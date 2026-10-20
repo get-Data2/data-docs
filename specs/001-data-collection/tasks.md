@@ -158,6 +158,21 @@ description: "과제 1 데이터 수집 체계 작업 목록"
 
 ---
 
+## Phase 9: User Story 6 — InfluxDB 과거 데이터 적재 (P1, 2026-10-20 추가)
+
+**Goal**: InfluxDB `iot-bucket`(2025-08-08~, 약 1,470만 행)의 센서 항목을 수집기 시작 전까지 MySQL에 같은 형식으로 적재한다.
+
+**Independent Test**: 하루치 적재 뒤 같은 날 InfluxDB와 MySQL의 장치·항목별 건수가 일치하고, 다시 실행해도 행이 늘지 않는다.
+
+- [X] T050 [US6] `config/collector.yaml`·`src/collector/config.py`에 `backfill` 섹션(bucket, measurements, chunk_hours, progress_path) 추가, 공간 `storage`(창고) 추가, 시험 장치 `dev001` 수집 제외
+- [X] T051 [P] [US6] `src/collector/influx.py`: 읽기 전용 Flux 조회 클라이언트(.env INFLUX_URL/TOKEN, 버킷 이름으로 orgID 찾기, annotated CSV 해석)
+- [X] T052 [US6] `src/collector/backfill.py`: (location, point)→장치 추론표, 행 변환(공간 매핑·별칭·제외 장치·숫자 검사), 1일 구간 적재, 진행 파일로 재개, 끝 시각=수집기 첫 수신
+- [X] T053 [US6] `src/collector/store.py`: `device_seen` 종류 — 있는 장치는 first_seen/last_seen만 넓히고 공간은 그대로
+- [X] T054 [P] [US6] `tests/unit/test_backfill.py`(행 변환·장치 추론), `tests/integration/test_backfill_db.py`(mysql: 멱등·device_seen)
+- [ ] T055 [US6] 전체 적재 실행(systemd-run 사용자 유닛, 로그 var/backfill.log), 결과를 `docs/reports/<날짜>-backfill.md`에 기록(건수 대조, 건너뛴 행과 사유)
+
+---
+
 ## Dependencies & Execution Order
 
 ```text
