@@ -69,7 +69,7 @@
 | detail | VARCHAR(512) NULL | 사유·건수 등(비밀 값 금지) |
 | host | VARCHAR(64) NOT NULL | 보드 이름 |
 
-인덱스 `ix_ts (ts)`. 사건도 스풀을 거쳐 기록되므로, DB가 끊긴 동안의 사건도 나중에 남는다.
+인덱스 `ix_event_ts (ts)`(Crowfoot은 문서 안 인덱스 이름이 유일해야 함). 사건도 스풀을 거쳐 기록되므로, DB가 끊긴 동안의 사건도 나중에 남는다.
 
 ## ingest_stats — 분 단위 수신 통계 (수집기 생존 신호 겸용)
 
