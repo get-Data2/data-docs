@@ -73,7 +73,7 @@ sources:
     space: deviceInfo.tags.location
     spot: deviceInfo.tags.spot
     measurements: object            # 이 사전의 숫자·참거짓 필드를 모두 측정값으로
-    time: [min(rxInfo[*].nsTime)]   # 우선순위 목록. 모두 실패하면 수신 시각
+    time: ["min(rxInfo[*].nsTime)"]   # 우선순위 목록. 모두 실패하면 수신 시각
     source_time: time
     frame_cnt: fCnt
 

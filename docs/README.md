@@ -19,7 +19,7 @@
 
 | 과제 | 상태 | 요구사항 | 설계 | 작업 |
 |---|---|---|---|---|
-| 1. 데이터 수집 체계 | 🟡 설계 완료 | [spec](../specs/001-data-collection/spec.md) | [plan](../specs/001-data-collection/plan.md) · [research](../specs/001-data-collection/research.md) · [data-model](../specs/001-data-collection/data-model.md) · [contracts](../specs/001-data-collection/contracts/) | 다음 단계 |
+| 1. 데이터 수집 체계 | 🟢 상시 수집 중 | [spec](../specs/001-data-collection/spec.md) | [plan](../specs/001-data-collection/plan.md) · [research](../specs/001-data-collection/research.md) · [data-model](../specs/001-data-collection/data-model.md) · [contracts](../specs/001-data-collection/contracts/) | [tasks](../specs/001-data-collection/tasks.md) 43/49 |
 | 2. 데이터 이해와 기준선 | ⚪ | | | |
 | 3. 60분 예측 | ⚪ | | | |
 | 4. 이상 탐지 | ⚪ | | | |
@@ -36,13 +36,17 @@
   → [research R10](../specs/001-data-collection/research.md)
 - **무손실**: 수신한 값은 로컬 스풀을 거쳐 MySQL에 일괄 기록한다. DB가 끊겨도 받은 값을 잃지 않는다.
 - **자동 복구**: 브로커 재접속은 최대 30초 간격으로 시도한다. 재부팅 뒤에는 systemd 사용자 서비스와 linger(또는 cron)로 자동 시작한다.
+  시험 브로커를 재시작했을 때 **6.0초** 만에 다시 수집했다.
+- **실측으로 찾은 문제**
+  - ChirpStack이 같은 업링크를 두 번 발행한다. 그래서 (장치, fCnt)로 중복을 걸러 낸다.
+  - 설치 직후 브로커에 같은 client_id를 쓰는 다른 클라이언트가 있어 1초마다 서로 밀어냈다. client_id를 바꾸고 감지 기능을 넣었다.
 
 ## 결과 문서
 
 | 문서 | 상태 |
 |---|---|
-| `collector-ops.md`: 수집기 운영 가이드 | 작성 예정 |
-| `format-change-case.md`: 형식 변경 대응 기록(과제 1 산출물) | 작성 예정 |
+| [collector-ops.md](collector-ops.md): 수집기 운영 가이드·장애 대응·확인 기준 검증 기록 | ✅ |
+| [format-change-case.md](format-change-case.md): 형식 변경 대응 기록(과제 1 산출물) | ✅ |
 | `reports/YYYY-MM-DD-coverage.md`: 수집 현황 보고(과제 1 산출물) | 24시간 수집 후 |
 
 모든 결과표에는 측정 조건(데이터 기간, 실/합성, 시험 기간, 전력 모드)을 함께 적는다.

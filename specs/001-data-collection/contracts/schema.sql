@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS {p}ingest_stats (
   minute    DATETIME    NOT NULL,
   host      VARCHAR(64) NOT NULL,
   messages  INT         NOT NULL,
-  stored    INT         NOT NULL,
+  `stored`  INT         NOT NULL,
   ignored   INT         NOT NULL,
   failed    INT         NOT NULL,
   duplicate INT         NOT NULL,
