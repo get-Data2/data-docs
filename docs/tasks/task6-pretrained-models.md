@@ -1,6 +1,6 @@
 # 과제 6. 사전학습 모델 비교 — 산출물
 
-> 상태: ⚪ 미착수. 계획: spec 미작성.
+> 상태: 🟡 계획 완료(spec·plan·tasks). 계획: [spec](../../specs/006-pretrained-models/spec.md) · [plan](../../specs/006-pretrained-models/plan.md) · [tasks](../../specs/006-pretrained-models/tasks.md)
 > 이 문서는 README의 요구를 하나도 빠뜨리지 않고 대응시키는 점검표다. 결과는 진행하면서 채운다.
 
 ## 해결할 것
