@@ -90,7 +90,7 @@ MQTT 두 원천(ChirpStack LoRaWAN 센서, xflow 냉난방)을 구독해 **공�
 | 심화 항목 | 결과 | 문서 |
 |---|---|---|
 | 1년 뒤 저장소 크기 추정과 다운샘플링·보관 정책 | 지금 속도(하루 약 10만 행, 행당 241바이트)로 **1년 8.2GB**. 원본 90일 + 이후 5분 집계면 **4.0GB**, 여기에 냉난방 상태값을 "바뀔 때만 + 15분 생존 기록"으로 저장하면 **약 2.9GB**. 저장량의 절반은 냉난방 반복값이고(야간 100% 반복), 환경 센서 원본은 값 고정 고장 탐지(과제 4)의 근거라 90일은 지킨다 | [storage-policy.md](../advanced/task1/01-storage-policy.md) |
-| 같은 메시지가 두 번 오는 경우(재전송) 찾아 처리 | 실측: ChirpStack이 게이트웨이 조합만 다른 같은 업링크(같은 fCnt)를 두 번 발행. `deduplicationId`와 `nsTime`(1ms 차이)이 달라 DB 유일키로는 못 막는다. (장치, fCnt)를 2시간 동안 기억해 한 번만 저장한다. 16.7시간 동안 **600건(메시지의 3.4%)** 걸러냄(`ingest_stats.duplicate`). 재처리·재접속 중복은 유일키(장치·항목·기준 시각)로 막는다 | [research R8](../../specs/001-data-collection/research.md), `src/collector/dedup.py` |
+| 같은 메시지가 두 번 오는 경우(재전송) 찾아 처리 | 실측: ChirpStack이 게이트웨이 조합만 다른 같은 업링크(같은 fCnt)를 두 번 발행. `deduplicationId`와 `nsTime`(1ms 차이)이 달라 DB 유일키로는 못 막는다. (장치, fCnt)를 2시간 동안 기억해 한 번만 저장한다. 16.7시간 동안 **600건(메시지의 3.4%)** 걸러냄(`ingest_stats.duplicate`). 재처리·재접속 중복은 유일키(장치·항목·기준 시각)로 막는다 | [advanced/task1/02-duplicate-messages.md](../advanced/task1/02-duplicate-messages.md) |
 
 ## 확인 명령
 

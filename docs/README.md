@@ -70,6 +70,7 @@
 |---|---|---|
 | [ops/collector-ops.md](ops/collector-ops.md) | 수집기 운영 가이드·장애 대응·확인 기준 검증 기록 | ✅ |
 | [advanced/task1/01-storage-policy.md](advanced/task1/01-storage-policy.md) | 과제 1 심화(B): 저장소 1년 추정(8.2GB)과 보관 정책 | ✅ |
+| [advanced/task1/02-duplicate-messages.md](advanced/task1/02-duplicate-messages.md) | 과제 1 심화(B): 재전송(이중 발행 3.2%) 찾아 처리, 남은 중복 0건 | ✅ |
 | [reports/2026-10-21-devices.md](reports/2026-10-21-devices.md) | 장비 현황(정상·수신 중단·판단 보류·배터리) | ✅ |
 | [reports/2026-10-21-backfill.md](reports/2026-10-21-backfill.md) | InfluxDB 과거 데이터 적재 — 978만 행, 장치 미특정 75만 행 원인과 계획 | 🟡 유선망 복구 대기 |
 | [reports/task2/diagnosis_v1-provisional.md](reports/task2/diagnosis_v1-provisional.md) | 과제 2 진단 상세 표(자동 생성, 진단서의 숫자 원본) | ✅ |
