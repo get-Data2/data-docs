@@ -62,9 +62,9 @@ schedule:                          # 고정 일과표(2026-10-21 결정). 실제
   file: null                       # 예: data/schedule.csv
   exclude_holidays: true
   rows:
-    - {space: lab,    days: [mon, tue, wed, thu, fri], start: "09:00", end: "12:00", kind: class}
+    - {space: lab,    days: [mon, tue, wed, thu, fri], start: "09:00", end: "11:30", kind: class}
     - {space: lab,    days: [mon, tue, wed, thu, fri], start: "13:00", end: "18:00", kind: class}
-    - {space: office, days: [mon, tue, wed, thu, fri], start: "09:00", end: "12:00", kind: work}
+    - {space: office, days: [mon, tue, wed, thu, fri], start: "09:00", end: "11:30", kind: work}
     - {space: office, days: [mon, tue, wed, thu, fri], start: "13:00", end: "18:00", kind: work}
   reaction: {pre_min: 15, window_min: 60, delta_ppm: 30}
 
