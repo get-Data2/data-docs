@@ -33,7 +33,7 @@
 | 2. 데이터 이해와 기준선 | [데이터 진단서](deliverables/task2/01-data-diagnosis.md) · [기준선 성능표](deliverables/task2/baseline_v1-provisional.md) | [task2](tasks/task2-data-baseline.md) | 🟢 완료 — 분할 `v1-provisional`이 과제 3~6 평가 기준(2학기 `v2-final`은 망 복구 시 추가) |
 | 3. 60분 예측 | — | [task3](tasks/task3-forecast-60min.md) | 🟡 진행 중 |
 | 4. 이상 탐지 | — | [task4](tasks/task4-anomaly-detection.md) | 🟡 진행 중 |
-| 5. 상태 추정 | — | [task5](tasks/task5-state-estimation.md) | ⚪ 점검표 |
+| 5. 상태 추정 | — | [task5](tasks/task5-state-estimation.md) | 🟡 계획 완료 |
 | 6. 사전학습 모델 비교 | — | [task6](tasks/task6-pretrained-models.md) | 🟡 계획 완료 |
 | 7. 엣지 최적화 | — | [task7](tasks/task7-edge-optimization.md) | 🟡 계획 완료 |
 | 8. 상시 추론 서비스 | — | [task8](tasks/task8-inference-service.md) | 🟡 계획 완료 |
@@ -46,7 +46,7 @@
 | 2. 데이터 이해와 기준선 | 🟢 완료 | [spec](../specs/002-data-baseline/spec.md) | [plan](../specs/002-data-baseline/plan.md) · [research](../specs/002-data-baseline/research.md) · [data-model](../specs/002-data-baseline/data-model.md) · [contracts](../specs/002-data-baseline/contracts/) | [tasks](../specs/002-data-baseline/tasks.md) 34/35 |
 | 3. 60분 예측 | 🟡 실험 중 | [spec](../specs/003-forecast-60min/spec.md) | [plan](../specs/003-forecast-60min/plan.md) · [research](../specs/003-forecast-60min/research.md) · [data-model](../specs/003-forecast-60min/data-model.md) · [contracts](../specs/003-forecast-60min/contracts/) | [tasks](../specs/003-forecast-60min/tasks.md) 24/43 |
 | 4. 이상 탐지 | 🟡 구현 중(학습 대기) | [spec](../specs/004-anomaly-detection/spec.md) | [plan](../specs/004-anomaly-detection/plan.md) · [research](../specs/004-anomaly-detection/research.md) · [data-model](../specs/004-anomaly-detection/data-model.md) · [contracts](../specs/004-anomaly-detection/contracts/) | [tasks](../specs/004-anomaly-detection/tasks.md) 18/34 |
-| 5. 상태 추정 | 🟡 spec 작성 중 | [spec](../specs/005-state-estimation/spec.md) | | |
+| 5. 상태 추정 | 🟡 계획 완료 | [spec](../specs/005-state-estimation/spec.md) | [plan](../specs/005-state-estimation/plan.md) · [research](../specs/005-state-estimation/research.md) · [data-model](../specs/005-state-estimation/data-model.md) · [contracts](../specs/005-state-estimation/contracts/) | [tasks](../specs/005-state-estimation/tasks.md) 0/36 |
 | 6. 사전학습 모델 비교 | 🟡 계획 완료 | [spec](../specs/006-pretrained-models/spec.md) | [plan](../specs/006-pretrained-models/plan.md) · [research](../specs/006-pretrained-models/research.md) · [data-model](../specs/006-pretrained-models/data-model.md) · [contracts](../specs/006-pretrained-models/contracts/) | [tasks](../specs/006-pretrained-models/tasks.md) 0/35 |
 | 7. 엣지 최적화 | 🟡 계획 완료 | [spec](../specs/007-edge-optimization/spec.md) | [plan](../specs/007-edge-optimization/plan.md) · [research](../specs/007-edge-optimization/research.md) · [data-model](../specs/007-edge-optimization/data-model.md) · [contracts](../specs/007-edge-optimization/contracts/) | [tasks](../specs/007-edge-optimization/tasks.md) 0/33 |
 | 8. 상시 추론 서비스 | 🟡 계획 완료 | [spec](../specs/008-inference-service/spec.md) | [plan](../specs/008-inference-service/plan.md) · [research](../specs/008-inference-service/research.md) · [data-model](../specs/008-inference-service/data-model.md) · [contracts](../specs/008-inference-service/contracts/) | [tasks](../specs/008-inference-service/tasks.md) 0/40 |

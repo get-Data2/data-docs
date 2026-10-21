@@ -1,6 +1,6 @@
 # 과제 5. 상태 추정 — 산출물
 
-> 상태: ⚪ 미착수. 계획: spec 미작성.
+> 상태: 🟡 계획 완료(spec·plan·tasks). 계획: [spec](../../specs/005-state-estimation/spec.md) · [plan](../../specs/005-state-estimation/plan.md) · [tasks](../../specs/005-state-estimation/tasks.md)
 > 이 문서는 README의 요구를 하나도 빠뜨리지 않고 대응시키는 점검표다. 결과는 진행하면서 채운다.
 
 ## 해결할 것
