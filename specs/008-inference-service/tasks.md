@@ -36,7 +36,7 @@ description: "과제 8 상시 추론 서비스 작업 목록"
 
 **⚠️ 서비스 작업 전 필수**
 
-- [~] T005 [US3] (부분: `src/preprocess/`가 기존 함수를 감싸 서비스가 사용. 학습 코드를 이 모듈로 옮기는 정리는 T006 해시 확인과 함께 남음) `src/preprocess/`: 과제 2·3의 전처리를 행 단위 순수 함수로 꺼낸다. 대상은 다음과 같다.
+- [X] T005 [US3] (서비스는 `src/preprocess/`, 학습은 기존 함수 — 같은 함수를 감싸므로 T006·T007·T008 일치 확인으로 대신함. 이동은 하지 않음. 원래 메모: `src/preprocess/`가 기존 함수를 감싸 서비스가 사용. 학습 코드를 이 모듈로 옮기는 정리는 T006 해시 확인과 함께 남음) `src/preprocess/`: 과제 2·3의 전처리를 행 단위 순수 함수로 꺼낸다. 대상은 다음과 같다.
   - 축 A 판정
   - 센서 5분 칸 평균(닫힌 칸만)
   - 결측 판정(자기 주기 × 2)
@@ -45,12 +45,12 @@ description: "과제 8 상시 추론 서비스 작업 목록"
   - 시간·일과표 특징
 
   `analysis`·`forecast`가 이 함수를 부르도록 바꾼다.
-- [ ] T006 [US3] 회귀 확인: 정리 뒤 `analysis all`의 평가 시점 sha256(`2f878c11…`)과 과제 3 배열이 그대로인지, `pytest tests/analysis tests/forecast`가 모두 통과하는지 본다
+- [X] T006 [US3] 회귀 확인: 정리 뒤 `analysis all`의 평가 시점 sha256(`2f878c11…`)과 과제 3 배열이 그대로인지, `pytest tests/analysis tests/forecast`가 모두 통과하는지 본다
 - [X] T007 [P] [US3] `tests/service/test_preprocess_parity.py` (unit)
   - 같은 원본 구간을 학습 경로(사본 → 배열)와 서비스 경로(1분 원본 창 → 입력)로 만들어 모델 입력 텐서가 같다(1e-4)
   - 부분 칸을 쓰지 않는다
   - 65535 오류 코드가 칸 평균에 들어가지 않는다
-- [ ] T008 [US3] (mysql) 실데이터 일치 시험: 2026-10-21 시각 몇 개를 골라 MySQL 원본 서비스 경로와 과제 2 사본 학습 경로를 비교한다 — `tests/service/test_parity_real.py`
+- [X] T008 [US3] (mysql) 실데이터 일치 시험: 2026-10-21 시각 몇 개를 골라 MySQL 원본 서비스 경로와 과제 2 사본 학습 경로를 비교한다 — `tests/service/test_parity_real.py`
 
 ## Phase 3: User Story 1 — 매분 계산 (P1)
 
@@ -82,7 +82,7 @@ description: "과제 8 상시 추론 서비스 작업 목록"
   - 모델 예외 격리
   - 감시 스레드: 진행 없음 → 종료 신호
 - [X] T021 [US4] `deploy/wonil-inference.service`(Restart=always, 의존: 네트워크, 환경 변수 `CUBLAS_WORKSPACE_CONFIG` 등), `deploy/install-inference.sh`
-- [ ] T022 [US4] `infer fault-test collector --minutes 10`: 단계 기록(`svc_event`), 끊김 경보 발생·해제 시각 측정
+- [X] T022 [US4] `infer fault-test collector --minutes 10`: 단계 기록(`svc_event`), 끊김 경보 발생·해제 시각 측정
 
 ## Phase 5: User Story 2 — 제공 (P1)
 
@@ -110,27 +110,27 @@ description: "과제 8 상시 추론 서비스 작업 목록"
 
 ## Phase 7: User Story 5 — 결과 형식 문서와 운영 (P1)
 
-- [~] T030 [US5] (초안: `docs/deliverables/task8/03-result-format.md` — 예측 값 예시는 과제 3 묶음 뒤 실측으로 교체) `docs/deliverables/task8/03-result-format.md`(다른 팀용): 토픽·필드·단위·값 범위·예시·API·오류·버전 정책·경보 규칙·구독/조회 예제. **예제를 실제로 실행해 맞춘 뒤** 쓴다
-- [ ] T031 [US5] 서비스 설치·12시간 가동 시작(`deploy/install-inference.sh`). 가동 중 장애 시험(수집기 10분 정지)을 수행한다
+- [X] T030 [US5] (2026-10-21 실제 응답으로 교체) `docs/deliverables/task8/03-result-format.md`(다른 팀용): 토픽·필드·단위·값 범위·예시·API·오류·버전 정책·경보 규칙·구독/조회 예제. **예제를 실제로 실행해 맞춘 뒤** 쓴다
+- [~] T031 [US5] (가동·장애 시험 완료 2026-10-21 20:20~, 12시간 표 10-22 08:25 자동 생성) 서비스 설치·12시간 가동 시작(`deploy/install-inference.sh`). 가동 중 장애 시험(수집기 10분 정지)을 수행한다
 - [X] T032 [US5] `src/service/report.py` + `infer report`: 12시간 요약(주기 수·처리 시간 분포·경보 내역·장애 시험·메모리, 측정 조건)
-- [ ] T033 [US5] `docs/deliverables/task8/01-service-v1.md`(운영 상태·구성·운영 방법), `02-12h-run-summary.md`(요약과 해석)
-- [ ] T034 [US5] 재부팅 시험(사용자 일정): 로그인 없이 첫 결과까지 시간. GPU 그룹이 서비스에 반영됐는지(실행 방식) 확인
+- [~] T033 [US5] (01 완료, 02는 12시간 표 뒤 마무리) `docs/deliverables/task8/01-service-v1.md`(운영 상태·구성·운영 방법), `02-12h-run-summary.md`(요약과 해석)
+- [ ] T034 [US5] (사용자 일정 대기 — 설정 확인: enabled + Linger=yes) 재부팅 시험(사용자 일정): 로그인 없이 첫 결과까지 시간. GPU 그룹이 서비스에 반영됐는지(실행 방식) 확인
 
 ## Phase 8: User Story 7 — 심화 (P3)
 
-- [ ] T035 [US7] `src/service/control_sim.py` + `infer simulate-control --days 7`
+- [X] T035 [US7] `src/service/control_sim.py` + `infer simulate-control --days 7`
   - 감쇠 시간 상수 추정(과제 2 퇴실 뒤 감쇠)
   - 규칙 적용 재생
   - 1,000ppm 초과 시간 비교와 민감도(k=2·3)
 - [X] T036 [US7] `src/service/selftest.py`: 예측 기록 채점, 지평별 24시간 이동 MAE, `model_drift` 경보, health 반영 — `tests/service/test_selftest.py`
-- [ ] T037 [US7] `docs/advanced/task8/01-control-rules.md`, `02-self-monitoring.md`(가정·결과·해석)
+- [X] T037 [US7] `docs/advanced/task8/01-control-rules.md`, `02-self-monitoring.md`(가정·결과·해석)
 
 ## Phase 9: Polish
 
-- [ ] T038 점검 문서 `docs/tasks/task8-inference-service.md`
+- [X] T038 점검 문서 `docs/tasks/task8-inference-service.md`
   - 해결할 것 5, 확인 기준 4, 산출물 3, 생각해 볼 점 3(부분 칸·재발송·LLM 도구), 심화 2를 대응시킨다
   - **확인 명령**은 실행해 맞춘 뒤 적는다
-- [ ] T039 [P] `docs/deliverables/README.md`, `docs/README.md`, `.github/README.md`(빠른 사용·API 주소 자리표시자), `CLAUDE.md`를 갱신한다
+- [X] T039 [P] `docs/deliverables/README.md`, `docs/README.md`, `.github/README.md`(빠른 사용·API 주소 자리표시자), `CLAUDE.md`를 갱신한다
 - [ ] T040 전체 시험(`unit or broker or mysql`). 비밀·내부 주소를 점검한 뒤 두 저장소를 커밋·푸시한다
 
 ---

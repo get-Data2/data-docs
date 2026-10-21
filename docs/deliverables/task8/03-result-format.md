@@ -1,8 +1,7 @@
 # 과제 8 산출물 ③ 결과 형식 문서 — team2 상시 추론 서비스 v1
 
 > 다른 팀이 이 문서만 보고 결과를 받아 쓸 수 있게 정리했다. 대상은 대시보드, 로컬 LLM 에이전트, 냉난방 제어다.
-> 상태: 서비스 코드와 시험 완료(2026-10-21). 상시 가동은 설치 뒤 시작한다. 예측·이상·상태 값은 과제 3·4·5 모델 묶음이 붙은 뒤부터 나온다.
-> 그 전에는 해당 판단이 `unavailable:no_bundle`로 나온다(아래 "가용성").
+> 상태: 상시 가동 중(2026-10-21 20:17 KST~). 예측·이상·상태·규칙 판단이 모두 `ok`이다. 아래 예시는 모두 실제 응답이다(`curl`로 받아 그대로 실음).
 
 ## 1. 무엇을 주나
 
@@ -97,16 +96,25 @@ c.loop_forever()
 curl -s "http://<팀 Jetson 주소>:18080/v1/spaces/meeting/forecast?minutes=30"
 ```
 
+실제 응답(2026-10-21 20:49 KST):
+
 ```json
-{"schema": "team2.inference.v1", "space_id": "meeting", "t0": "2026-10-22T05:10:00Z", "minutes": 30,
- "target_time": "2026-10-22T05:40:00Z", "freshness_min": 6.0, "stale": false,
- "co2": {"value": 958, "unit": "ppm"}, "temperature": {"value": 23.4, "unit": "°C"},
- "co2_over": {"threshold_ppm": 1000, "first_over_min": 40, "current_ppm": 790},
- "summary_ko": "회의실 30분 뒤 CO₂ 958ppm, 온도 23.4°C 예상",
- "model": {"version": "forecast-<해시12>", "sha256": "<16자>", "runtime": "torch-cuda"}}
+{"schema": "team2.inference.v1", "space_id": "meeting", "t0": "2026-10-21T11:45:00Z", "minutes": 30,
+ "target_time": "2026-10-21T12:15:00Z", "freshness_min": 19.3, "stale": true,
+ "co2": {"value": 625.7, "unit": "ppm"}, "temperature": {"value": 20.06, "unit": "°C"},
+ "co2_over": {"threshold_ppm": 1000.0, "first_over_min": null, "current_ppm": 641.0},
+ "summary_ko": "회의실 30분 뒤 CO₂ 626ppm, 온도 20.1°C 예상",
+ "model": {"version": "forecast-52aff4f0c4bf", "sha256": "696085dc53f9b69d", "runtime": "torch-cuda"}}
 ```
 
-(예측 값은 형식 예시다. 과제 3 묶음이 붙으면 실제 값으로 바꿔 싣는다.)
+이 응답은 수집기 정지 시험 직후라 `stale: true`(데이터 19분 전)다. 예측은 60분까지는 계속 내고, 받는 쪽이 `stale`을 보고 믿을지 정한다.
+
+오류 응답(실제):
+
+```bash
+curl -s "http://<팀 Jetson 주소>:18080/v1/spaces/lab/forecast?minutes=61"   # {"error": "minutes는 5~60"}  (400)
+curl -s "http://<팀 Jetson 주소>:18080/v1/spaces/x"                         # {"error": "없는 공간: x"}     (404)
+```
 
 ## 5. 공통 필드
 
@@ -132,18 +140,37 @@ curl -s "http://<팀 Jetson 주소>:18080/v1/spaces/meeting/forecast?minutes=30"
 | `unavailable:stale` | 15분 넘게 오래돼 이상 판단을 보류했다 |
 | `error:<예외>` | 그 판단 계산이 실패했다. 다른 판단은 계속 나온다 |
 
-실제 결과 예(2026-10-21 15:56 KST, 실데이터, 모델 묶음 붙기 전 — `infer once`로 실행):
+실제 결과 묶음 예(`GET /v1/spaces/lab`, 2026-10-21 20:48 KST, 예측 12칸은 앞 3칸만 표시):
 
 ```json
-{"schema": "team2.inference.v1", "space_id": "meeting", "space_name": "회의실",
- "t0": "2026-10-21T06:55:00Z", "t0_kst": "2026-10-21T15:55:00+09:00", "computed_at": "2026-10-21T06:56:31.771172Z",
- "freshness_min": 6.5, "stale": false,
- "availability": {"rules": "ok", "forecast": "unavailable:no_bundle", "anomaly": "unavailable:no_bundle", "state": "unavailable:no_bundle"},
+{"schema": "team2.inference.v1", "space_id": "lab", "space_name": "실습실",
+ "t0": "2026-10-21T11:45:00Z", "t0_kst": "2026-10-21T20:45:00+09:00", "computed_at": "2026-10-21T11:48:20.757405Z",
+ "freshness_min": 3.3, "stale": false,
+ "availability": {"rules": "ok", "forecast": "ok", "anomaly": "ok", "state": "ok"},
+ "models": {"forecast": {"version": "forecast-52aff4f0c4bf", "sha256": "696085dc53f9b69d", "runtime": "torch-cuda"},
+            "anomaly": {"version": "anomaly-240088924310", "sha256": "6d04702384d48367", "runtime": "torch-cuda"},
+            "state": {"version": "state-1cd4d961a332", "sha256": "d40b1dd327551ef2", "runtime": "torch-cuda"}},
+ "forecast": {"unit": {"co2": "ppm", "temperature": "°C"}, "step_min": 5, "horizons_min": [5, 10, 15, "…", 60],
+              "co2": [564.4, 563.7, 562.5, "…", 558.3], "temperature": [22.49, 22.48, 22.47, "…", 22.36], "interval": null},
+ "co2_over": {"threshold_ppm": 1000.0, "first_over_min": null, "current_ppm": 564.5},
+ "anomaly": {"is_anomaly": false, "score": 114.3035, "score_q": 0.91321, "threshold_q": 0.999,
+             "causes": [{"device_id": "24e124128c067999", "item": "temperature", "contribution": 0.298},
+                        {"device_id": "24e124126d152590", "item": "co2", "contribution": 0.262},
+                        {"device_id": "24e124126d152862", "item": "temperature", "contribution": 0.146}]},
+ "state": {"p_occupied": 0.1586, "occupied": false, "occupancy_threshold": 0.5908,
+           "p_vent": 0.0001, "ventilation_soon": false, "vent_threshold": 0.6371},
  "rules": {"data_gap": [], "stuck": [], "out_of_range": []},
- "summary_ko": "회의실 예측 불가(no_bundle)"}
+ "summary_ko": "실습실 CO₂ 60분 안 1,000ppm 초과 없음(현재 564ppm)"}
 ```
 
-회의실 신선도가 6.5분인 것은 10분 주기 센서이기 때문이다(정상).
+| 판단 | 필드 | 범위·뜻 |
+|---|---|---|
+| `anomaly` | `score_q` | 0~1. 과제 4 검증 기간 점수 분포에서의 분위수. `threshold_q`(0.999) 이상이면 `is_anomaly` |
+| | `causes[].contribution` | 0~1, 합 1. 재구성 오차에서 그 장치·항목이 차지하는 몫 |
+| `state` | `p_occupied`, `p_vent` | 0~1 확률. 각 `_threshold` 이상이면 `occupied`·`ventilation_soon` |
+| | (없음) | 최근 30분 관측 칸이 50% 미만이면 `state`가 빠지고 `availability.state = unavailable:no_result`. 회의실(10분 주기 센서)은 시간의 약 3분의 1만 나온다 |
+
+회의실 신선도는 평소 5~15분이다. 10분 주기 센서이기 때문이다(정상).
 
 ## 6. 경보
 

@@ -36,7 +36,7 @@
 | 5. 상태 추정 | — | [task5](tasks/task5-state-estimation.md) | 🟡 계획 완료 |
 | 6. 사전학습 모델 비교 | — | [task6](tasks/task6-pretrained-models.md) | 🟡 계획 완료 |
 | 7. 엣지 최적화 | — | [task7](tasks/task7-edge-optimization.md) | 🟡 계획 완료 |
-| 8. 상시 추론 서비스 | — | [task8](tasks/task8-inference-service.md) | 🟡 계획 완료 |
+| 8. 상시 추론 서비스 | [서비스 v1](deliverables/task8/01-service-v1.md) · [12시간 가동 요약](deliverables/task8/02-12h-run-summary.md) · [결과 형식 문서](deliverables/task8/03-result-format.md) | [task8](tasks/task8-inference-service.md) | 🟡 상시 가동 중, 12시간 기록 진행(10-22 08:20 종료) |
 
 ## 과제별 계획
 
@@ -49,7 +49,7 @@
 | 5. 상태 추정 | 🟡 계획 완료 | [spec](../specs/005-state-estimation/spec.md) | [plan](../specs/005-state-estimation/plan.md) · [research](../specs/005-state-estimation/research.md) · [data-model](../specs/005-state-estimation/data-model.md) · [contracts](../specs/005-state-estimation/contracts/) | [tasks](../specs/005-state-estimation/tasks.md) 0/36 |
 | 6. 사전학습 모델 비교 | 🟡 계획 완료 | [spec](../specs/006-pretrained-models/spec.md) | [plan](../specs/006-pretrained-models/plan.md) · [research](../specs/006-pretrained-models/research.md) · [data-model](../specs/006-pretrained-models/data-model.md) · [contracts](../specs/006-pretrained-models/contracts/) | [tasks](../specs/006-pretrained-models/tasks.md) 0/35 |
 | 7. 엣지 최적화 | 🟡 계획 완료 | [spec](../specs/007-edge-optimization/spec.md) | [plan](../specs/007-edge-optimization/plan.md) · [research](../specs/007-edge-optimization/research.md) · [data-model](../specs/007-edge-optimization/data-model.md) · [contracts](../specs/007-edge-optimization/contracts/) | [tasks](../specs/007-edge-optimization/tasks.md) 0/33 |
-| 8. 상시 추론 서비스 | 🟡 계획 완료 | [spec](../specs/008-inference-service/spec.md) | [plan](../specs/008-inference-service/plan.md) · [research](../specs/008-inference-service/research.md) · [data-model](../specs/008-inference-service/data-model.md) · [contracts](../specs/008-inference-service/contracts/) | [tasks](../specs/008-inference-service/tasks.md) 0/40 |
+| 8. 상시 추론 서비스 | 🟡 상시 가동 중 | [spec](../specs/008-inference-service/spec.md) | [plan](../specs/008-inference-service/plan.md) · [research](../specs/008-inference-service/research.md) · [data-model](../specs/008-inference-service/data-model.md) · [contracts](../specs/008-inference-service/contracts/) | [tasks](../specs/008-inference-service/tasks.md) 37/41 |
 
 ### 과제 1 핵심 결정 (요약)
 
