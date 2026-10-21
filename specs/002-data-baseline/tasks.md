@@ -195,7 +195,8 @@ description: "과제 2 데이터 이해와 기준선 작업 목록"
   - '어제 같은 시각'이 약한 이유와 강할 수 있는 공간
   - 고장 구간을 학습·평가에 넣을지
 - [X] T034 [P] `.github/README.md`·`docs/README.md` 진행 표, `CLAUDE.md` 진행 상황 갱신, 두 저장소 커밋·푸시
-- [ ] T035 InfluxDB 미적재분(2026-07-23 ~ 10-20)을 적재한 뒤 `analysis extract --refresh && analysis all --split v2-final` 실행 → 확정 기준선 표로 교체(과제 1 T055 완료가 선행 조건)
+- [ ] T035 (선택, 이월) InfluxDB 미적재분(2026-07-23 ~ 10-20)을 적재한 뒤 `analysis extract --refresh && analysis all --split v2-final` 실행 → 2학기 시험 기준선을 추가 비교로 싣는다(과제 1 T055 완료가 선행 조건)
+  - 2026-10-21 결정: 유선 랜 단절로 적재 불가 → `v1-provisional`을 과제 3~6 공식 평가 기준으로 채택하고 과제 2를 완료 처리
 
 ---
 

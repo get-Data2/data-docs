@@ -22,7 +22,7 @@ README의 해결할 것·확인 기준·산출물·생각해 볼 점·심화(B)�
 | 과제 | 문서 | 상태 |
 |---|---|---|
 | 1. 데이터 수집 체계 | [task1-data-collection.md](tasks/task1-data-collection.md) | 🟢 완료(운영 중), 24h 최종표만 남음 |
-| 2. 데이터 이해와 기준선 | [task2-data-baseline.md](tasks/task2-data-baseline.md) | 🟡 잠정 결과(`v1-provisional`) 완료 — 확정(`v2-final`)은 InfluxDB 미적재분 적재 후 |
+| 2. 데이터 이해와 기준선 | [task2-data-baseline.md](tasks/task2-data-baseline.md) | 🟢 완료 — 분할 `v1-provisional`을 과제 3~6 평가 기준으로 채택(2학기 `v2-final`은 망 복구 시 추가) |
 | 3. 60분 예측 | [task3-forecast-60min.md](tasks/task3-forecast-60min.md) | ⚪ 점검표 |
 | 4. 이상 탐지 | [task4-anomaly-detection.md](tasks/task4-anomaly-detection.md) | ⚪ 점검표 |
 | 5. 상태 추정 | [task5-state-estimation.md](tasks/task5-state-estimation.md) | ⚪ 점검표 |
@@ -35,7 +35,7 @@ README의 해결할 것·확인 기준·산출물·생각해 볼 점·심화(B)�
 | 과제 | 상태 | 요구사항 | 설계 | 작업 |
 |---|---|---|---|---|
 | 1. 데이터 수집 체계 | 🟢 상시 수집 중 | [spec](../specs/001-data-collection/spec.md) | [plan](../specs/001-data-collection/plan.md) · [research](../specs/001-data-collection/research.md) · [data-model](../specs/001-data-collection/data-model.md) · [contracts](../specs/001-data-collection/contracts/) | [tasks](../specs/001-data-collection/tasks.md) 53/56 |
-| 2. 데이터 이해와 기준선 | 🟡 잠정 결과 | [spec](../specs/002-data-baseline/spec.md) | [plan](../specs/002-data-baseline/plan.md) · [research](../specs/002-data-baseline/research.md) · [data-model](../specs/002-data-baseline/data-model.md) · [contracts](../specs/002-data-baseline/contracts/) | [tasks](../specs/002-data-baseline/tasks.md) 34/35 |
+| 2. 데이터 이해와 기준선 | 🟢 완료 | [spec](../specs/002-data-baseline/spec.md) | [plan](../specs/002-data-baseline/plan.md) · [research](../specs/002-data-baseline/research.md) · [data-model](../specs/002-data-baseline/data-model.md) · [contracts](../specs/002-data-baseline/contracts/) | [tasks](../specs/002-data-baseline/tasks.md) 34/35 |
 | 3. 60분 예측 | ⚪ | | | |
 | 4. 이상 탐지 | ⚪ | | | |
 | 5. 상태 추정 | ⚪ | | | |
