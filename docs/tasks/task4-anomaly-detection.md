@@ -1,6 +1,6 @@
 # 과제 4. 이상 탐지 — 산출물
 
-> 상태: 🟡 계획 중(spec·plan). 계획: [spec](../../specs/004-anomaly-detection/spec.md) · [plan](../../specs/004-anomaly-detection/plan.md)
+> 상태: 🟡 계획 중(spec·plan·tasks). 계획: [spec](../../specs/004-anomaly-detection/spec.md) · [plan](../../specs/004-anomaly-detection/plan.md) · [tasks](../../specs/004-anomaly-detection/tasks.md)
 > 이 문서는 README의 요구를 하나도 빠뜨리지 않고 대응시키는 점검표다. 결과는 진행하면서 채운다.
 
 ## 해결할 것
