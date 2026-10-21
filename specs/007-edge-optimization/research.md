@@ -166,3 +166,14 @@ sudo 없이 `tegrastats --interval 1000`으로 얻은 원문이다. 그때 과�
 
 - **TensorRT**: pip `tensorrt-cu13`로 먼저 시도한다(Phase 0 동작 확인). 대안 순서까지 해 보고도 안 되면, 관리자 요청 여부를 사용자에게 다시 묻는다.
 - **로컬 LLM 크기**: 1B·3B·7B(4비트) 가정으로 동시 적재 조합을 판단한다.
+
+## 추가 발견 (2026-10-21 17:05): 시스템 TensorRT가 이미 설치돼 있다
+
+- 보드에 JetPack TensorRT **10.16.2**(`cuda13.2`)가 깔려 있다: `tensorrt`·`libnvinfer10`·`libnvonnxparsers10`·`python3-libnvinfer` 패키지, `/usr/bin/trtexec`.
+  처음 확인 때 `/usr/lib/aarch64-linux-gnu`에서 못 찾은 것은 검색 실수였다(`libnvinfer.so.10.16.2`가 있음).
+- 시스템 파이썬 3.12에서 `import tensorrt`가 된다(`/usr/lib/python3.12/dist-packages/tensorrt`). 같은 보드의 다른 계정(t2)이 `trtexec --onnx ... --fp16`로 실제 변환을 돌리고 있었다 → Orin에서 동작하는 판이다.
+- **결정**: TensorRT 경로의 1순위를 pip `tensorrt-cu13` 11.4(sm87 전용 빌더 자원 없음)에서 **시스템 TensorRT 10.16**으로 바꾼다.
+  - 엔진 만들기: `trtexec`(시스템) 또는 시스템 파이썬 바인딩
+  - `.venv`(파이썬 3.12.3)에서 쓰려면 `tensorrt` 패키지 폴더만 연결(pip판 제거 또는 경로 우선순위)하는 방법을 probe에서 시험한다
+  - pip판은 비교용으로만 남긴다
+- 관리자 요청은 필요 없어졌다.
