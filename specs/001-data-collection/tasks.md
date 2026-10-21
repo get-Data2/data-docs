@@ -151,7 +151,7 @@ description: "과제 1 데이터 수집 체계 작업 목록"
 ## Phase 8: Polish & 산출물
 
 - [X] T045 [P] `docs/collector-ops.md`: 운영 가이드 — 설치(`deploy/install.sh`), 상태 확인(`systemctl --user status`, `journalctl --user -u wonil-collector`, `report --hours 1`), 장애 대응표(브로커·DB·디스크·설정 오류), 설정 반영(`reload`)
-- [ ] T046 24시간 연속 수집 후 `report --hours 24 --md docs/reports/<날짜>-coverage.md` 생성, 아래에 결측 구간별 원인 해석과 조치 작성 (SC-003, SC-004, 헌법 VII)
+- [X] T046 (2026-10-21 16:41 생성, `docs/deliverables/task1/01-coverage-report.md`, 최저 98.6%) 24시간 연속 수집 후 `report --hours 24 --md docs/reports/<날짜>-coverage.md` 생성, 아래에 결측 구간별 원인 해석과 조치 작성 (SC-003, SC-004, 헌법 VII)
 - [X] T047 [P] 수집기 메모리 측정(`systemctl --user show -p MemoryCurrent`, 1시간 간격 3회) → 200MB 이하 확인, `docs/collector-ops.md`에 측정 조건과 함께 기록 (SC-007)
 - [X] T048 [P] `.github/README.md`·`docs/README.md` 진행 표 갱신, `CLAUDE.md` 진행 상황 체크, 두 저장소 커밋·푸시(`git push`, `tools/docs-git push`)
 - [X] T049 quickstart.md 절차 전체를 처음부터 따라 해 보고 어긋난 곳 수정

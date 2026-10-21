@@ -1,6 +1,6 @@
 # 과제 1. 데이터 수집 체계 — 점검 문서
 
-> 상태: 🟢 **완료(운영 중)**. 남은 것은 24시간 최종 현황표(2026-10-21 16:40 이후)와 InfluxDB 미적재분(유선망 복구 대기).
+> 상태: 🟢 **완료(운영 중)**. 24시간 최종 현황표 통과(2026-10-21, 핵심 항목 최저 98.6%). 남은 것은 InfluxDB 미적재분(보드 유선 링크 복구 대기)뿐이다.
 > 측정 조건: Jetson(L4T R39, aarch64), 실데이터, 수집 2026-10-20 16:33 KST~, 보드 전력 모드 기본값(측정에 영향 없음).
 > 계획: [spec](../../specs/001-data-collection/spec.md) · [plan](../../specs/001-data-collection/plan.md) · [tasks](../../specs/001-data-collection/tasks.md) ·
 > 코드: [get-Data2/data](https://github.com/get-Data2/data) `src/collector/`
@@ -48,13 +48,13 @@ MQTT 두 원천(ChirpStack LoRaWAN 센서, xflow 냉난방)을 구독해 **공�
 |---|---|---|---|
 | 브로커를 껐다 켜도 **1분 안에** 수집 재개 | 시험 브로커를 10초 껐다 켠 뒤 **6.0초** 만에 첫 저장(자동 시험). 운영 중 실제 MQTT 끊김(keepalive timeout)도 **15초** 만에 재접속 | ✅ | 시험: 보드 내 amqtt, `pytest -m broker`. 운영: 2026-10-20 17:35 실데이터 |
 | 보드를 재부팅해도 **자동으로** 다시 시작 | 부팅 17:28:37 → 수집기 시작 +15초 → 첫 저장 **+28초**. 사용자 로그인(17:29)보다 먼저. 데이터 공백 46초 | ✅ | 2026-10-20 실제 재부팅, `Linger=yes` |
-| 24시간 커버율 **95% 이상**, 빠진 구간은 원인 설명 | 중간 16.3시간: 핵심 항목(co2·온도·습도) 공간별 **최저 98.0%**. 빠진 구간은 모두 원인 단서 있음. **24시간 최종본은 10-21 16:40 이후** | 🟡 중간 통과 | 2026-10-20 16:40 ~ 10-21 09:00 KST, 실데이터, 커버율 = 기대 주기 칸 기준 |
+| 24시간 커버율 **95% 이상**, 빠진 구간은 원인 설명 | **24시간 최종: 핵심 항목(co2·온도·습도) 공간별 최저 98.6%, 95% 미만 0개**. 빠진 구간은 모두 원인 단서 있음. 집중회의실 실내기 온도(0.1%)는 끊김이 아니라 켜졌을 때만 보내는 조건부 항목이라 판정 제외(`periodic_items`, 24시간 중 1번 켜짐) | ✅ | 2026-10-20 16:40 ~ 10-21 16:40 KST(24시간), 실데이터, 커버율 = 기대 주기 칸 기준 |
 
 ## 산출물
 
 | README 산출물 | 위치 | 상태 |
 |---|---|---|
-| 수집 현황 보고(공간·항목별 커버율 표, 결측 구간과 추정 원인) | [deliverables/task1/01-coverage-report-interim.md](../deliverables/task1/01-coverage-report-interim.md) | 🟡 중간본(16.3시간, 핵심 항목 공간별 최저 98.0%). 24시간 최종본은 10-21 16:40 이후 `01-coverage-report.md`로 추가 |
+| 수집 현황 보고(공간·항목별 커버율 표, 결측 구간과 추정 원인) | [deliverables/task1/01-coverage-report.md](../deliverables/task1/01-coverage-report.md)(24시간 최종), 해석이 있는 [중간본](../deliverables/task1/01-coverage-report-interim.md) | ✅ 24시간 최저 98.6% |
 | 메시지 형식 변경 상황 가정과 대응 기록 | [deliverables/task1/02-format-change.md](../deliverables/task1/02-format-change.md) | ✅ 가정 2개(필드 이름 변경, 새 원천), 설정만 수정·코드 0줄 |
 
 산출물이 아닌 부속 기록: [운영 가이드](../ops/collector-ops.md), [장비 현황](../reports/2026-10-21-devices.md), [InfluxDB 적재 보고](../reports/2026-10-21-backfill.md), 심화 결과 [보관 정책](../advanced/task1/01-storage-policy.md)

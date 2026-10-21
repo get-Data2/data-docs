@@ -7,7 +7,7 @@
 
 | 과제 | README 산출물 | 문서 | 상태 |
 |---|---|---|---|
-| 1. 데이터 수집 체계 | 수집 현황 보고(공간·항목별 커버율 표, 결측 구간과 추정 원인) | [task1/01-coverage-report-interim.md](task1/01-coverage-report-interim.md) | 🟡 중간본 16.3시간(최저 98.0%). 24시간 최종본 `task1/01-coverage-report.md`는 10-21 16:40 이후 |
+| 1. 데이터 수집 체계 | 수집 현황 보고(공간·항목별 커버율 표, 결측 구간과 추정 원인) | [task1/01-coverage-report.md](task1/01-coverage-report.md)(24시간 최종) · [중간본(해석 포함)](task1/01-coverage-report-interim.md) | ✅ 24시간 최저 98.6% |
 | | 메시지 형식 변경 상황 가정과 대응 기록 | [task1/02-format-change.md](task1/02-format-change.md) | ✅ |
 | 2. 데이터 이해와 기준선 | 데이터 진단서(정제 규칙, 분할 기준, 패턴 그래프, 일정–CO₂ 반응 분석) | [task2/01-data-diagnosis.md](task2/01-data-diagnosis.md) | ✅ 그래프 3개(`task2/figures/`) |
 | | 기준선 성능표 | [task2/baseline_v1-provisional.md](task2/baseline_v1-provisional.md) | ✅ `analysis baseline`이 생성 |
