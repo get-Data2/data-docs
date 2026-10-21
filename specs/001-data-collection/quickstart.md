@@ -19,14 +19,17 @@
 
 ```bash
 .venv/bin/python -m pytest -m unit                 # 오프라인
-.venv/bin/python -m pytest -m broker               # 시험 브로커: 재시작 후 ≤60초 재수집
-.venv/bin/python -m pytest -m mysql                # 실 DB(test_ 접두사): 스풀 무손실, 멱등 기록
+.venv/bin/python -m pytest -m broker               # 시험 브로커: 재시작 후 ≤60초 재수집, 스풀 무손실, 거부 행 격리
+.venv/bin/python -m pytest -m mysql                # 실 DB(test_ 접두사): 멱등 기록, 현황 보고, 과거 적재
+.venv/bin/python -m pytest -m live                 # 실 브로커 3분(LIVE_SECONDS)
 ```
 
 ## 3. 상시 운영 설치
 
 ```bash
 deploy/install.sh        # 사용자 서비스 등록·시작, linger 시도, 실패 시 cron @reboot 등록
+.venv/bin/python -m collector check   # 서비스·MQTT·MySQL·InfluxDB 연결 점검
+deploy/install-backfill.sh            # (선택) InfluxDB 과거 데이터 적재 타이머 — 사설망 경로가 있어야 함
 systemctl --user status team2-collector
 ```
 

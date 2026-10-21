@@ -19,8 +19,8 @@
 
 | 과제 | 상태 | 요구사항 | 설계 | 작업 |
 |---|---|---|---|---|
-| 1. 데이터 수집 체계 | 🟢 상시 수집 중 | [spec](../specs/001-data-collection/spec.md) | [plan](../specs/001-data-collection/plan.md) · [research](../specs/001-data-collection/research.md) · [data-model](../specs/001-data-collection/data-model.md) · [contracts](../specs/001-data-collection/contracts/) | [tasks](../specs/001-data-collection/tasks.md) 43/49 |
-| 2. 데이터 이해와 기준선 | ⚪ | | | |
+| 1. 데이터 수집 체계 | 🟢 상시 수집 중 | [spec](../specs/001-data-collection/spec.md) | [plan](../specs/001-data-collection/plan.md) · [research](../specs/001-data-collection/research.md) · [data-model](../specs/001-data-collection/data-model.md) · [contracts](../specs/001-data-collection/contracts/) | [tasks](../specs/001-data-collection/tasks.md) 52/56 |
+| 2. 데이터 이해와 기준선 | 🟡 spec 초안 | [spec](../specs/002-data-baseline/spec.md) | | |
 | 3. 60분 예측 | ⚪ | | | |
 | 4. 이상 탐지 | ⚪ | | | |
 | 5. 상태 추정 | ⚪ | | | |
@@ -47,6 +47,8 @@
 |---|---|
 | [collector-ops.md](collector-ops.md): 수집기 운영 가이드·장애 대응·확인 기준 검증 기록 | ✅ |
 | [format-change-case.md](format-change-case.md): 형식 변경 대응 기록(과제 1 산출물) | ✅ |
-| `reports/YYYY-MM-DD-coverage.md`: 수집 현황 보고(과제 1 산출물) | 24시간 수집 후 |
+| [reports/2026-10-21-coverage-interim.md](reports/2026-10-21-coverage-interim.md): 수집 현황 보고(과제 1 산출물) — 중간 16.3시간, 핵심 항목 공간별 최저 98.0% | 🟡 24시간 최종본은 10-21 16:40 이후 |
+| [reports/2026-10-21-backfill.md](reports/2026-10-21-backfill.md): InfluxDB 과거 데이터 적재 — 978만 행, 장치 미특정 75만 행 원인과 계획 | 🟡 유선망 복구 대기 |
+| [storage-policy.md](storage-policy.md): 저장소 1년 추정(8.2GB)과 보관 정책(심화 B) | ✅ |
 
 모든 결과표에는 측정 조건(데이터 기간, 실/합성, 시험 기간, 전력 모드)을 함께 적는다.

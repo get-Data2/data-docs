@@ -144,7 +144,7 @@ description: "과제 1 데이터 수집 체계 작업 목록"
 - [X] T041 [P] [US5] `tests/unit/test_dedup.py`: 같은 장치·`fCnt`·다른 `deduplicationId`/`nsTime` → 두 번째는 duplicate, 2시간 창 밖이면 다시 허용, `fCnt` 리셋(작아짐) 시 허용
 - [X] T042 [US5] `src/collector/service.py`(또는 `src/collector/dedup.py`): 최근 2시간 `(device_id, frame_cnt)` 창, 중복 시 저장 안 하고 `ingest_stats.duplicate` 증가 (research R8)
 - [X] T043 [US5] `src/collector/report.py`: 장치별 중복 건수 표 추가, `report --capacity` — `information_schema.TABLES` 데이터·인덱스 크기, 최근 일 평균 행 수 → 1년 선형 추정, 정책(원본 90일 + 이후 5분 평균·최소·최대 `measurement_5m`) 적용 시 크기 (research R9)
-- [ ] T044 [P] [US5] `docs/storage-policy.md`: 1년 추정 결과와 보관·다운샘플링 정책, `measurement_5m` 생성·이관 SQL(실행은 하지 않음)
+- [X] T044 [P] [US5] `docs/storage-policy.md`: 1년 추정 결과와 보관·다운샘플링 정책, `measurement_5m` 생성·이관 SQL(실행은 하지 않음)
 
 ---
 
@@ -152,9 +152,9 @@ description: "과제 1 데이터 수집 체계 작업 목록"
 
 - [X] T045 [P] `docs/collector-ops.md`: 운영 가이드 — 설치(`deploy/install.sh`), 상태 확인(`systemctl --user status`, `journalctl --user -u team2-collector`, `report --hours 1`), 장애 대응표(브로커·DB·디스크·설정 오류), 설정 반영(`reload`)
 - [ ] T046 24시간 연속 수집 후 `report --hours 24 --md docs/reports/<날짜>-coverage.md` 생성, 아래에 결측 구간별 원인 해석과 조치 작성 (SC-003, SC-004, 헌법 VII)
-- [ ] T047 [P] 수집기 메모리 측정(`systemctl --user show -p MemoryCurrent`, 1시간 간격 3회) → 200MB 이하 확인, `docs/collector-ops.md`에 측정 조건과 함께 기록 (SC-007)
-- [ ] T048 [P] `.github/README.md`·`docs/README.md` 진행 표 갱신, `CLAUDE.md` 진행 상황 체크, 두 저장소 커밋·푸시(`git push`, `tools/docs-git push`)
-- [ ] T049 quickstart.md 절차 전체를 처음부터 따라 해 보고 어긋난 곳 수정
+- [X] T047 [P] 수집기 메모리 측정(`systemctl --user show -p MemoryCurrent`, 1시간 간격 3회) → 200MB 이하 확인, `docs/collector-ops.md`에 측정 조건과 함께 기록 (SC-007)
+- [X] T048 [P] `.github/README.md`·`docs/README.md` 진행 표 갱신, `CLAUDE.md` 진행 상황 체크, 두 저장소 커밋·푸시(`git push`, `tools/docs-git push`)
+- [X] T049 quickstart.md 절차 전체를 처음부터 따라 해 보고 어긋난 곳 수정
 
 ---
 
@@ -169,6 +169,7 @@ description: "과제 1 데이터 수집 체계 작업 목록"
 - [X] T052 [US6] `src/collector/backfill.py`: (location, point)→장치 추론표, 행 변환(공간 매핑·별칭·제외 장치·숫자 검사), 1일 구간 적재, 진행 파일로 재개, 끝 시각=수집기 첫 수신
 - [X] T053 [US6] `src/collector/store.py`: `device_seen` 종류 — 있는 장치는 first_seen/last_seen만 넓히고 공간은 그대로
 - [X] T054 [P] [US6] `tests/unit/test_backfill.py`(행 변환·장치 추론), `tests/integration/test_backfill_db.py`(mysql: 멱등·device_seen)
+- [ ] T056 [US6] 2025-08-13~09-03 `device_id` 없는 행 75만 건 복원: InfluxDB에서 (location, point) 조합 조사 → `backfill.infer_table` 보강(항목으로 기종 좁히기 등) → 진행 파일에서 해당 날짜 지우고 재적재 → `docs/reports/*-backfill.md` 갱신
 - [ ] T055 [US6] 전체 적재 실행(systemd-run 사용자 유닛, 로그 var/backfill.log), 결과를 `docs/reports/<날짜>-backfill.md`에 기록(건수 대조, 건너뛴 행과 사유)
 
 ---

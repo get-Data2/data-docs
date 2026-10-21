@@ -11,6 +11,68 @@ MQTT 브로커 ──구독(QoS1)──► 해석(config/collector.yaml) ──�
                                └─ 매분 ingest_stats, 사건 collector_event
 ```
 
+## 코드 구성 (코드 저장소 `get-Data2/data`)
+
+```text
+src/collector/
+├── __main__.py   명령줄: run · check · check-config · init-db · report · replay · backfill
+├── config.py     설정(config/collector.yaml) 읽기·검증, 공간 매핑(장치 지정 → 별칭 → unmapped), 항목 별칭, 기대 주기
+├── pathexpr.py   설정의 경로 표현식 해석기(a.b, a[*].b, min(), topic[n], values.*, split())
+├── timeutil.py   시각 해석(ISO·epoch ms/s) — 저장 UTC, 표시 KST
+├── parser.py     MQTT 메시지 → 측정값 행. 기준 시각 결정(nsTime 우선, 허용 범위 밖이면 수신 시각)
+├── dedup.py      (장치, fCnt) 2시간 창 — ChirpStack 이중 발행 걸러내기
+├── spool.py      SQLite 스풀(var/spool.db) — DB에 쓰기 전에 보드에 먼저 남김(무손실)
+├── store.py      MySQL 연결·DDL(schema.sql)·일괄 기록(멱등)
+├── service.py    상시 수집기: MQTT 구독(재접속·무수신 감시·client_id 충돌 감지) + 기록 스레드(백오프·거부 행 격리)
+├── report.py     현황 보고: 커버율·빠진 구간·원인 단서·관측 주기
+├── capacity.py   저장소 크기·1년 추정
+├── replay.py     저장된 메시지 파일을 해석만 해 보기(형식 변경 대응 확인)
+├── influx.py     InfluxDB 읽기 전용 Flux 클라이언트
+├── backfill.py   InfluxDB 과거 데이터 → MySQL 적재(구간별 재개·멱등)
+└── check.py      연결 점검(서비스·MQTT·MySQL·InfluxDB)
+config/collector.yaml   원천 규칙·공간 매핑·항목 별칭·장치별 주기 — 형식 변경·센서 추가는 여기만 고친다
+deploy/                 team2-collector.service, install.sh, run_forever.sh(cron 대체), team2-backfill.{service,timer}, install-backfill.sh
+tests/                  unit(오프라인) · broker(보드 안 amqtt) · mysql(test_ 테이블) · live(실 브로커)
+```
+
+흐름은 이렇다. 메시지가 `service._on_message`로 들어오면 `parser.parse`가 측정값으로 풀고, `dedup`으로 중복을 거른 뒤
+`spool.put_many`로 보드에 먼저 남긴다. 그다음 기록 스레드가 `store.write_batch`로 MySQL에 옮기고, 성공한 만큼 스풀에서 지운다(`spool.ack`).
+
+## 연결 확인
+
+**한 번에 점검**:
+
+```bash
+.venv/bin/python -m collector check            # 서비스·MQTT(10초 수신)·MySQL·InfluxDB
+.venv/bin/python -m collector check --seconds 30 --skip-influx
+```
+
+```text
+| 대상 | 결과 | 내용 |
+| 수집 서비스 | ✅ | active, 재시작 1회, 메모리 24MB |
+| MQTT 브로커 | ✅ | 접속 0.1초, 15초 동안 무시 토픽 3건, chirpstack 1건 |
+| MySQL | ✅ | MySQL 8.0.41, 최근 5분 저장 352건, 마지막 저장 7초 전 |
+| InfluxDB(과거 데이터) | ❌ | 접속 실패: URLError (사설망 — 유선 랜 경로 확인) |
+```
+
+- MQTT 점검은 **일회용 client_id**(`team2-check-xxxxxx`)로 접속한다. 운영 수집기 client_id를 쓰면 서로 밀어낸다.
+- InfluxDB는 과거 데이터용이라 실패해도 종료 코드는 0이다. 수집 서비스·MQTT·MySQL 중 하나라도 실패하면 3이다.
+- 비밀 값(주소·계정·토큰)은 출력하지 않는다.
+
+**하나씩 볼 때**:
+
+| 대상 | 명령 | 정상 |
+|---|---|---|
+| MQTT 로그인만 | `.venv/bin/python tools/mqtt_ping.py .env` | `MQTT: 접속 성공` |
+| 수집기 MQTT 상태 | `journalctl --user -u team2-collector -n 20 \| grep MQTT` | 마지막 줄이 `MQTT 접속, 구독 4개` |
+| 수집기 최근 사건 | `report --hours 1`의 ④ 원인 단서, 또는 `SELECT kind, ts FROM collector_event ORDER BY id DESC LIMIT 10` | `mqtt_disconnected` 뒤에 `mqtt_connected` |
+| MySQL 저장 | `SELECT MAX(received_at) FROM measurement` | 1분 이내 |
+| InfluxDB 경로 | `ip route \| grep '^10\.'` | 유선 랜(`enP8p1s0`) 경로가 보여야 함. 없으면 사설망 InfluxDB에 닿지 않는다 |
+| InfluxDB 응답 | `check` 결과의 InfluxDB 행 | `pass`와 최근 값 시각 |
+| 과거 적재 진행 | `systemctl --user list-timers team2-backfill.timer`, `journalctl --user -u team2-backfill -n 5` | 완료되면 `var/backfill_done` 생성 |
+
+## 서비스 설정
+
 | 항목 | 값 |
 |---|---|
 | 서비스 | systemd **사용자** 서비스 `team2-collector.service` (`~/.config/systemd/user/`) |
@@ -56,6 +118,7 @@ journalctl --user -u team2-collector -n 50 --no-pager
 | `bad_row` 사건 | DB가 거부한 행(형식 이상) | 해당 행만 버리고 나머지는 기록. 로그에서 장치·항목 확인 후 설정 점검 |
 | `config_rejected` 사건 | 설정 검증 실패 | 기존 설정으로 계속 동작. `python -m collector check-config`로 오류 위치 확인 |
 | `stale_reconnect` 사건 | 접속은 됐는데 5분 무수신 | 조용히 죽은 연결로 보고 자동 재접속 |
+| `reload` 뒤에 `stop`·`start` 사건(재시작됨) | (수정됨) 예전 서비스 파일은 HUP을 `flock`에 보내 프로세스가 죽었다 | 2026-10-21에 `ExecReload`를 자식 프로세스로 보내게 고쳤다. `deploy/install.sh`로 서비스 파일을 다시 설치 |
 | `mqtt_flapping` 사건, 로그에 1초 간격 접속·끊김(`Unspecified error`) | 브로커에 **같은 client_id**를 쓰는 다른 클라이언트 | `config/collector.yaml`의 `mqtt.client_id`를 고유하게 바꾸고 재시작(2026-10-20 설치 직후 실제 발생, `team2-collector` → `team2-jetson-collector-a1`로 해결) |
 
 ## 확인 기준 검증 기록
@@ -65,8 +128,10 @@ journalctl --user -u team2-collector -n 50 --no-pager
 | 브로커 재시작 후 1분 안 재수집 | `pytest -m broker tests/integration/test_broker_restart.py` (보드 안 amqtt 브로커를 10초 정지 후 재시작) | **6.0초** 만에 첫 저장 | 2026-10-20, Jetson, 시험 브로커, 재접속 상한 30초 |
 | DB 장애 무손실 | `test_spool_lossless.py` (DB 실패 주입 중 메시지 600건) | 손실 0, `db_down`/`db_up` 기록 | 2026-10-20, 가짜 기록기 |
 | 실 브로커 수집 | `pytest -m live` (3분) | 장치 18대·항목 30종, 미지정 공간 0, \|ts−수신\| 최대 69.7초 | 2026-10-20 16:29~16:32 KST, 실데이터 |
-| 보드 재부팅 후 자동 시작 | 아래 절차 | 시험 예정 | |
-| 24시간 커버율 95% | `report --hours 24` | 수집 24시간 뒤 | |
+| 실제 장애 자동 복구 | 운영 중 사건 기록 | 2026-10-20 17:34 DB 기록 실패와 MQTT keepalive timeout이 함께 발생(InfluxDB 유선망이 끊긴 시각과 겹침). **DB 62초, MQTT 15초 만에 사람 손 없이 복구**, 스풀 덕분에 손실 0 | 실데이터, 운영 서비스 |
+| 보드 재부팅 후 자동 시작 | 아래 절차 | 시험 예정(사용자 일정) | `Linger=yes` 확인됨 |
+| 24시간 커버율 95% | `report` | **중간 보고 16.3시간: 핵심 항목 공간별 최저 98.0%** ([보고](reports/2026-10-21-coverage-interim.md)). 24시간 최종본은 2026-10-21 16:33 이후 | 2026-10-20 16:40 ~ 10-21 09:00 KST, 실데이터 |
+| 메모리 200MB 이하 | `systemctl --user show -p MemoryCurrent` | 20.0MB(10-20 16:34) → 21.8MB(16:41) → 25.5MB(10-21 09:04) → 24MB(10-21 오전 `check` 실행 시). 16시간 동안 늘지 않음 | 운영 서비스, `MemoryMax=256M` |
 
 ### 재부팅 시험 절차
 
