@@ -6,7 +6,9 @@
 
 ## R1. 분석 데이터를 어디서 어떻게 읽나
 
-- **Decision**: MySQL에서 **월 단위로 한 번** 읽어 `var/cache/raw/YYYY-MM.parquet` 사본을 만든다. 이후 분석은 사본만 쓴다.
+- **Decision**: MySQL에서 꺼낸 데이터를 **달별 파일로 나눠** `var/cache/raw/YYYY-MM.parquet` 사본을 만든다.
+  이후 분석은 사본만 쓴다.
+  - "달별"은 **저장 단위**일 뿐이다. 분석·학습은 파일을 모두 합쳐 분할 기간 전체(학습 약 7~8개월)를 쓴다.
   - 읽는 항목: co2·temperature·humidity·battery
   - 읽는 열: ts, space_id, device_id, item, value, source
   - 닫힌 달은 다시 읽지 않는다. 진행 중인 달과 새로 적재된 달만 다시 읽는다(`--refresh`). 사본마다 행 수와 해시를 `manifest.json`에 남긴다.
