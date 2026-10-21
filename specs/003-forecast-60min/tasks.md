@@ -26,15 +26,15 @@ description: "과제 3 60분 예측 작업 목록"
 
 ## Phase 1: Setup
 
-- [ ] T001 `pyproject.toml`에 extra `forecast = ["torch>=2.14"]`를 추가하고, 패키지 탐색에 `forecast`가 포함되는지 확인한다.
+- [X] T001 `pyproject.toml`에 extra `forecast = ["torch>=2.14"]`를 추가하고, 패키지 탐색에 `forecast`가 포함되는지 확인한다.
   pytest 마커 `forecast`(실데이터 학습 시험, 기본 제외)를 등록한다. torch는 이미 cu130 index로 설치돼 있으므로 `-e '.[test,analysis,forecast]'` 설치가 torch를 바꾸지 않는지 확인한다
-- [ ] T002 [P] `tools/forecast` 실행 래퍼를 작성한다.
+- [X] T002 [P] `tools/forecast` 실행 래퍼를 작성한다.
   - 프로젝트 폴더로 이동해 `.venv/bin/python -m forecast "$@"`를 실행한다.
   - `id -nG`(현재 프로세스)에 `video`가 없고 `id -nG "$USER"`(계정)에는 있으면 `sg video -c "sg render -c '<자기 자신 + 인자>'"`로 다시 실행한다. 인자는 따옴표를 안전하게 처리한다.
   - `CUBLAS_WORKSPACE_CONFIG=:4096:8`을 내보낸다.
   - `~/.local/bin/forecast`에 링크한다
-- [ ] T003 [P] `config/forecast.yaml`을 contracts/config.md 예시 그대로 작성한다
-- [ ] T004 [P] `tests/forecast/__init__.py`, `tests/forecast/conftest.py`를 작성한다. 고정물은 다음과 같다.
+- [X] T003 [P] `config/forecast.yaml`을 contracts/config.md 예시 그대로 작성한다
+- [X] T004 [P] `tests/forecast/__init__.py`, `tests/forecast/conftest.py`를 작성한다. 고정물은 다음과 같다.
   - `fcfg`: 예측 설정. 작은 크기로 덮어쓰기(hidden 8, max_epochs 2, seeds [0])
   - `synth_series(days, spaces, gaps)`: 과제 2 `space_5min` 형식 합성 시계열. 평일 09:00 상승, 점심 하락, 회의실은 10분 주기 관측
   - `synth_eval_points`: 합성 시계열에서 과제 2 `build`와 같은 규칙으로 만든 평가 시점
@@ -45,68 +45,68 @@ description: "과제 3 60분 예측 작업 목록"
 
 **⚠️ 스토리 작업 전 필수**
 
-- [ ] T005 `src/forecast/config.py`
+- [X] T005 `src/forecast/config.py`
   - `config/forecast.yaml`을 로드·검증한다(contracts/config.md 검증 규칙).
   - `analysis.config.load_analysis_config`로 분할·일과표·사용 시간대를 읽는다.
   - `ExperimentConfig`(data-model "실험 설정")를 만들고, 설정 해시(seeds·inputs 제외, 정렬 JSON sha256 앞 12자리)를 계산한다.
   - `stage_candidates(stage, chosen)`: 앞 단계 선택을 누적 적용한 후보 목록. B1은 곱집합
-- [ ] T006 [P] `src/forecast/env.py`
+- [X] T006 [P] `src/forecast/env.py`
   - `pick_device(pref)`: auto는 cuda 가능 시 cuda
   - `set_determinism(seed)`: random·numpy·torch 씨앗, TF32 끔, cudnn deterministic, `use_deterministic_algorithms(True, warn_only=True)`
   - `env_info()`: torch·CUDA 버전, GPU 이름, 결정성 설정
   - `peak_memory()`: 프로세스 RSS 최대값, `torch.cuda.max_memory_allocated`
-- [ ] T007 `src/forecast/data.py`
+- [X] T007 `src/forecast/data.py`
   - `load_inputs(cfg)`: 과제 2 파일을 읽고, 평가 시점 sha256을 확인한다(불일치 시 `InputHashError`).
   - `build_space_arrays(series, norm, spaces, t_start, t_end)`: data-model "공간 배열"을 만든다.
     - 관측(`filled=False`)만 쓰고, 빈 칸은 앞으로만 채운다.
     - `x_obs`, `x_age`(상한 `age_cap_h`)를 만들고, `y_raw`에는 관측만 둔다.
   - `split_t0(arr, split, kind, min_input_obs, lookback)`: data-model "표본 선정 규칙"
   - `pooled_norm(norm, spaces)`: 처음 보는 공간용 합친 통계(칸 수 가중)
-- [ ] T008 `src/forecast/features.py`
+- [X] T008 `src/forecast/features.py`
   - `time_features(t)`: 하루 시각·요일 sin·cos, 주말·공휴일(`holidays.KR`)
   - `schedule_features(t, space, acfg)`: `analysis.schedule`의 일과표 행으로 상태 4종 원-핫과 다음 변화까지 남은 시간(시간, 상한 3)
   - `booking_features(t, space, bookings)`: 예약 중 여부, 시작·끝까지 남은 시간
   - `estimate_bookings(series, space, rule)`: research R10 규칙으로 추정 예약 구간 표(source=`estimated`)
   - `covariates(arr_t, space, features, acfg, bookings)`: 묶음 순서가 고정된 특징 행렬과 열 이름 목록
-- [ ] T009 `src/forecast/dataset.py`
+- [X] T009 `src/forecast/dataset.py`
   - `WindowDataset(arrays, index, lookback_bins, horizon_bins, features, target)`: 인덱스로 잘라 `past`, `future`, `space`, `target`, `target_mask`, `current`를 낸다(data-model "표본").
   - 변화량 목표는 (y(t0+h) − y(t0)) / σ, 값 목표는 (y − μ) / σ다. 정답이 관측이 아닌 칸은 mask 0, target 0으로 둔다.
   - `to_original(pred, current, norm, target)`: 원 단위로 복원한다
-- [ ] T010 `src/forecast/models.py`
+- [X] T010 `src/forecast/models.py`
   - `RNNEncoder(kind=gru|lstm)`
   - `TCNEncoder`: 인과적 팽창 합성곱, 잔차 연결. 수용 영역이 과거 길이 이상이 되도록 층 수를 자동으로 정한다
   - `Head`: [인코더 출력, 공간, 미래 펼침] → MLP → 12×2
   - `ForecastModel(direct)`
   - `RecursiveForecaster`: 한 칸 모델을 12번 반복한다. 예측을 다음 입력으로 넣을 때 관측 표시 0, 경과 시간 증가, 미래 특징은 해당 칸 값
   - `count_params()`
-- [ ] T011 `src/forecast/train.py`
+- [X] T011 `src/forecast/train.py`
   - `masked_l1(pred, target, mask)`
   - `train_one(exp, seed, arrays, device)`: AdamW, 배치 512, 학습 표본만 섞는다. 검증 손실로 ReduceLROnPlateau(patience_lr)와 조기 종료(patience_stop)를 하고, 최고 가중치를 복원한다. NaN이면 `failed`
   - `predict(model, dataset)`: 원 단위 예측
   - 검증 MAE: 공간 × 항목 × 지평(5·15·30·60)과 정규화 평균(선택 지표 `val_norm_mae`)
   - 출력: `run.json`(data-model "실행 기록"), `model.pt`, `val_pred.parquet`를 `var/forecast/runs/<name>/<hash>-s<seed>/`에 쓴다
-- [ ] T012 `src/forecast/__main__.py` 뼈대
+- [X] T012 `src/forecast/__main__.py` 뼈대 (배열은 캐시하지 않고 매번 만든다 — 약 11초라 캐시 이득이 작다)
   - 하위 명령 `check · build · train · run · select · test · report · info`(contracts/cli.md)와 공통 옵션 `--config`, `--device`
   - `check`: 장치·입력 해시·설정 결과표
   - `build`: 배열·추정 예약을 `var/forecast/arrays.npz`, `booking_estimated.parquet`에 캐시하고 표본 수 표를 낸다
-- [ ] T013 [P] `tests/forecast/test_data.py` (unit)
+- [X] T013 [P] `tests/forecast/test_data.py` (unit)
   - **인과성**: 칸 i 이후 값을 바꿔도 `x_val[:i+1]`, `x_obs`, `x_age`가 같다
   - 보간 칸(`filled=True`)은 입력·정답에 쓰이지 않는다
   - 10분 주기 공간의 관측 표시가 번갈아 나온다
   - 표본 선정이 분할 경계(t0+60분 포함)를 지킨다
   - 입력 관측 비율 미만 표본은 test에서 `unpredictable`이 된다
   - `pooled_norm`이 뺀 공간 통계를 쓰지 않는다
-- [ ] T014 [P] `tests/forecast/test_features.py` (unit)
+- [X] T014 [P] `tests/forecast/test_features.py` (unit)
   - 공휴일(예: 2026-05-05)은 비수업일이다
   - 09:00 직전 칸의 "다음 변화까지 남은 시간"이 맞다
   - 미래 12칸 특징이 t0 이후 센서값에 의존하지 않는다(센서값을 바꿔도 같음)
   - 추정 예약: 합성 회의 1건(+600ppm 상승 → 하락)에서 시작·끝이 15분 단위로 맞게 나온다
-- [ ] T015 [P] `tests/forecast/test_models.py` (unit)
+- [X] T015 [P] `tests/forecast/test_models.py` (unit)
   - GRU·LSTM·TCN × direct·recursive 출력 형상이 (배치, 12, 2)다
   - TCN 수용 영역이 과거 길이 이상이다
   - 변화량 목표에서 출력 0이 원 단위로 현재값 유지와 같다
   - 마스크 손실은 마스크 0 칸의 값과 무관하다
-- [ ] T016 `forecast check`, `forecast build`를 실데이터로 실행한다. 공간별 학습·검증·시험 표본 수, 예측 불가 수, 추정 예약 건수, GPU 인식을 기록한다(T040 점검 문서에 반영)
+- [X] T016 `forecast check`, `forecast build`를 실데이터로 실행한다. 공간별 학습·검증·시험 표본 수, 예측 불가 수, 추정 예약 건수, GPU 인식을 기록한다(T040 점검 문서에 반영)
 
 **Checkpoint**: 실데이터 배열·표본이 만들어지고 합성 시험이 통과한다
 
@@ -118,15 +118,15 @@ description: "과제 3 60분 예측 작업 목록"
 
 **Independent Test**: 시험 기간 값을 바꾼 데이터로 학습·선택을 다시 해도 결과가 같다.
 
-- [ ] T017 [US2] `src/forecast/experiments.py`의 선택 고정 부분
+- [X] T017 [US2] `src/forecast/experiments.py`의 선택 고정 부분
   - `freeze_selection(stages, final, test_set)`: `selection.json`(data-model)을 쓰고 sha256을 기록한다
   - `require_selection()`: 파일이 없거나, 기록된 실행 해시와 맞지 않으면 `SelectionMissingError`
   - 시험 평가 함수는 이 검사를 반드시 거친다
-- [ ] T018 [P] [US2] `tests/forecast/test_leakage.py` (unit, 합성 데이터)
+- [X] T018 [P] [US2] `tests/forecast/test_leakage.py` (unit, 합성 데이터)
   - 같은 씨앗으로 두 번 학습한다. 두 번째는 시험 기간의 입력·정답 값을 ×10, −999로 바꾼다
   - 학습 손실 기록, 검증 손실 기록, 최고 에폭, 가중치(텐서 동일), 단계 선택 결과가 같아야 한다
-- [ ] T019 [P] [US2] `tests/forecast/test_selection_gate.py` (unit): `selection.json` 없이, 또는 해시가 변조된 상태로 시험 평가를 부르면 거부된다. 고정 시각이 시험 평가 시각보다 앞선다
-- [ ] T020 [US2] 정규화 확인 시험: 학습에 쓰는 통계가 과제 2 `norm_v1-provisional.json`과 같다(실데이터, 마커 `forecast`) — `tests/forecast/test_norm_real.py`
+- [X] T019 [P] [US2] `tests/forecast/test_selection_gate.py` (unit): `selection.json` 없이, 또는 해시가 변조된 상태로 시험 평가를 부르면 거부된다. 고정 시각이 시험 평가 시각보다 앞선다
+- [X] T020 [US2] 정규화 확인 시험: 학습에 쓰는 통계가 과제 2 `norm_v1-provisional.json`과 같다(실데이터, 마커 `forecast`) — `tests/forecast/test_norm_real.py`
 
 **Checkpoint**: 누수 시험이 통과한 뒤에만 실험을 시작한다
 
@@ -138,17 +138,17 @@ description: "과제 3 60분 예측 작업 목록"
 
 **Independent Test**: 단계마다 검증 MAE 표(평균 ± 표준편차)와 고른 값·이유가 나온다.
 
-- [ ] T021 [US3] `src/forecast/experiments.py`의 실행부
+- [X] T021 [US3] `src/forecast/experiments.py`의 실행부
   - `run_stage(stage, chosen)`: 후보 × 씨앗을 학습하고, `run.json`이 `done`이면 건너뛴다
   - `pick(stage)`: `val_norm_mae` 평균 최소. 단, 1표준편차 안이면 단순한 쪽(tie_rule)
   - `stage_table(stage)`: 후보별 공간 × 항목 × 지평 검증 MAE
   - `run all` 순서는 D0 → D1 → D2 → D3 → D4 → B1 → S → A2 → A3이다. 실패한 실행은 기록하고 계속한다(`--retry-failed`)
-- [ ] T022 [P] [US3] `tests/forecast/test_experiments.py` (unit)
+- [X] T022 [P] [US3] `tests/forecast/test_experiments.py` (unit)
   - 재개: `run.json`이 있으면 다시 학습하지 않는다
   - 단계 누적: D2 후보가 D1 선택값을 쓴다
   - tie_rule이 동률 근처에서 단순한 쪽을 고른다
   - 실패 실행이 다음 실행을 막지 않는다
-- [ ] T023 [US3] `forecast train D0 --seed 0`을 실데이터로 실행한다. 실제 학습 시간, 에폭, 최대 메모리(목표 ≤ 2GB), 검증 MAE를 확인한다.
+- [X] T023 [US3] `forecast train D0 --seed 0`을 실데이터로 실행한다. 실제 학습 시간, 에폭, 최대 메모리(목표 ≤ 2GB), 검증 MAE를 확인한다.
   - 시간 추정(research R14)을 실측으로 고친다
   - 문제가 있으면(메모리·발산·시간) 크기·배치를 설정에서 조정하고 그 이유를 research에 기록한다
 - [ ] T024 [US3] 백그라운드에서 `forecast run D0 D1 D2 D3 D4` 실행한다. 끝나면 단계별 표를 확인한다
@@ -179,7 +179,7 @@ description: "과제 3 60분 예측 작업 목록"
   - `join_baseline()`: 기준선 parquet과 키로 결합한다(행 수 일치를 검사하고, 다르면 오류)
   - `comparison_table(subset=all|usage)`: 공간 × 항목 × 지평, 기준선 3종 + 모델(씨앗 평균 ± 표준편차), 개선율. `min_points` 미만은 "평가 불가"
   - `criteria_table()`: CO₂ 60분 30%, 온도 60분 개선, 누수 시험 결과 링크
-- [ ] T029 [P] [US1] `tests/forecast/test_evaluate.py` (unit): 합성 평가 시점에서 예측 행 키 집합 = 평가 시점 키 집합. 예측 불가 대체 표시, 개선율 계산, `min_points` 처리를 확인한다
+- [X] T029 [P] [US1] `tests/forecast/test_evaluate.py` (unit): 합성 평가 시점에서 예측 행 키 집합 = 평가 시점 키 집합. 예측 불가 대체 표시, 개선율 계산, `min_points` 처리를 확인한다
 - [ ] T030 [US1] `forecast test` 구현과 실행. 모델 묶음 `var/forecast/bundle/`(data-model)을 저장하고, `run.json`에 `test_evaluated_at`을 기록한다
 - [ ] T031 [US1] 확인 기준 판정 확인. 못 미치는 항목이 있으면 원인을 분석한다(사용 시간대 오차 구성, 공간 특성). **시험을 본 뒤 설정을 바꾸지 않는다** — 바꾸면 새 선택·새 시험으로 기록하고 그 사실을 문서에 적는다
 
