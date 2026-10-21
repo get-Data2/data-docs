@@ -39,13 +39,13 @@ mqtt:
   target: local                # team | local — 팀 브로커 발행 권한 확인 전에는 local
   topic_prefix: team2/inference/v1
   qos: 1
-  local: {host: 127.0.0.1, port: 1884}      # 보드 로컬 amqtt(다른 팀은 보드 주소로 구독)
+  local: {host: 127.0.0.1, port: 11883}     # 대안 B: 보드 로컬 amqtt(다른 팀은 보드 주소로 구독). 흔한 1883/1884와 겹치지 않게
   # team: .env의 MQTT_* 사용(별도 client_id)
   client_id: team2-jetson-inference-a1
 
 api:
   bind: 0.0.0.0
-  port: 8080                   # 사용자 확인 필요
+  port: 18080                  # 2026-10-21 결정: 흔한 8080을 피함(보드를 다른 계정과 공유). 시작 시 사용 중이면 알림
   max_minutes: 60
 
 records:
