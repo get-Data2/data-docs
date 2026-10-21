@@ -1,6 +1,6 @@
 # 수집기 운영 가이드 (과제 1)
 
-MQTT로 들어오는 센서·냉난방 메시지를 MySQL `cf_u36_d3`에 쌓는 상시 서비스 `team2-collector`의 운영 방법이다.
+MQTT로 들어오는 센서·냉난방 메시지를 MySQL `cf_u36_d3`에 쌓는 상시 서비스 `wonil-collector`의 운영 방법이다.
 설계 근거는 data-docs의 [plan](../specs/001-data-collection/plan.md)과 [research](../specs/001-data-collection/research.md)에 있다.
 
 ## 구성
@@ -31,12 +31,25 @@ src/collector/
 ├── backfill.py   InfluxDB 과거 데이터 → MySQL 적재(구간별 재개·멱등)
 └── check.py      연결 점검(서비스·MQTT·MySQL·InfluxDB)
 config/collector.yaml   원천 규칙·공간 매핑·항목 별칭·장치별 주기 — 형식 변경·센서 추가는 여기만 고친다
-deploy/                 team2-collector.service, install.sh, run_forever.sh(cron 대체), team2-backfill.{service,timer}, install-backfill.sh
+deploy/                 wonil-collector.service, install.sh, run_forever.sh(cron 대체), team2-backfill.{service,timer}, install-backfill.sh
 tests/                  unit(오프라인) · broker(보드 안 amqtt) · mysql(test_ 테이블) · live(실 브로커)
 ```
 
 흐름은 이렇다. 메시지가 `service._on_message`로 들어오면 `parser.parse`가 측정값으로 풀고, `dedup`으로 중복을 거른 뒤
 `spool.put_many`로 보드에 먼저 남긴다. 그다음 기록 스레드가 `store.write_batch`로 MySQL에 옮기고, 성공한 만큼 스풀에서 지운다(`spool.ack`).
+
+## 명령 실행 위치
+
+`.venv/bin/python -m collector …`는 **프로젝트 폴더(`~/Desktop/project`)에서** 입력한다. `.venv`, `config/`, `.env`가 그 폴더 기준 상대 경로이기 때문이다.
+어디서든 쓰려면 `collector` 명령을 쓴다. `tools/collector`가 프로젝트 폴더로 이동해 `.venv` 파이썬으로 실행하며, `~/.local/bin/collector`에 링크돼 있다.
+
+```bash
+cd ~/Desktop/project && .venv/bin/python -m collector check     # 프로젝트 폴더에서
+collector check                                                  # 어디서든(같은 동작)
+collector report --hours 1
+```
+
+Claude Code 대화창에서는 앞에 `!`를 붙여 실행한다(예: `! collector check`).
 
 ## 연결 확인
 
@@ -64,7 +77,7 @@ tests/                  unit(오프라인) · broker(보드 안 amqtt) · mysql(
 | 대상 | 명령 | 정상 |
 |---|---|---|
 | MQTT 로그인만 | `.venv/bin/python tools/mqtt_ping.py .env` | `MQTT: 접속 성공` |
-| 수집기 MQTT 상태 | `journalctl --user -u team2-collector -n 20 \| grep MQTT` | 마지막 줄이 `MQTT 접속, 구독 4개` |
+| 수집기 MQTT 상태 | `journalctl --user -u wonil-collector -n 20 \| grep MQTT` | 마지막 줄이 `MQTT 접속, 구독 4개` |
 | 수집기 최근 사건 | `report --hours 1`의 ④ 원인 단서, 또는 `SELECT kind, ts FROM collector_event ORDER BY id DESC LIMIT 10` | `mqtt_disconnected` 뒤에 `mqtt_connected` |
 | MySQL 저장 | `SELECT MAX(received_at) FROM measurement` | 1분 이내 |
 | InfluxDB 경로 | `ip route \| grep '^10\.'` | 유선 랜(`enP8p1s0`) 경로가 보여야 함. 없으면 사설망 InfluxDB에 닿지 않는다 |
@@ -75,26 +88,26 @@ tests/                  unit(오프라인) · broker(보드 안 amqtt) · mysql(
 
 | 항목 | 값 |
 |---|---|
-| 서비스 | systemd **사용자** 서비스 `team2-collector.service` (`~/.config/systemd/user/`) |
+| 서비스 | systemd **사용자** 서비스 `wonil-collector.service` (`~/.config/systemd/user/`) |
 | 부팅 시 자동 시작 | `loginctl enable-linger` → `Linger=yes` (2026-10-20 설치 시 sudo 없이 적용됨) |
 | 중복 실행 방지 | `flock var/collector.lock` |
 | 재시작 | 비정상 종료 시 5초 뒤 자동(`Restart=always`) |
 | 메모리 상한 | `MemoryMax=256M` |
-| 로그 | `journalctl --user -u team2-collector` |
+| 로그 | `journalctl --user -u wonil-collector` |
 
 ## 설치·갱신
 
 ```bash
 deploy/install.sh                    # 설정 검증 → 테이블 생성 → 서비스 등록·시작 → linger(안 되면 cron @reboot)
-systemctl --user restart team2-collector   # 코드를 바꾼 뒤
-systemctl --user reload team2-collector    # 설정(config/collector.yaml)만 바꾼 뒤 — 재시작 없이 반영
+systemctl --user restart wonil-collector   # 코드를 바꾼 뒤
+systemctl --user reload wonil-collector    # 설정(config/collector.yaml)만 바꾼 뒤 — 재시작 없이 반영
 ```
 
 ## 상태 확인
 
 ```bash
-systemctl --user status team2-collector
-journalctl --user -u team2-collector -n 50 --no-pager
+systemctl --user status wonil-collector
+journalctl --user -u wonil-collector -n 50 --no-pager
 .venv/bin/python -m collector report --hours 1          # 최근 1시간 현황
 .venv/bin/python -m collector report --hours 24 --md docs/reports/$(date +%F)-coverage.md
 ```
@@ -135,7 +148,7 @@ journalctl --user -u team2-collector -n 50 --no-pager
 
 ### 재부팅 시험 절차
 
-1. 재부팅 전에 `uptime -s`와 `systemctl --user is-enabled team2-collector`(enabled)를 확인한다.
+1. 재부팅 전에 `uptime -s`와 `systemctl --user is-enabled wonil-collector`(enabled)를 확인한다.
 2. 재부팅한 뒤 **로그인하지 않고** 3분을 기다린다.
 3. 다른 PC에서 SSH로 접속해 아래를 확인하고 결과를 위 표에 적는다.
    - `uptime -s`(부팅 시각)

@@ -1,7 +1,7 @@
 # Contract: 수집기 설정 파일 `config/collector.yaml`
 
 메시지 형식 변경·센서 추가·공간 변경은 **이 파일만** 고쳐 대응한다(FR-019~022). 접속 정보는 넣지 않는다(`.env`).
-반영: 수집기 재시작 또는 `systemctl --user reload team2-collector`(SIGHUP). 검증에 실패하면 시작을 거부하고,
+반영: 수집기 재시작 또는 `systemctl --user reload wonil-collector`(SIGHUP). 검증에 실패하면 시작을 거부하고,
 가동 중 다시 읽기라면 기존 설정을 유지하며 `config_rejected` 사건을 남긴다.
 
 ## 최상위 키

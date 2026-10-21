@@ -25,7 +25,7 @@ MQTT 두 원천(ChirpStack LoRaWAN 센서, xflow 냉난방)을 구독해 **공�
 
 | # | README 요구 | 해결 방법 | 근거·위치 |
 |---|---|---|---|
-| 1 | MQTT 센서 메시지를 **공간·항목·시각별로 저장**하는 수집기를 상시 가동 | `team2-collector`(systemd 사용자 서비스)가 구독 → 해석 → 보드 내 스풀 → MySQL `measurement` 일괄 기록. 기준 시각은 네트워크 서버 시각(`nsTime`). 원천 시각과 수신 시각도 함께 저장 | [data-model](../../specs/001-data-collection/data-model.md), [research R1·R2](../../specs/001-data-collection/research.md) |
+| 1 | MQTT 센서 메시지를 **공간·항목·시각별로 저장**하는 수집기를 상시 가동 | `wonil-collector`(systemd 사용자 서비스)가 구독 → 해석 → 보드 내 스풀 → MySQL `measurement` 일괄 기록. 기준 시각은 네트워크 서버 시각(`nsTime`). 원천 시각과 수신 시각도 함께 저장 | [data-model](../../specs/001-data-collection/data-model.md), [research R1·R2](../../specs/001-data-collection/research.md) |
 | 2 | 형식 변경·새 센서에 **설정만 바꿔** 대응 | `config/collector.yaml`의 원천 규칙(경로 표현식), 공간 매핑(장치 지정 → 별칭 → unmapped), 항목 별칭, 장치별 주기. 반영은 `reload`(재시작 없음) | [형식 변경 대응 기록](../format-change-case.md), [설정 형식](../../specs/001-data-collection/contracts/config.md) |
 | 3 | 브로커 재시작·네트워크 끊김·재부팅 뒤 **사람 손 없이 재수집** | 재접속(최대 30초 간격), 구독 확인 뒤 접속 판정, 5분 무수신 시 강제 재접속, client_id 충돌 감지, DB 장애는 스풀이 흡수(최대 40만 행), 거부 행 격리, `Restart=always`, `Linger=yes` | [운영 가이드](../collector-ops.md) |
 | 4 | 공간·항목별 **건수, 마지막 수신, 커버율**을 한눈에 | `python -m collector report`: ① 확인 필요 장치 ② 공간·항목별 ③ 장치별(관측 주기 포함) ④ 빠진 구간과 원인 단서. 연결 점검은 `python -m collector check` | [중간 현황 보고](../reports/2026-10-21-coverage-interim.md) |

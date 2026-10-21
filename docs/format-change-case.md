@@ -78,7 +78,7 @@
 1. 바뀐 메시지 몇 개를 JSONL로 저장한다(`{"t": 수신 epoch, "topic": ..., "payload": "..."}`).
 2. 설정을 고친 뒤 `python -m collector check-config`로 검증한다. 틀리면 `파일: 위치: 이유`로 거부된다.
 3. `python -m collector replay --file <저장한 파일>`로 저장 없이 결과를 확인한다.
-4. `systemctl --user reload team2-collector`(SIGHUP)로 반영한다. 재시작은 필요 없다.
+4. `systemctl --user reload wonil-collector`(SIGHUP)로 반영한다. 재시작은 필요 없다.
    - 검증에 실패하면 기존 설정을 유지하고 `config_rejected` 사건을 남긴다.
    - 성공하면 구독 토픽의 차이만 반영하고 `config_reload` 사건을 남긴다.
 

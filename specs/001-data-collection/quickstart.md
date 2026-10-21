@@ -30,7 +30,7 @@
 deploy/install.sh        # 사용자 서비스 등록·시작, linger 시도, 실패 시 cron @reboot 등록
 .venv/bin/python -m collector check   # 서비스·MQTT·MySQL·InfluxDB 연결 점검
 deploy/install-backfill.sh            # (선택) InfluxDB 과거 데이터 적재 타이머 — 사설망 경로가 있어야 함
-systemctl --user status team2-collector
+systemctl --user status wonil-collector
 ```
 
 ## 4. 재부팅 시험 (수동, 기록 필수)

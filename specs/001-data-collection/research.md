@@ -45,7 +45,7 @@
 
 ## R5. 재부팅 자동 시작 (sudo 없음)
 
-- **Decision**: systemd **사용자** 서비스 `team2-collector.service`를 쓴다(`Restart=always`, `RestartSec=5`,
+- **Decision**: systemd **사용자** 서비스 `wonil-collector.service`를 쓴다(`Restart=always`, `RestartSec=5`,
   `WantedBy=default.target`). 재부팅 자동 시작은 1순위로 `loginctl enable-linger $USER`를 쓴다. polkit이 본인 계정을
   허용하면 sudo 없이 된다. 이것이 거부되면 2순위로 `crontab @reboot`에서 감시 스크립트(`deploy/run_forever.sh`)를
   실행한다. 이 스크립트는 수집기를 `nohup`으로 재실행하며 잠금 파일로 중복 실행을 막는다. systemd 사용자 서비스와 cron 감시가

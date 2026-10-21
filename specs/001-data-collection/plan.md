@@ -93,7 +93,7 @@ src/collector/                      # 소스 코드 (패키지)
 
 config/collector.yaml               # 원천 규칙 + 공간 매핑 (형식 변경은 여기만)
 deploy/                             # 상시 운영
-├── team2-collector.service         # systemd 사용자 서비스
+├── wonil-collector.service         # systemd 사용자 서비스
 ├── run_forever.sh                  # linger 불가 시 cron @reboot 감시 스크립트
 └── install.sh                      # 서비스 등록·linger 시도·cron 대체
 tests/

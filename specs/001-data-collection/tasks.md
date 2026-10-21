@@ -85,7 +85,7 @@ description: "과제 1 데이터 수집 체계 작업 목록"
 
 - [X] T024 [US2] `src/collector/service.py`: `reconnect_delay_set(1, mqtt.reconnect_max_s)`, `keepalive=mqtt.keepalive_s`, `connect_async`+`loop_start`로 첫 접속 실패도 같은 재시도 경로; `on_disconnect`→`mqtt_disconnected`(사유 코드만, 주소·계정 금지), `on_connect`→`mqtt_connected`; 감시 스레드: 접속 상태인데 `mqtt.stale_reconnect_s`(300초) 동안 메시지 0건이면 `reconnect()`와 `stale_reconnect` 사건
 - [X] T025 [US2] `src/collector/service.py` 기록 스레드: `write_batch` 실패 시 연결 폐기, 지수 백오프(1→2→…→30초), 최초 실패 시 `db_down`, 성공 복귀 시 `db_up`(끊긴 시간·밀린 건수 포함); 스풀 한도 초과 삭제 시 `spool_drop` 사건
-- [X] T026 [P] [US2] `deploy/team2-collector.service`: `[Service] Type=simple`, `WorkingDirectory=%h/Desktop/project`, `ExecStart=/usr/bin/flock -n %h/Desktop/project/var/collector.lock %h/Desktop/project/.venv/bin/python -m collector run`, `ExecReload=/bin/kill -HUP $MAINPID`, `Restart=always`, `RestartSec=5`, `MemoryMax=256M`, `[Install] WantedBy=default.target`
+- [X] T026 [P] [US2] `deploy/wonil-collector.service`: `[Service] Type=simple`, `WorkingDirectory=%h/Desktop/project`, `ExecStart=/usr/bin/flock -n %h/Desktop/project/var/collector.lock %h/Desktop/project/.venv/bin/python -m collector run`, `ExecReload=/bin/kill -HUP $MAINPID`, `Restart=always`, `RestartSec=5`, `MemoryMax=256M`, `[Install] WantedBy=default.target`
 - [X] T027 [P] [US2] `deploy/run_forever.sh`: cron 대체 감시 — `flock -n var/collector.lock`로 이미 돌면 종료, 아니면 무한 루프(수집기 실행, 종료 시 5초 후 재실행), 로그 `var/collector.log`(10MB 회전)
 - [X] T028 [US2] `deploy/install.sh`: `mkdir -p var ~/.config/systemd/user` → 서비스 링크·`daemon-reload`·`enable --now`; `loginctl enable-linger "$USER"` 시도 후 `loginctl show-user -p Linger` 확인; 실패 시 `crontab`에 `@reboot …/deploy/run_forever.sh`를 중복 없이 추가하고 결과 출력 (research R5)
 - [X] T029 [US2] 실제 설치 실행 및 linger/cron 중 무엇이 적용됐는지 확인, 재부팅 시험 절차·결과를 `docs/collector-ops.md`에 기록(부팅 시각 `uptime -s` vs 첫 `start` 사건 vs 첫 저장 시각) (SC-002)
@@ -150,7 +150,7 @@ description: "과제 1 데이터 수집 체계 작업 목록"
 
 ## Phase 8: Polish & 산출물
 
-- [X] T045 [P] `docs/collector-ops.md`: 운영 가이드 — 설치(`deploy/install.sh`), 상태 확인(`systemctl --user status`, `journalctl --user -u team2-collector`, `report --hours 1`), 장애 대응표(브로커·DB·디스크·설정 오류), 설정 반영(`reload`)
+- [X] T045 [P] `docs/collector-ops.md`: 운영 가이드 — 설치(`deploy/install.sh`), 상태 확인(`systemctl --user status`, `journalctl --user -u wonil-collector`, `report --hours 1`), 장애 대응표(브로커·DB·디스크·설정 오류), 설정 반영(`reload`)
 - [ ] T046 24시간 연속 수집 후 `report --hours 24 --md docs/reports/<날짜>-coverage.md` 생성, 아래에 결측 구간별 원인 해석과 조치 작성 (SC-003, SC-004, 헌법 VII)
 - [X] T047 [P] 수집기 메모리 측정(`systemctl --user show -p MemoryCurrent`, 1시간 간격 3회) → 200MB 이하 확인, `docs/collector-ops.md`에 측정 조건과 함께 기록 (SC-007)
 - [X] T048 [P] `.github/README.md`·`docs/README.md` 진행 표 갱신, `CLAUDE.md` 진행 상황 체크, 두 저장소 커밋·푸시(`git push`, `tools/docs-git push`)
