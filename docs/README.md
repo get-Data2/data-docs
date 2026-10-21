@@ -21,7 +21,7 @@
 |---|---|
 | [`deliverables/`](deliverables/README.md) | **산출물만**: 과제 안내서의 "산출물" 항목에 해당하는 문서(보고서·표·그래프). 최종 결과 보고서의 재료 |
 | [`tasks/`](tasks/) | **과제별 점검 문서**: 해결할 것·확인 기준·생각해 볼 점·심화(B)의 항목별 대응과 확인 명령 |
-| [`advanced/`](advanced/) | 심화(B) 결과 문서 |
+| [`advanced/`](advanced/) | 심화(B) 결과 문서(`advanced/taskN/NN-이름.md`, 번호는 README 심화 목록 순서). 과제 2는 README에 심화가 없다 |
 | [`ops/`](ops/) | 운영 가이드(설치·상태 확인·장애 대응) |
 | [`reports/`](reports/) | 측정·작업 기록(장비 현황, 적재 보고, 자동 생성 상세 표, 사건 목록) |
 
@@ -69,7 +69,7 @@
 | 문서 | 내용 | 상태 |
 |---|---|---|
 | [ops/collector-ops.md](ops/collector-ops.md) | 수집기 운영 가이드·장애 대응·확인 기준 검증 기록 | ✅ |
-| [advanced/storage-policy.md](advanced/storage-policy.md) | 과제 1 심화(B): 저장소 1년 추정(8.2GB)과 보관 정책 | ✅ |
+| [advanced/task1/01-storage-policy.md](advanced/task1/01-storage-policy.md) | 과제 1 심화(B): 저장소 1년 추정(8.2GB)과 보관 정책 | ✅ |
 | [reports/2026-10-21-devices.md](reports/2026-10-21-devices.md) | 장비 현황(정상·수신 중단·판단 보류·배터리) | ✅ |
 | [reports/2026-10-21-backfill.md](reports/2026-10-21-backfill.md) | InfluxDB 과거 데이터 적재 — 978만 행, 장치 미특정 75만 행 원인과 계획 | 🟡 유선망 복구 대기 |
 | [reports/task2/diagnosis_v1-provisional.md](reports/task2/diagnosis_v1-provisional.md) | 과제 2 진단 상세 표(자동 생성, 진단서의 숫자 원본) | ✅ |
