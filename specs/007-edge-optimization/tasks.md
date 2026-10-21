@@ -24,8 +24,8 @@ description: "과제 7 엣지 최적화 작업 목록"
 
 ## Phase 0: 동작 확인 (먼저)
 
-- [ ] T001 패키지를 설치한다: `uv pip install onnx onnxruntime-gpu==1.31.0 tensorrt-cu13==11.4.0.106`(`.venv`). 설치 전후 `torch` 판이 바뀌지 않았는지 확인한다(cu130 유지)
-- [ ] T002 `src/edgeopt/__main__.py`의 `probe`와 `src/edgeopt/runners.py` 최소판
+- [X] T001 패키지를 설치한다: `uv pip install onnx onnxruntime-gpu==1.31.0 tensorrt-cu13==11.4.0.106`(`.venv`). 설치 전후 `torch` 판이 바뀌지 않았는지 확인한다(cu130 유지)
+- [X] T002 `src/edgeopt/__main__.py`의 `probe`와 `src/edgeopt/runners.py` 최소판(코드만 — 실행은 T003. pip TensorRT 휠에 sm87 전용 빌더 자원이 없고 PTX만 있음, 2026-10-21 확인)
   - 합성 Linear·Conv1d·GRU를 ONNX로 내보낸다
   - ORT CPU·CUDA EP, TensorRT FP16 엔진 생성·실행, ORT TensorRT EP를 실행한다
   - 결과 일치(FP32 1e-5, FP16 1e-2)와 실패 사유를 `var/edgeopt/probe.json`에 쓴다
@@ -38,13 +38,13 @@ description: "과제 7 엣지 최적화 작업 목록"
 
 ## Phase 1: Setup
 
-- [ ] T004 [P] `pyproject.toml`에 extra `edgeopt = ["onnx", "onnxruntime-gpu", "tensorrt-cu13"]`를 넣고, pytest 마커 `trt`를 등록한다
-- [ ] T005 [P] `tools/edgeopt` 래퍼를 만든다
+- [ ] T004 [P] (총괄 작업자가 반영) `pyproject.toml`에 extra `edgeopt = ["onnx", "onnxruntime-gpu", "tensorrt-cu13"]`를 넣고, pytest 마커 `trt`를 등록한다
+- [X] T005 [P] `tools/edgeopt` 래퍼를 만든다
   - `tools/forecast`와 같은 GPU 그룹 처리
   - pip TensorRT lib 경로를 `LD_LIBRARY_PATH`에 넣는다
   - `~/.local/bin/edgeopt`에 링크한다
-- [ ] T006 [P] `config/edgeopt.yaml`을 contracts/config.md 그대로 작성한다
-- [ ] T007 [P] `tests/edgeopt/__init__.py`, `conftest.py`
+- [X] T006 [P] `config/edgeopt.yaml`을 contracts/config.md 그대로 작성한다
+- [X] T007 [P] `tests/edgeopt/__init__.py`, `conftest.py`
   - 합성 작은 예측 모델(과제 3 `ForecastModel`, hidden 8)과 오토인코더(과제 4 `ConvAE`)
   - 가짜 묶음 디렉터리
 
@@ -52,20 +52,20 @@ description: "과제 7 엣지 최적화 작업 목록"
 
 ## Phase 2: Foundational
 
-- [ ] T008 `src/edgeopt/config.py`: 로드·검증(contracts/config.md 검증 규칙), 설정 해시, 대상 모델 목록 해석
+- [X] T008 `src/edgeopt/config.py`: 로드·검증(contracts/config.md 검증 규칙), 설정 해시, 대상 모델 목록 해석
   - 묶음이 없으면 `waiting`
   - `forecast_b1`은 `selection.json`의 B1 단계 후보 중 최종과 같은 과거 길이의 GRU·LSTM·TCN(씨앗 0)
-- [ ] T009 `src/edgeopt/models.py`: 묶음 → (torch 모듈, 예시 입력, 원 단위 복원 함수, 입력 규약)
+- [X] T009 `src/edgeopt/models.py`: 묶음 → (torch 모듈, 예시 입력, 원 단위 복원 함수, 입력 규약)
   - 예측: `forecast.models.ForecastModel` + `bundle.json`
   - 반복 예측이면 반복 안의 정규화 값을 입력으로 받는 래퍼(research R3)
   - 오토인코더: `anomaly.autoencoder.ConvAE`
   - 분류기: 신경망 여부 판별
-- [ ] T010 `src/edgeopt/tegra.py`
+- [X] T010 `src/edgeopt/tegra.py`
   - `tegrastats` 시작·중지(로그 파일)
   - 줄 해석: 시각, VDD_IN·VDD_CPU_GPU_CV·VDD_SOC mW, GR3D_FREQ, RAM, 온도
   - 구간 평균, 대기 대비 증가분, 1회당 에너지
-- [ ] T011 [P] `tests/edgeopt/test_tegra.py` (unit): 2026-10-21 실제 `tegrastats` 줄 2개(research 기록)를 해석해 값이 맞다. 구간 평균·에너지 계산을 손 계산과 맞춘다
-- [ ] T012 `src/edgeopt/bench.py`
+- [X] T011 [P] `tests/edgeopt/test_tegra.py` (unit): 2026-10-21 실제 `tegrastats` 줄 2개(research 기록)를 해석해 값이 맞다. 구간 평균·에너지 계산을 손 계산과 맞춘다
+- [X] T012 `src/edgeopt/bench.py`
   - 지연 통계(평균·중앙값·p95·p99·최대, 나눈 측정의 p95)
   - 동기화를 포함한 측정 루프
   - 측정 전 검사
@@ -73,7 +73,7 @@ description: "과제 7 엣지 최적화 작업 목록"
     - 대기 GR3D 평균 → 경합 표시·재시도
     - 온도 상한
   - 조합마다 새 프로세스로 실행한다(`python -m edgeopt _bench_one ...`)
-- [ ] T013 [P] `tests/edgeopt/test_bench_stats.py` (unit)
+- [X] T013 [P] `tests/edgeopt/test_bench_stats.py` (unit)
   - 알려진 지연 배열로 p95 계산
   - 학습 프로세스가 있으면 거부(가짜 프로세스 목록 주입)
   - 경합 판정
@@ -82,15 +82,15 @@ description: "과제 7 엣지 최적화 작업 목록"
 
 ## Phase 3: User Story 1 — 변환 (P1)
 
-- [ ] T014 [US1] `src/edgeopt/export.py`
+- [X] T014 [US1] `src/edgeopt/export.py`
   - ONNX 내보내기: 연산 집합 17, 배치 축 동적, 시간 축 고정
   - 검증: ORT CPU vs PyTorch CPU 최대 차이 ≤ 1e-5
   - 실패 시 단계·오류를 기록하고 계속한다
-- [ ] T015 [US1] `src/edgeopt/trt.py`
+- [X] T015 [US1] `src/edgeopt/trt.py`
   - FP16 엔진 생성: 프로필 1/3/4, 작업 공간, 선택적 FP32 마지막 층
   - 실행 래퍼(`execute_async_v3` + 스트림 동기화)
   - 생성 환경 기록
-- [ ] T016 [P] [US1] `tests/edgeopt/test_export.py` (unit): 합성 예측·오토인코더 ONNX 내보내기 → ORT CPU 결과가 PyTorch와 같다. 배치 1·3·4 동작
+- [X] T016 [P] [US1] `tests/edgeopt/test_export.py` (unit): 합성 예측·오토인코더 ONNX 내보내기 → ORT CPU 결과가 PyTorch와 같다. 배치 1·3·4 동작
 - [ ] T017 [P] [US1] `tests/edgeopt/test_trt.py` (마커 trt): 합성 모델 FP16 엔진 결과가 1e-2 이내다
 - [ ] T018 [US1] `edgeopt export && edgeopt build`를 실데이터 묶음으로 실행하고, 성공·실패와 빌드 시간을 기록한다
 
@@ -98,12 +98,12 @@ description: "과제 7 엣지 최적화 작업 목록"
 
 ## Phase 4: User Story 3 — 결과 차이 (P1)
 
-- [ ] T019 [US3] `src/edgeopt/diff.py`
+- [X] T019 [US3] `src/edgeopt/diff.py`
   - 과제 3 시험 표본 전체(`forecast` 배열·`eval_samples`)로 입력을 만든다
   - 방식마다 예측 → 원 단위 복원(FP32, 엔진 밖) → 기준 대비 CO₂·온도 차이(최대·평균·99%)와 시험 MAE 변화
   - 오토인코더: 점수 차이와 과제 4 임계값 기준 경보 판정 바뀐 비율
   - 분류기: 바뀐 비율
-- [ ] T020 [P] [US3] `tests/edgeopt/test_diff.py` (unit): 일부러 0.5ppm·1.5ppm 차이를 넣은 출력으로 판정 ✅/❌, 바뀐 비율 계산
+- [X] T020 [P] [US3] `tests/edgeopt/test_diff.py` (unit): 일부러 0.5ppm·1.5ppm 차이를 넣은 출력으로 판정 ✅/❌, 바뀐 비율 계산
 - [ ] T021 [US3] `edgeopt diff`를 실행하고 판정표를 확인한다
   - CO₂ 최대 차이가 1ppm을 넘으면 그 표본(공간·시각·입력 범위)을 본다
   - `trt.fp32_last_layer`를 켜고 다시 만든 뒤 비교한다(research R4·R7)
