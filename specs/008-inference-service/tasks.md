@@ -86,12 +86,11 @@ description: "과제 8 상시 추론 서비스 작업 목록"
 
 ## Phase 5: User Story 2 — 제공 (P1)
 
-- [ ] T023 [US2] **사용자 확인**
-  - (a) 팀 브로커 발행 권한 시험(`infer probe-mqtt`, 승인 뒤 1회)
-  - (b) API 포트·노출 범위
-
-  결과를 점검 문서에 기록하고 `mqtt.target`을 확정한다.
-- [ ] T024 [US2] `src/service/publish.py`: 보존 발행(QoS 1), 재접속 시 최신 재발행, 없어진 공간의 보존 메시지 지우기. `local`이면 보드 amqtt 브로커 사용자 서비스(`deploy/wonil-mqtt-local.service`)
+- [X] T023 [US2] **사용자 확인**(2026-10-21 결정, research "결정 기록")
+  - (a) MQTT: 보드 로컬 브로커(B안), `0.0.0.0:11883`, 구독 익명·발행은 서비스 계정만. 공용 서버 발행 시험은 하지 않는다
+  - (b) API 포트 18080, 이 보드에서 상시 운영
+- [ ] T023a [US2] `deploy/wonil-broker.service`(amqtt 상시, Restart=always)와 설치 스크립트, 브로커 설정(포트 11883, 익명 구독 허용, 발행 계정·토픽 ACL `team2/inference/v1/#`). 발행 비밀번호는 `.env`에 키만 추가하고 출력하지 않는다
+- [ ] T024 [US2] `src/service/publish.py`: 보존 발행(QoS 1), 재접속 시 최신 재발행, 없어진 공간의 보존 메시지 지우기. 보드 amqtt 브로커(`wonil-broker`, T023a)에 발행
 - [ ] T025 [P] [US2] `tests/service/test_publish.py` (broker): 새 구독자 1초 안 최신값, 브로커 재시작 뒤 재발행
 - [ ] T026 [US2] `src/service/api.py`: 라우터(contracts/api.md), 400·404·503, OpenAPI JSON
 - [ ] T027 [P] [US2] `tests/service/test_api.py` (unit): 엔드포인트별 응답 형식, `minutes` 검증, p95 200ms(로컬)

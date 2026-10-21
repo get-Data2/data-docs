@@ -36,10 +36,10 @@ alerts:
     air_quality: 공간 사용자
 
 mqtt:
-  target: local                # team | local — 팀 브로커 발행 권한 확인 전에는 local
+  target: local                # 2026-10-21 결정: 보드 로컬 브로커(B안). team은 대안으로만 남김
   topic_prefix: team2/inference/v1
   qos: 1
-  local: {host: 127.0.0.1, port: 11883}     # 대안 B: 보드 로컬 amqtt(다른 팀은 보드 주소로 구독). 흔한 1883/1884와 겹치지 않게
+  local: {host: 127.0.0.1, port: 11883}     # 서비스는 같은 보드 브로커에 발행. 브로커는 0.0.0.0:11883에서 받아 다른 팀이 보드 주소로 구독
   # team: .env의 MQTT_* 사용(별도 client_id)
   client_id: team2-jetson-inference-a1
 
