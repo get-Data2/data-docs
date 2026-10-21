@@ -34,7 +34,7 @@ README의 해결할 것·확인 기준·산출물·생각해 볼 점·심화(B)�
 
 | 과제 | 상태 | 요구사항 | 설계 | 작업 |
 |---|---|---|---|---|
-| 1. 데이터 수집 체계 | 🟢 상시 수집 중 | [spec](../specs/001-data-collection/spec.md) | [plan](../specs/001-data-collection/plan.md) · [research](../specs/001-data-collection/research.md) · [data-model](../specs/001-data-collection/data-model.md) · [contracts](../specs/001-data-collection/contracts/) | [tasks](../specs/001-data-collection/tasks.md) 52/56 |
+| 1. 데이터 수집 체계 | 🟢 상시 수집 중 | [spec](../specs/001-data-collection/spec.md) | [plan](../specs/001-data-collection/plan.md) · [research](../specs/001-data-collection/research.md) · [data-model](../specs/001-data-collection/data-model.md) · [contracts](../specs/001-data-collection/contracts/) | [tasks](../specs/001-data-collection/tasks.md) 53/56 |
 | 2. 데이터 이해와 기준선 | 🟡 spec 초안 | [spec](../specs/002-data-baseline/spec.md) | | |
 | 3. 60분 예측 | ⚪ | | | |
 | 4. 이상 탐지 | ⚪ | | | |
