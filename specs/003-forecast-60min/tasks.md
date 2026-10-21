@@ -151,8 +151,8 @@ description: "과제 3 60분 예측 작업 목록"
 - [X] T023 [US3] `forecast train D0 --seed 0`을 실데이터로 실행한다. 실제 학습 시간, 에폭, 최대 메모리(목표 ≤ 2GB), 검증 MAE를 확인한다.
   - 시간 추정(research R14)을 실측으로 고친다
   - 문제가 있으면(메모리·발산·시간) 크기·배치를 설정에서 조정하고 그 이유를 research에 기록한다
-- [ ] T024 [US3] 백그라운드에서 `forecast run D0 D1 D2 D3 D4` 실행한다. 끝나면 단계별 표를 확인한다
-- [ ] T025 [US3] 설계 결과 해석: 과거 길이, 입력 묶음별 기여, direct vs recursive의 지평별 오차 증가 모양,
+- [X] T024 [US3] 백그라운드에서 `forecast run D0 D1 D2 D3 D4` 실행한다. 끝나면 단계별 표를 확인한다
+- [X] T025 [US3] 설계 결과 해석: 과거 길이, 입력 묶음별 기여, direct vs recursive의 지평별 오차 증가 모양,
   값 vs 변화량(변화가 없을 때 현재값을 지키는 정도)을 정리한다. 생각해 볼 점 Q2의 근거로 쓴다
 
 **Checkpoint**: D1~D4 선택값이 정해진다
@@ -161,8 +161,8 @@ description: "과제 3 60분 예측 작업 목록"
 
 ## Phase 5: User Story 6 (일부) — 심화 1: 과거 길이 × 모델 (P3, 최종 모델 선택에 필요)
 
-- [ ] T026 [US6] 백그라운드에서 `forecast run B1`(1·2·4시간 × GRU·LSTM·TCN, 씨앗 3)을 실행한다. 검증 MAE, 학습 시간, 파라미터 수를 표로 만든다
-- [ ] T027 [US6] `forecast select`: D1~D4·B1로 최종 설정을 고정한다. 시험 대상은 final, S(final − schedule), B1 최적, A2·A3 실험이다
+- [X] T026 [US6] 백그라운드에서 `forecast run B1`(1·2·4시간 × GRU·LSTM·TCN, 씨앗 3)을 실행한다. 검증 MAE, 학습 시간, 파라미터 수를 표로 만든다
+- [X] T027 [US6] `forecast select`: D1~D4·B1로 최종 설정을 고정한다. 시험 대상은 final, S(final − schedule), B1 최적, A2·A3 실험이다
 
 **Checkpoint**: `selection.json` 고정. 이후에만 시험 평가
 
@@ -174,14 +174,14 @@ description: "과제 3 60분 예측 작업 목록"
 
 **Independent Test**: 평가 시점 행 수가 기준선과 같고, 판정표가 자동으로 나온다.
 
-- [ ] T028 [US1] `src/forecast/evaluate.py`
+- [X] T028 [US1] `src/forecast/evaluate.py`
   - `test_predict(run)`: 평가 시점 파일의 고유 (공간, t0)를 예측한다. 예측 불가 표본은 현재값 유지로 대체하고 표시한다
   - `join_baseline()`: 기준선 parquet과 키로 결합한다(행 수 일치를 검사하고, 다르면 오류)
   - `comparison_table(subset=all|usage)`: 공간 × 항목 × 지평, 기준선 3종 + 모델(씨앗 평균 ± 표준편차), 개선율. `min_points` 미만은 "평가 불가"
   - `criteria_table()`: CO₂ 60분 30%, 온도 60분 개선, 누수 시험 결과 링크
 - [X] T029 [P] [US1] `tests/forecast/test_evaluate.py` (unit): 합성 평가 시점에서 예측 행 키 집합 = 평가 시점 키 집합. 예측 불가 대체 표시, 개선율 계산, `min_points` 처리를 확인한다
-- [ ] T030 [US1] `forecast test` 구현과 실행. 모델 묶음 `var/forecast/bundle/`(data-model)을 저장하고, `run.json`에 `test_evaluated_at`을 기록한다
-- [ ] T031 [US1] 확인 기준 판정 확인. 못 미치는 항목이 있으면 원인을 분석한다(사용 시간대 오차 구성, 공간 특성). **시험을 본 뒤 설정을 바꾸지 않는다** — 바꾸면 새 선택·새 시험으로 기록하고 그 사실을 문서에 적는다
+- [X] T030 [US1] `forecast test` 구현과 실행. 모델 묶음 `var/forecast/bundle/`(data-model)을 저장하고, `run.json`에 `test_evaluated_at`을 기록한다
+- [X] T031 [US1] 확인 기준 판정 확인. 못 미치는 항목이 있으면 원인을 분석한다(사용 시간대 오차 구성, 공간 특성). **시험을 본 뒤 설정을 바꾸지 않는다** — 바꾸면 새 선택·새 시험으로 기록하고 그 사실을 문서에 적는다
 
 ---
 
@@ -210,7 +210,7 @@ description: "과제 3 60분 예측 작업 목록"
 
 ## Phase 9: User Story 6 (나머지) — 심화 2·3 (P3)
 
-- [ ] T035 [US6] 백그라운드에서 `forecast run S A2 A3`을 실행한다(S는 선택 전에 돌아도 되지만 시험 평가는 선택 뒤). 이어서 `forecast test`로 시험 대상에 포함한다
+- [X] T035 [US6] 백그라운드에서 `forecast run S A2 A3`을 실행한다(S는 선택 전에 돌아도 되지만 시험 평가는 선택 뒤). 이어서 `forecast test`로 시험 대상에 포함한다
 - [ ] T036 [US6] 심화 2 분석: `booking` 유무에 따른 회의실 30·60분 MAE와 실습실·사무실 영향. **추정 예약 = 상한** 표시. 추정 예약 건수·평균 길이도 정리
 - [ ] T037 [US6] 심화 3 분석: 공간별 "빼고 학습" vs "포함 학습(`space` 끔)" vs 현재값 유지 시험 MAE와 해석
 
