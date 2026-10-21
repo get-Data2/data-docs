@@ -20,7 +20,7 @@
 | 5. 상태 추정 | 두 분류기 성적표·혼동 행렬 | [task5/01-scorecards.md](task5/01-scorecards.md) | ✅ 환기 macro-F1 > 규칙 / 재현율 67% ❌ |
 | | 일정 기반 정답과 직접 관찰의 차이 | [task5/02-schedule-vs-observation.md](task5/02-schedule-vs-observation.md) | 🟡 관찰 기록 대기 |
 | | 많이 틀리는 상황 사례 | [task5/03-error-cases.md](task5/03-error-cases.md) | ✅ |
-| 6. 사전학습 모델 비교 | 비교표와 채택 의견(반 쪽) | `task6/` | ⚪ |
+| 6. 사전학습 모델 비교 | 비교표와 채택 의견(반 쪽) | [task6/01-comparison-adoption.md](task6/01-comparison-adoption.md) | ✅ GRU 유지, Chronos-2는 예비 예측기 |
 | 7. 엣지 최적화 | 최적화 보고서(실행 방식 × 모델별 지연·오차·메모리·전력, 결론) | [task7/01-optimization-report.md](task7/01-optimization-report.md) | ✅ ONNX Runtime CPU 채택 / TensorRT FP16은 GRU 2.4ppm ❌ |
 | 8. 상시 추론 서비스 | 예측 서비스 v1 | [task8/01-service-v1.md](task8/01-service-v1.md) | ✅ 상시 가동 중 |
 | | 12시간 가동 로그 요약 | [task8/02-12h-run-summary.md](task8/02-12h-run-summary.md) | 🟡 장애 시험 완료, 12시간 표 10-22 08:25 |

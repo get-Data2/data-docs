@@ -23,7 +23,7 @@ description: "과제 6 사전학습 모델 비교 작업 목록"
 
 ## Phase 1: Setup
 
-- [ ] T001 `pyproject.toml`에 extra `pretrained = ["chronos-forecasting==2.3.2"]`와 pytest 마커 `pretrained`를 추가한다.
+- [X] T001 `pyproject.toml`에 extra `pretrained = ["chronos-forecasting==2.3.2"]`와 pytest 마커 `pretrained`를 추가한다.
   설치(`-e '.[test,analysis,forecast,pretrained]'`) 뒤 torch가 `2.14.1+cu130` 그대로인지 확인한다(바뀌면 되돌리고 의존성 고정)
 - [X] T002 [P] `tools/pretrained` 래퍼(`tools/forecast` 방식, `HF_HUB_OFFLINE`은 fetch 외 명령에서 1)를 만들고 `~/.local/bin/pretrained`에 링크한다
 - [X] T003 [P] `config/pretrained.yaml`을 contracts/config.md 그대로 작성한다(LLM 가정은 결정 기록대로 1B·3B·7B 4비트, `batch_size`·`size_order`·`tie_rel` 추가)
@@ -70,14 +70,14 @@ description: "과제 6 사전학습 모델 비교 작업 목록"
 
 ## Phase 3: User Story 1·2 — 비교와 예측 구간 (P1)
 
-- [ ] T015 [US1] `pretrained fetch`: Chronos-Bolt tiny·mini·small(+ Chronos-2)을 받는다. 리비전 해시를 설정에 고정하고 `models.json`(파라미터 수·라이선스·해시)을 만든다
-- [ ] T016 [US1] 결측 입력 실측: NaN 컨텍스트를 모델이 받는지, 결과가 앞으로 채우기와 얼마나 다른지 검증 표본 일부로 확인해 `missing` 기본값을 확정한다(research R3)
-- [ ] T017 [US1] `pretrained predict val`: 크기 3 × 컨텍스트 4(1시간·4시간·1일·1주) 검증 예측. 시간·메모리를 기록한다(과제 3 학습 중이면 CPU 또는 대기)
-- [ ] T018 [US1] `pretrained select`: 크기·컨텍스트 고정. 앙상블 w는 과제 3 검증 예측이 있을 때 고정한다
-- [ ] T019 [US1] `pretrained test`(과제 3 `forecast test` 뒤)
+- [X] T015 [US1] `pretrained fetch`: Chronos-Bolt tiny·mini·small(+ Chronos-2)을 받는다. 리비전 해시를 설정에 고정하고 `models.json`(파라미터 수·라이선스·해시)을 만든다
+- [X] T016 [US1] 결측 입력 실측: NaN 컨텍스트를 모델이 받는지, 결과가 앞으로 채우기와 얼마나 다른지 검증 표본 일부로 확인해 `missing` 기본값을 확정한다(research R3)
+- [X] T017 [US1] `pretrained predict val`: 크기 3 × 컨텍스트 4(1시간·4시간·1일·1주) 검증 예측. 시간·메모리를 기록한다(과제 3 학습 중이면 CPU 또는 대기)
+- [X] T018 [US1] `pretrained select`: 크기·컨텍스트 고정. 앙상블 w는 과제 3 검증 예측이 있을 때 고정한다
+- [X] T019 [US1] `pretrained test`(과제 3 `forecast test` 뒤)
   - 선택 조합 + 크기별 비교 열 시험 예측
   - 비교표(전체·사용 시간대)와 행 일치 검사
-- [ ] T020 [US2] 적중률·이탈·폭·보정 곡선을 계산하고, 80%에서 벗어난 공간·지평·순간(수업 시작·점심)을 분석한다
+- [X] T020 [US2] 적중률·이탈·폭·보정 곡선을 계산하고, 80%에서 벗어난 공간·지평·순간(수업 시작·점심)을 분석한다
 
 ---
 
@@ -89,26 +89,26 @@ description: "과제 6 사전학습 모델 비교 작업 목록"
   - 측정 조건 수집: `nvpmodel -q`, 클럭 고정 안 함, 동시 프로세스
   - 과제 7에서 재사용할 수 있는 형태로 만든다
 - [X] T022 [P] [US3] `tests/pretrained/test_bench.py` (unit): 가짜 모델로 반복 수·통계 계산, tegrastats 한 줄 파싱(실측 예시 문자열)
-- [ ] T023 [US3] `pretrained bench`(과제 3·4 학습 종료 뒤): 사전학습 크기 3 + 과제 3 최종 모델 × GPU·CPU × 배치 1·3
+- [X] T023 [US3] `pretrained bench`(과제 3·4 학습 종료 뒤): 사전학습 크기 3 + 과제 3 최종 모델 × GPU·CPU × 배치 1·3
 
 ---
 
 ## Phase 5: User Story 4·5 — 판단과 생각해 볼 점
 
 - [X] T024 [US4] `src/pretrained/budget.py`: 관찰값(`tegrastats` RAM, 수집기·다른 계정 RSS)과 가정 LLM(2B·4B·8B), 측정값으로 예산표·판정
-- [ ] T025 [US4] 판단표(정확도·적중률·지연·메모리)와 채택 의견 초안
-- [ ] T026 [US5] Q1 정보 차이 분해: 과제 3 `stages.json` D2 검증 결과 + 사전학습 검증 결과
+- [X] T025 [US4] 판단표(정확도·적중률·지연·메모리)와 채택 의견 초안
+- [X] T026 [US5] Q1 정보 차이 분해: 과제 3 `stages.json` D2 검증 결과 + 사전학습 검증 결과
   - 선택: 과제 3 설정으로 CO₂만 입력 모델 1개 추가 학습(과제 3 실험 종료 뒤, 검증 비교용)
-- [ ] T027 [US5] Q2 컨텍스트 길이 곡선(검증)과 해석
+- [X] T027 [US5] Q2 컨텍스트 길이 곡선(검증)과 해석
 
 ---
 
 ## Phase 6: User Story 6 — 심화 (P3)
 
-- [ ] T028 [US6] 공변량 모델: Chronos-2에 온습도(과거)·시간·일과표(과거 + 미래 12칸, `forecast.features`)를 넣는다
+- [X] T028 [US6] 공변량 모델: Chronos-2에 온습도(과거)·시간·일과표(과거 + 미래 12칸, `forecast.features`)를 넣는다
   - 검증으로 컨텍스트 선택 → 시험에서 공변량 있음/없음 비교
   - 지원하지 않으면 대체 모델을 research에 기록하고 진행한다
-- [ ] T029 [US6] 섞은 예측: 검증으로 고정한 w(하나·공간 × 지평별 중 검증 우세)로 시험 평가. 직접·사전학습 단독과 비교한다
+- [X] T029 [US6] 섞은 예측: 검증으로 고정한 w(하나·공간 × 지평별 중 검증 우세)로 시험 평가. 직접·사전학습 단독과 비교한다
 
 ---
 
@@ -120,15 +120,15 @@ description: "과제 6 사전학습 모델 비교 작업 목록"
   - 보정 곡선
   - 지연–정확도 산점도
   - 예산 막대
-- [ ] T031 산출물 `docs/deliverables/task6/01-comparison-adoption.md`
+- [X] T031 산출물 `docs/deliverables/task6/01-comparison-adoption.md`
   - 비교표, 판단표, **채택 의견 반 쪽**
   - 측정 조건: 데이터 기간, 실데이터, 시험 기간, 전력 모드, 클럭 고정 안 함, 반복·워밍업, 동시 작업
-- [ ] T032 심화 문서 `docs/advanced/task6/01-covariates.md`, `02-ensemble.md`
-- [ ] T033 점검 문서 `docs/tasks/task6-pretrained-models.md`
+- [X] T032 심화 문서 `docs/advanced/task6/01-covariates.md`, `02-ensemble.md`
+- [X] T033 점검 문서 `docs/tasks/task6-pretrained-models.md`
   - 해결할 것 5, 확인 기준 2, 산출물, 생각해 볼 점 3, 심화 2를 대응시킨다
   - **확인 명령**은 실행해 맞춘 뒤 적는다
-- [ ] T034 [P] `docs/deliverables/README.md`, `docs/README.md`, `.github/README.md`, `CLAUDE.md`를 갱신한다
-- [ ] T035 전체 시험을 실행하고 두 저장소를 커밋·푸시한다(가중치·예측은 `var/`라 제외, 라이선스 표기 확인)
+- [X] T034 [P] `docs/deliverables/README.md`, `docs/README.md`, `.github/README.md`, `CLAUDE.md`를 갱신한다
+- [X] T035 전체 시험을 실행하고 두 저장소를 커밋·푸시한다(가중치·예측은 `var/`라 제외, 라이선스 표기 확인)
 
 ---
 
