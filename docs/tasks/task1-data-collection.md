@@ -116,6 +116,53 @@ MQTT 두 원천(ChirpStack LoRaWAN 센서, xflow 냉난방)을 구독해 **공�
 | 1년 뒤 저장소 크기 추정과 다운샘플링·보관 정책 | 지금 속도(하루 약 10만 행, 행당 241바이트)로 **1년 8.2GB**. 원본 90일 + 이후 5분 집계면 **4.0GB**, 여기에 냉난방 상태값을 "바뀔 때만 + 15분 생존 기록"으로 저장하면 **약 2.9GB**. 저장량의 절반은 냉난방 반복값이고(야간 100% 반복), 환경 센서 원본은 값 고정 고장 탐지(과제 4)의 근거라 90일은 지킨다 | [storage-policy.md](../storage-policy.md) |
 | 같은 메시지가 두 번 오는 경우(재전송) 찾아 처리 | 실측: ChirpStack이 게이트웨이 조합만 다른 같은 업링크(같은 fCnt)를 두 번 발행. `deduplicationId`와 `nsTime`(1ms 차이)이 달라 DB 유일키로는 못 막는다. (장치, fCnt)를 2시간 동안 기억해 한 번만 저장한다. 16.7시간 동안 **600건(메시지의 3.4%)** 걸러냄(`ingest_stats.duplicate`). 재처리·재접속 중복은 유일키(장치·항목·기준 시각)로 막는다 | [research R8](../../specs/001-data-collection/research.md), `src/collector/dedup.py` |
 
+## 확인 명령
+
+모든 명령은 Jetson 터미널에서 입력한다. `collector`는 어느 폴더에서든 동작하고, `.venv/bin/python …`과 `deploy/…`는
+`cd ~/Desktop/project` 뒤에 입력한다. Claude Code 대화창에서는 앞에 `!`를 붙인다.
+
+| 확인할 것 | 명령 | 정상 결과 |
+|---|---|---|
+| 연결 전체(서비스·MQTT·MySQL·InfluxDB) | `collector check` | 수집 서비스·MQTT·MySQL ✅ (InfluxDB는 유선망 있을 때만 ✅) |
+| 수집기가 상시 가동 중 | `systemctl --user status wonil-collector` | `active (running)` |
+| 수집기 로그 | `journalctl --user -u wonil-collector -n 30 --no-pager` | 마지막 줄 근처에 `MQTT 접속, 구독 4개` |
+| **해결 1** 공간·항목·시각별 저장이 정확한가 | `.venv/bin/python tools/verify_ingest.py 120` | `기대 행 N개: {'일치': N}`, `원본에 없는 행 0개`, 종료 코드 0 |
+| 실제 저장된 값 보기 | 아래 SQL ① | 공간·항목별 최근 값 |
+| **해결 2** 설정 검증 | `collector check-config` | `OK: 공간 9개, 원천 2개, 구독 토픽 4개` |
+| 설정만으로 형식 변경 대응 | `.venv/bin/python -m pytest tests/unit/test_format_change.py` | `3 passed` |
+| 저장 없이 해석해 보기 | `collector replay --file tests/fixtures/messages.jsonl --limit 10` | 공간·항목·시각 표, `실패 0` |
+| 설정 반영(재시작 없이) | `systemctl --user reload wonil-collector` 후 `journalctl --user -u wonil-collector -n 2` | `설정 다시 읽음` |
+| **해결 3** 브로커 재시작 후 1분 안 재수집 | `.venv/bin/python -m pytest -m broker tests/integration/test_broker_restart.py -s` | `브로커 재시작 → 첫 저장 N초`(N ≤ 60), `1 passed` |
+| DB 장애 무손실·거부 행 격리 | `.venv/bin/python -m pytest -m broker tests/integration/test_spool_lossless.py` | `4 passed` |
+| 재부팅 자동 시작 설정 | `loginctl show-user $USER -p Linger` / `systemctl --user is-enabled wonil-collector` | `Linger=yes` / `enabled` |
+| 재부팅 뒤 첫 저장 시각 | 아래 SQL ② | 부팅 시각(`uptime -s`) + 1분 안 |
+| 실제 끊김·복구 기록 | 아래 SQL ③ | `mqtt_disconnected` 뒤 `mqtt_connected`, `db_down` 뒤 `db_up` |
+| **해결 4** 현황 보고(커버율·빠진 구간·원인) | `collector report --hours 24` | 표 ①~④, 핵심 항목 커버율 95% 이상 |
+| 보고서를 파일로 | `collector report --hours 24 --md docs/reports/$(date +%F)-coverage.md` | Markdown 파일 생성 |
+| **심화** 저장소 1년 추정 | `collector report --capacity` | 1년 크기 표(원본·집계 정책) |
+| **심화** 재전송(이중 발행) 거르기 | `.venv/bin/python -m pytest tests/unit/test_dedup.py` 그리고 아래 SQL ④ | `3 passed`, 중복 버림 건수 |
+| 과거 데이터 적재 진행 | `systemctl --user list-timers wonil-backfill.timer` / `journalctl --user -u wonil-backfill -n 5` | 다음 실행 시각 / 구간별 적재 행 수 |
+| 전체 자동 시험 | `.venv/bin/python -m pytest -m "unit or broker or mysql"` | 모두 passed |
+
+```sql
+-- ① 공간·항목별 최근 값(KST)
+SELECT space_id, item, value, unit, CONVERT_TZ(ts,'+00:00','+09:00') AS ts_kst
+FROM measurement WHERE ts > UTC_TIMESTAMP() - INTERVAL 10 MINUTE AND item IN ('co2','temperature','humidity')
+ORDER BY space_id, item, ts DESC;
+
+-- ② 재부팅 뒤 첫 저장(부팅 시각을 KST로 넣는다)
+SELECT CONVERT_TZ(MIN(received_at),'+00:00','+09:00') FROM measurement
+WHERE received_at > CONVERT_TZ('2026-10-20 17:28:37','+09:00','+00:00') AND source<>'influx';
+
+-- ③ 수집기 사건(최근 20건)
+SELECT CONVERT_TZ(ts,'+00:00','+09:00') AS ts_kst, kind, detail FROM collector_event ORDER BY id DESC LIMIT 20;
+
+-- ④ 분 단위 수신 통계 합계(재전송으로 버린 메시지 = duplicate)
+SELECT SUM(messages), SUM(`stored`), SUM(duplicate), SUM(failed) FROM ingest_stats;
+```
+
+SQL은 MySQL 클라이언트나 Crowfoot(워크스페이스 "데이터 수집" → 연결 MySQL #3)에서 실행한다.
+
 ## 추가로 한 것(README 범위 밖)
 
 - **InfluxDB 과거 데이터 적재**: 2025-08-08 ~ 2026-07-22, **978만 행**을 같은 공간 매핑으로 적재했다. 하루치 대조 결과는 37,401 = 37,401이다.

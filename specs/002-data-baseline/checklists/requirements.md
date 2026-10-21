@@ -13,7 +13,7 @@
 
 ## Requirement Completeness
 
-- [ ] No [NEEDS CLARIFICATION] markers remain
+- [x] No [NEEDS CLARIFICATION] markers remain
 - [x] Requirements are testable and unambiguous
 - [x] Success criteria are measurable
 - [x] Success criteria are technology-agnostic (no implementation details)
@@ -31,7 +31,7 @@
 
 ## Notes
 
-- 남은 확인 1건: 일정 자료(수업 시간표·회의실 예약)를 어떻게 마련할지. 답을 받으면 FR-010과 배경 절을 갱신한다.
+- 확인 1건 해결(2026-10-21): 일정 자료는 고정 일과표로 시작하고, 실제 자료와 같은 형식으로 교체할 수 있게 한다.
 - 기본값으로 채운 결정은 다음과 같다. 모두 설정으로 바꿀 수 있다.
   - 물리 범위
   - 짧은 결측 15분
