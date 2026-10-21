@@ -14,7 +14,9 @@
 | 3. 60분 예측 | 모델 비교표 | [task3/01-model-comparison.md](task3/01-model-comparison.md) | ✅ 실습실 CO₂ 60분 53% 개선 |
 | | 공간별 오차 분석과 원인 | [task3/02-space-error-analysis.md](task3/02-space-error-analysis.md) | ✅ |
 | | 일정 정보 포함·제외 비교와 결론 | [task3/03-schedule-value.md](task3/03-schedule-value.md) | ✅ 3.3ppm(8%) 감소 |
-| 4. 이상 탐지 | 탐지 성적표 / 임계값–탐지율·헛경보 표·그래프 / 운영 제안 | `task4/` | ⚪ |
+| 4. 이상 탐지 | 탐지 성적표 | [task4/01-scorecard.md](task4/01-scorecard.md) | ✅ 탐지 86.7% / 헛경보 4.65회/일 ❌ |
+| | 임계값–탐지율·헛경보 표·그래프 | [task4/02-threshold-tradeoff.md](task4/02-threshold-tradeoff.md) | ✅ |
+| | 운영 제안 | [task4/03-operations.md](task4/03-operations.md) | ✅ |
 | 5. 상태 추정 | 두 분류기 성적표·혼동 행렬 / 일정 기반 정답과 직접 관찰의 차이 / 많이 틀리는 상황 사례 | `task5/` | ⚪ |
 | 6. 사전학습 모델 비교 | 비교표와 채택 의견(반 쪽) | `task6/` | ⚪ |
 | 7. 엣지 최적화 | 최적화 보고서(실행 방식 × 모델별 지연·오차·메모리·전력, 결론) | `task7/` | ⚪ |

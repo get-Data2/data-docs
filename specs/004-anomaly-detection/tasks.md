@@ -74,7 +74,7 @@ description: "과제 4 이상 탐지 작업 목록"
   - F4·F5는 사용 시간대·수업일에 시작한다
   - 같은 공간 간격 ≥ 12시간
   - 종류마다 건수가 정확하다
-- [ ] T013 [US1] `anomaly inject`를 실데이터로 실행하고, 종류 × 공간 건수와 해시를 기록한다
+- [X] T013 [US1] `anomaly inject`를 실데이터로 실행하고, 종류 × 공간 건수와 해시를 기록한다
 
 ---
 
@@ -86,7 +86,7 @@ description: "과제 4 이상 탐지 작업 목록"
   - 단조 상승(수업 시작)은 급변이 아니다
   - 장치 고정 2시간 + 이웃 변함 → 값 고정
   - 밤의 습도 양자화 반복(이웃도 안 변함) → 경보 없음
-- [ ] T016 [US4] 검증·평가판 규칙 점수(`anomaly score rule_spike rule_stuck`)
+- [X] T016 [US4] 검증·평가판 규칙 점수(`anomaly score rule_spike rule_stuck`)
 
 ---
 
@@ -98,31 +98,31 @@ description: "과제 4 이상 탐지 작업 목록"
   - 마스크 MSE, 조기 종료(검증)
   - 점수: 창 끝 3칸 열 오차, 열별 검증 중앙값으로 나눔, 합. 상위 3 원인
 - [X] T018 [P] [US2] `tests/anomaly/test_autoencoder.py` (unit): 형상, 마스크 칸 무시, 큰 튐 주입 시 그 열이 1순위 원인
-- [ ] T019 [US2] `anomaly train`을 실데이터로 실행한다(학습 시간·메모리 기록). 이어서 `anomaly score ae`
+- [X] T019 [US2] `anomaly train`을 실데이터로 실행한다(학습 시간·메모리 기록). 이어서 `anomaly score ae`
 
 ---
 
 ## Phase 6: User Story 3 — 임계값 (P1)
 
-- [ ] T020 [US3] `anomaly threshold`: 탐지기별 검증 기준 선택·고정. 후보 표(검증 하루당 경보)를 남긴다
-- [ ] T021 [US3] 검증 기간 경보 중 과제 2 사건 후보와 겹치는 수를 기록한다(실제 이상 가능성)
+- [X] T020 [US3] `anomaly threshold`: 탐지기별 검증 기준 선택·고정. 후보 표(검증 하루당 경보)를 남긴다
+- [X] T021 [US3] 검증 기간 경보 중 과제 2 사건 후보와 겹치는 수를 기록한다(실제 이상 가능성)
 
 ---
 
 ## Phase 7: User Story 5 — 성적표·운영 제안 (P1)
 
-- [ ] T022 [US5] `anomaly evaluate`: 모델 / 규칙 / 결합 경보, 매칭, 성적표, 판정표, 임계값 곡선을 낸다(`results.json`)
-- [ ] T023 [US5] 미탐 원인 분석
+- [X] T022 [US5] `anomaly evaluate`: 모델 / 규칙 / 결합 경보, 매칭, 성적표, 판정표, 임계값 곡선을 낸다(`results.json`)
+- [X] T023 [US5] 미탐 원인 분석
   - 종류별로 놓친 고장의 사례를 본다(크기, 시간대, 공간, 원인 열)
   - 모델이 못 잡는 종류와 규칙이 못 잡는 종류를 정리한다(확인 기준 3)
-- [ ] T024 [US5] 운영 제안 표: 공간별 임계값, 알림 대상(센서 고장 → 센서 관리 담당, 설비 → 시설 담당, 공기질 → 공간 사용자), 예상 하루 경보 수
-- [ ] T025 [US5] `src/anomaly/bundle.py`: 과제 8용 묶음
+- [X] T024 [US5] 운영 제안 표: 공간별 임계값, 알림 대상(센서 고장 → 센서 관리 담당, 설비 → 시설 담당, 공기질 → 공간 사용자), 예상 하루 경보 수
+- [X] T025 [US5] `src/anomaly/bundle.py`: 과제 8용 묶음
 
 ---
 
 ## Phase 8: User Story 6 — 심화 (P3)
 
-- [ ] T026 [US6] `src/anomaly/forecast_err.py`: 평가판 공간 대표값 → 과제 3 묶음으로 15분 예측 → 정규화 잔차 점수. 같은 임계값·지표 (과제 3 `forecast test` 뒤)
+- [X] T026 [US6] `src/anomaly/forecast_err.py`: 평가판 공간 대표값 → 과제 3 묶음으로 15분 예측 → 정규화 잔차 점수. 같은 임계값·지표 (과제 3 `forecast test` 뒤)
 - [X] T027 [US6] `src/anomaly/drift.py`: 새벽 기준 + 이웃 비교. F3 성적·헛경보를 기본 탐지기와 비교
 - [X] T028 [P] [US6] `tests/anomaly/test_drift.py` (unit): 합성 영점 +300ppm 경사 → 이웃 비교 경보, 다음 새벽 기준 경보. 정상 계절 변화에서는 경보 없음
 
@@ -130,19 +130,19 @@ description: "과제 4 이상 탐지 작업 목록"
 
 ## Phase 9: Polish & 산출물
 
-- [ ] T029 `src/anomaly/report.py` + `anomaly report`
+- [X] T029 `src/anomaly/report.py` + `anomaly report`
   - 결과 표(`tables/`)와 그래프: 임계값–탐지율·헛경보 곡선, 종류별 지연 분포, 대표 고장 사례
-- [ ] T030 산출물 본문을 쓴다
+- [X] T030 산출물 본문을 쓴다
   - `docs/deliverables/task4/01-scorecard.md`(성적표·판정·미탐 이유)
   - `02-threshold-tradeoff.md`(곡선·임계값 근거)
   - `03-operations.md`(운영 제안)
   - 측정 조건과 해석을 단다
-- [ ] T031 심화 문서 `docs/advanced/task4/01-forecast-error-detector.md`, `02-drift-detector.md`
-- [ ] T032 점검 문서 `docs/tasks/task4-anomaly-detection.md`
+- [X] T031 심화 문서 `docs/advanced/task4/01-forecast-error-detector.md`, `02-drift-detector.md`
+- [X] T032 점검 문서 `docs/tasks/task4-anomaly-detection.md`
   - 해결할 것 5, 확인 기준 3, 산출물 3, 생각해 볼 점 3, 심화 2를 대응시킨다
   - **확인 명령**은 실행해 맞춘 뒤 적는다
-- [ ] T033 [P] `docs/deliverables/README.md`, `docs/README.md`, `.github/README.md`, `CLAUDE.md`를 갱신한다
-- [ ] T034 전체 시험을 실행하고 두 저장소를 커밋·푸시한다
+- [X] T033 [P] `docs/deliverables/README.md`, `docs/README.md`, `.github/README.md`, `CLAUDE.md`를 갱신한다
+- [X] T034 전체 시험을 실행하고 두 저장소를 커밋·푸시한다
 
 ---
 
