@@ -22,10 +22,10 @@ description: "과제 2 데이터 이해와 기준선 작업 목록"
 
 ## Phase 1: Setup
 
-- [ ] T001 `pyproject.toml`에 extra `analysis = ["pandas>=3.0", "pyarrow>=26", "matplotlib>=3.11", "holidays>=0.107"]` 추가하고, 패키지 탐색에 `analysis`가 포함되는지 확인한 뒤 `~/.local/bin/uv pip install --python .venv/bin/python -e '.[test,analysis]'`로 설치
-- [ ] T002 [P] `tools/analysis` 실행 래퍼 작성(`tools/collector`와 같은 방식: 프로젝트 폴더로 이동해 `.venv/bin/python -m analysis "$@"`). 실행 권한을 주고 `~/.local/bin/analysis`에 링크
-- [ ] T003 [P] `config/analysis.yaml`을 contracts/config.md 예시 그대로 작성(점심 11:30~13:00 반영, `split.active: v1-provisional`)
-- [ ] T004 [P] `tests/analysis/__init__.py`, `tests/analysis/conftest.py` 작성 — 고정물 `acfg`(분석 설정), `make_raw(rows)`(원본 사본 형식 DataFrame 생성: ts UTC, space_id, device_id, item, value, source), `periods`(과제 1 설정에서 읽은 장치별 기대 주기)
+- [X] T001 `pyproject.toml`에 extra `analysis = ["pandas>=3.0", "pyarrow>=26", "matplotlib>=3.11", "holidays>=0.107"]` 추가하고, 패키지 탐색에 `analysis`가 포함되는지 확인한 뒤 `~/.local/bin/uv pip install --python .venv/bin/python -e '.[test,analysis]'`로 설치
+- [X] T002 [P] `tools/analysis` 실행 래퍼 작성(`tools/collector`와 같은 방식: 프로젝트 폴더로 이동해 `.venv/bin/python -m analysis "$@"`). 실행 권한을 주고 `~/.local/bin/analysis`에 링크
+- [X] T003 [P] `config/analysis.yaml`을 contracts/config.md 예시 그대로 작성(점심 11:30~13:00 반영, `split.active: v1-provisional`)
+- [X] T004 [P] `tests/analysis/__init__.py`, `tests/analysis/conftest.py` 작성 — 고정물 `acfg`(분석 설정), `make_raw(rows)`(원본 사본 형식 DataFrame 생성: ts UTC, space_id, device_id, item, value, source), `periods`(과제 1 설정에서 읽은 장치별 기대 주기)
 
 ---
 
@@ -33,14 +33,14 @@ description: "과제 2 데이터 이해와 기준선 작업 목록"
 
 **⚠️ 스토리 작업 전 필수**
 
-- [ ] T005 `src/analysis/config.py`: YAML 로드·검증(분할 순서·겹침·경계 1일 간격, 공간 targets 존재 경고). 과제 1 `config/collector.yaml`에서 장치별 `expected_period_s`와 `periodic`을 읽는다. 설정 해시(sha256, 정렬된 JSON)를 계산한다. 오류는 `파일: 경로: 이유` 형식
-- [ ] T006 `src/analysis/extract.py`: `collector.store.connect`로 접속해 달마다 한 번씩 읽는다.
+- [X] T005 `src/analysis/config.py`: YAML 로드·검증(분할 순서·겹침·경계 1일 간격, 공간 targets 존재 경고). 과제 1 `config/collector.yaml`에서 장치별 `expected_period_s`와 `periodic`을 읽는다. 설정 해시(sha256, 정렬된 JSON)를 계산한다. 오류는 `파일: 경로: 이유` 형식
+- [X] T006 `src/analysis/extract.py`: `collector.store.connect`로 접속해 달마다 한 번씩 읽는다.
   - 쿼리: `SELECT ts, space_id, device_id, item, value, source FROM measurement WHERE item IN (...) AND ts >= 월초 AND ts < 다음 달 초`
   - 저장: `var/cache/raw/YYYY-MM.parquet`(ts는 timestamp[ms, UTC], 문자열 열은 category)
   - 기록: `var/cache/manifest.json`에 `{rows, sha256, extracted_at, closed}`. 지난 달은 `closed=true`이면 건너뛰고, `--refresh`면 다시 읽는다
   - 결과: 월별 행 수 표를 돌려준다
-- [ ] T007 `src/analysis/__main__.py`: argparse CLI 골격. 명령은 `extract`·`clean`·`events`·`split`·`diagnose`·`baseline`·`all`·`info`, 공통 `--config`·`--split`. 종료 코드는 0 / 2 설정 / 3 DB / 4 데이터 부족(contracts/cli.md)
-- [ ] T008 [P] `tests/analysis/test_config.py`: 정상 설정 로드, 분할 겹침·순서·경계 간격 위반 시 오류, 과제 1 주기 읽기(`24e124126d152590` → 120, 문 센서 → periodic False)
+- [X] T007 `src/analysis/__main__.py`: argparse CLI 골격. 명령은 `extract`·`clean`·`events`·`split`·`diagnose`·`baseline`·`all`·`info`, 공통 `--config`·`--split`. 종료 코드는 0 / 2 설정 / 3 DB / 4 데이터 부족(contracts/cli.md)
+- [X] T008 [P] `tests/analysis/test_config.py`: 정상 설정 로드, 분할 겹침·순서·경계 간격 위반 시 오류, 과제 1 주기 읽기(`24e124126d152590` → 120, 문 센서 → periodic False)
 
 **Checkpoint**: `analysis extract` 결과 `var/cache/raw/`에 2025-08 ~ 2026-10 사본, `analysis info`에 월별 행 수가 나온다.
 
@@ -54,23 +54,23 @@ description: "과제 2 데이터 이해와 기준선 작업 목록"
 
 ### Tests
 
-- [ ] T009 [P] [US1] `tests/analysis/test_quality.py`
+- [X] T009 [P] [US1] `tests/analysis/test_quality.py`
   - A1: CO₂ 65535·0 → error
   - A2: 같은 장치·시각의 습도 127.5와 온도 −0.1 → 둘 다 error. 한쪽만 있으면 error가 아니다
   - A3: 범위 밖 → error
   - A4: CO₂ 5000 → saturated
   - 원본 행 수가 보존된다(SC-006)
-- [ ] T010 [P] [US1] `tests/analysis/test_gaps.py`
+- [X] T010 [P] [US1] `tests/analysis/test_gaps.py`
   - 60초 장치 간격 150초 → 결측, 110초 → 결측 아님
   - 600초 장치 간격 900초 → 결측 아님
   - 짧은 결측 10분 → 선형 보간 + filled 표시
   - 20분 결측 → 보간하지 않음
   - 인위 결측 시험 함수가 길이별 MAE 표를 돌려준다
-- [ ] T011 [P] [US1] `tests/analysis/test_series.py`
+- [X] T011 [P] [US1] `tests/analysis/test_series.py`
   - 센서 3대의 5분 칸 평균 → 중앙값과 `n_sensors`
   - `exclude_from_space` 센서는 빠진다
   - error 값은 빠지고 saturated는 남는다
-- [ ] T012 [P] [US1] `tests/analysis/test_axes.py` — 합성 시나리오 4개(SC-007)
+- [X] T012 [P] [US1] `tests/analysis/test_axes.py` — 합성 시나리오 4개(SC-007)
   - 화재: 실습실 센서 2대 온도가 30분에 25 → 45℃, 습도 하락, 뒤에 끊김 → 축 A error 0, B1 1건
   - 오류 코드 쌍 → A error, 사건 0
   - 단독 튐(센서 1대 1칸 +800ppm) → B0
@@ -79,21 +79,21 @@ description: "과제 2 데이터 이해와 기준선 작업 목록"
 
 ### Implementation
 
-- [ ] T013 [US1] `src/analysis/quality.py`: `apply_axis_a(raw, cfg) -> DataFrame[ts, device_id, item, quality, rule]`. 원본은 바꾸지 않는다
+- [X] T013 [US1] `src/analysis/quality.py`: `apply_axis_a(raw, cfg) -> DataFrame[ts, device_id, item, quality, rule]`. 원본은 바꾸지 않는다
   - A1 `error_codes`
   - A2 `error_pairs`: device_id·ts로 짝을 맞춘다
   - A3 `ranges` + `models` 덮어쓰기(기종은 `device` 테이블의 model을 extract에서 함께 받거나 별도 조회)
   - A4 `saturation`
-- [ ] T014 [US1] `src/analysis/gaps.py`
+- [X] T014 [US1] `src/analysis/gaps.py`
   - `find_gaps(device_ts, period_s, factor=2)`
   - `interpolate_short(sensor_bins, max_min=15)`: 같은 장치 내 선형 보간, filled 표시
   - `interpolation_test(series, lengths=[5,10,15,30,60], rng_seed=0)`: 결측 없는 학습 구간에 인위 결측을 넣고 길이별 MAE와 칸 안 잡음(표준편차 중앙값)을 낸다
-- [ ] T015 [US1] `src/analysis/series.py`
+- [X] T015 [US1] `src/analysis/series.py`
   - 처리: 센서별 5분 칸 평균(error 제외) → 짧은 결측 보간 → 공간별 중앙값
   - 결과 열: `bin, space_id, item, value, n_sensors, filled`
   - 저장: `var/series/space_5min.parquet`
   - `--interval` 후보(1·5·15분)로도 만들 수 있게 매개변수화한다
-- [ ] T016 [US1] `src/analysis/events.py`
+- [X] T016 [US1] `src/analysis/events.py`
   - `detect(series_by_sensor, quality, cfg, train_stats) -> events DataFrame[space_id, kind, start, end, devices, evidence, rule_version]`
     - B1 화재(센서 2대 이상, 30분 상승 ≥5℃, 습도 하락, 이후 끊김·포화 가산)
     - B2 누수(습도 ≥95% 30분)
@@ -101,7 +101,7 @@ description: "과제 2 데이터 이해와 기준선 작업 목록"
     - B0(공간 중앙값 대비 학습 MAD×10)
   - `stuck_candidates(...)`: 2시간 이상 같은 값이고 같은 공간 다른 센서는 변한 경우
   - 저장: `var/cache/events.parquet`, `docs/reports/task2/events.md`
-- [ ] T017 [US1] `src/analysis/__main__.py`에 `clean`·`events` 연결
+- [X] T017 [US1] `src/analysis/__main__.py`에 `clean`·`events` 연결
   - `clean`은 규칙별 건수 표와 검산 줄(`ok N + saturated N + error N = 원본 N`)을 출력한다
   - 학습 기간 통계(p99.9, MAD)는 분할 버전의 학습 기간에서만 계산한다(T019에서 받는다. 없으면 분할 먼저 실행)
 
@@ -115,15 +115,15 @@ description: "과제 2 데이터 이해와 기준선 작업 목록"
 
 **Independent Test**: 시험 기간 값을 바꿔도 정규화 통계와 학습 기반 임계값이 같다.
 
-- [ ] T018 [P] [US4] `tests/analysis/test_split.py`
+- [X] T018 [P] [US4] `tests/analysis/test_split.py`
   - 분할 경계 계산은 KST 날짜 → UTC 구간
   - 시험 기간 값을 ×10 해도 `norm_stats`·`train_quantile`·MAD가 같다(SC-002)
   - 학습 기간에 시험 기간 칸이 하나도 섞이지 않는다
-- [ ] T019 [US4] `src/analysis/split.py`
+- [X] T019 [US4] `src/analysis/split.py`
   - `periods(cfg, version) -> {train, val, test: (start_utc, end_utc)}`
   - `fit_train_stats(series, train)`: 공간×항목 평균·표준편차·p99.9·MAD, 칸 수, 학습 구간 데이터 해시. 저장은 `var/eval/norm_<split>.json`
   - `autocorr(series, lags=[1, 12, 288])`
-- [ ] T020 [US4] `__main__.py`에 `split` 연결. 분할 기간별 칸 수·데이터 비율 표를 출력하고, 학습·검증·시험 중 어느 하나라도 대상 공간 데이터가 없으면 종료 코드 4와 이유
+- [X] T020 [US4] `__main__.py`에 `split` 연결. 분할 기간별 칸 수·데이터 비율 표를 출력하고, 학습·검증·시험 중 어느 하나라도 대상 공간 데이터가 없으면 종료 코드 4와 이유
 
 ---
 
