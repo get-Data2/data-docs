@@ -4,6 +4,16 @@
 
 > 💻 **코드는 [get-Data2/data](https://github.com/get-Data2/data)**에 있다.
 
+## 최종 제출물(과제 안내서 4절)
+
+| 제출물 | 문서 |
+|---|---|
+| README 조건 대비 수행 점검 | [submission/00-readme-audit.md](submission/00-readme-audit.md) |
+| 결과 보고서(과제 1~8, 표·그래프 중심) | [submission/01-final-report.md](submission/01-final-report.md) |
+| 상시 서비스(수집기·추론 서비스, 조회 API) | [submission/02-service.md](submission/02-service.md) |
+| 결과 형식 문서(1~2쪽) | [submission/03-result-format.md](submission/03-result-format.md) |
+| 발표(5분, 가장 의외였던 발견) | [submission/04-presentation.md](submission/04-presentation.md) |
+
 ## 원칙
 
 - [프로젝트 헌법](../.specify/memory/constitution.md): 7개 원칙

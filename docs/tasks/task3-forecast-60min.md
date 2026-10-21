@@ -28,7 +28,7 @@
 | # | README 요구 | 해결 방법 | 근거·위치 | 상태 |
 |---|---|---|---|---|
 | 1 | 입력·출력 설계: 과거 길이, 입력 정보, 한 번에 vs 반복 | 검증 MAE로 한 단계씩 골랐다(D1~D4). 결과는 아래 표 | [산출물 ① "최종 모델"](../deliverables/task3/01-model-comparison.md#최종-모델) | ✅ |
-| 2 | 딥러닝 모델(B: 3종 비교) | GRU·LSTM·TCN × 과거 1·2·4시간 = 9조합 × 씨앗 3. GRU가 모든 길이에서 최소 | [심화 ①](../advanced/task3/01-lookback-model.md) | ✅ |
+| 2 | 딥러닝 모델(B: 3종 비교) | GRU·LSTM·TCN × 과거 1·2·4시간 = 9조합 × 씨앗 3. 검증(선택 기준)과 시험(보고용) 모두 GRU가 실습실·사무실에서 최소. 회의실만 TCN이 3% 낮음 | [산출물 ① 비교표](../deliverables/task3/01-model-comparison.md#세-모델--과거-길이-비교--왜-gru인가), [심화 ①](../advanced/task3/01-lookback-model.md) | ✅ |
 | 3 | 기준선과 같은 시점 5·15·30·60분 비교 | 과제 2 평가 시점 파일 그대로. 공간 × 항목 × 지평 표(전체·사용 시간대) | [산출물 ①](../deliverables/task3/01-model-comparison.md), [표](../deliverables/task3/tables/01-comparison.md), 그래프 `figures/horizon_mae.png` | ✅ |
 | 4 | 공간별 분석(어디서 잘 맞고 왜) | 센서가 촘촘하고 일정이 규칙적일수록 잘 맞는다. 일과 단계별 오차, 오차 상위 20개, 창문 개방 추정 구간, 밀집 사건 | [산출물 ②](../deliverables/task3/02-space-error-analysis.md) | ✅ |
 | 5 | 일정 정보의 가치(숫자로) | 최종 모델과 "일정만 뺀" 모델을 같은 씨앗끼리 비교(선택 전에 정한 쌍) | [산출물 ③](../deliverables/task3/03-schedule-value.md) | ✅ |
@@ -107,6 +107,7 @@ Jetson 터미널에서 `cd ~/Desktop/project` 뒤에 실행한다. 2026-10-21 21
 | 실행·선택 상태 | `forecast info` | `실행 기록: 완료 61, 실패 2`, 단계별 고른 후보, `선택 고정: 있음 2026-10-21T08:23:22+00:00` |
 | 단위·누수 시험 | `.venv/bin/python -m pytest tests/forecast` | 27 passed |
 | 평가 시점이 과제 2와 같음 | `sha256sum var/eval/eval_points_v1-provisional.parquet` | `2f878c11d09ab68d…` |
+| 모델 × 과거 길이 9조합 시험 성적(보고용, 선택 고정 뒤) | `forecast b1-test` | `→ var/forecast/b1_test.parquet`(9조합 × 씨앗 3, 산출물 ① 비교표의 시험 열) |
 | 산출물 다시 만들기 | `forecast report` | `docs/deliverables/task3/`·`docs/advanced/task3/`의 표·그래프 갱신 |
 | 서비스에서 쓰는 묶음 | `cat var/forecast/bundle/bundle.json \| head -c 300` | `config_hash` `52aff4f0c4bf` |
 | 누수 게이트 | `.venv/bin/python -m pytest tests/forecast/test_pipeline.py -k "selection_gate or test_period or tamper"` | 3 passed — 선택 전 시험 평가 거부, 시험 기간이 학습에 영향 없음, 고정 뒤 바뀐 모델 거부 |
