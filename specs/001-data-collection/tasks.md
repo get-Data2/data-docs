@@ -88,7 +88,7 @@ description: "과제 1 데이터 수집 체계 작업 목록"
 - [X] T026 [P] [US2] `deploy/team2-collector.service`: `[Service] Type=simple`, `WorkingDirectory=%h/Desktop/project`, `ExecStart=/usr/bin/flock -n %h/Desktop/project/var/collector.lock %h/Desktop/project/.venv/bin/python -m collector run`, `ExecReload=/bin/kill -HUP $MAINPID`, `Restart=always`, `RestartSec=5`, `MemoryMax=256M`, `[Install] WantedBy=default.target`
 - [X] T027 [P] [US2] `deploy/run_forever.sh`: cron 대체 감시 — `flock -n var/collector.lock`로 이미 돌면 종료, 아니면 무한 루프(수집기 실행, 종료 시 5초 후 재실행), 로그 `var/collector.log`(10MB 회전)
 - [X] T028 [US2] `deploy/install.sh`: `mkdir -p var ~/.config/systemd/user` → 서비스 링크·`daemon-reload`·`enable --now`; `loginctl enable-linger "$USER"` 시도 후 `loginctl show-user -p Linger` 확인; 실패 시 `crontab`에 `@reboot …/deploy/run_forever.sh`를 중복 없이 추가하고 결과 출력 (research R5)
-- [ ] T029 [US2] 실제 설치 실행 및 linger/cron 중 무엇이 적용됐는지 확인, 재부팅 시험 절차·결과를 `docs/collector-ops.md`에 기록(부팅 시각 `uptime -s` vs 첫 `start` 사건 vs 첫 저장 시각) (SC-002)
+- [X] T029 [US2] 실제 설치 실행 및 linger/cron 중 무엇이 적용됐는지 확인, 재부팅 시험 절차·결과를 `docs/collector-ops.md`에 기록(부팅 시각 `uptime -s` vs 첫 `start` 사건 vs 첫 저장 시각) (SC-002)
 
 **Checkpoint**: 상시 운영 가능.
 

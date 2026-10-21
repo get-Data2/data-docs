@@ -15,6 +15,21 @@
   - 사람 손 없는 복구
   - 해석 우선
 
+## 과제별 산출물 문서
+
+README의 해결할 것·확인 기준·산출물·생각해 볼 점·심화(B)를 하나도 빠뜨리지 않고 대응시킨 문서다. 최종 결과 보고서는 이 8개를 묶어 만든다.
+
+| 과제 | 문서 | 상태 |
+|---|---|---|
+| 1. 데이터 수집 체계 | [task1-data-collection.md](tasks/task1-data-collection.md) | 🟢 완료(운영 중), 24h 최종표만 남음 |
+| 2. 데이터 이해와 기준선 | [task2-data-baseline.md](tasks/task2-data-baseline.md) | 🟡 spec 초안 |
+| 3. 60분 예측 | [task3-forecast-60min.md](tasks/task3-forecast-60min.md) | ⚪ 점검표 |
+| 4. 이상 탐지 | [task4-anomaly-detection.md](tasks/task4-anomaly-detection.md) | ⚪ 점검표 |
+| 5. 상태 추정 | [task5-state-estimation.md](tasks/task5-state-estimation.md) | ⚪ 점검표 |
+| 6. 사전학습 모델 비교 | [task6-pretrained-models.md](tasks/task6-pretrained-models.md) | ⚪ 점검표 |
+| 7. 엣지 최적화 | [task7-edge-optimization.md](tasks/task7-edge-optimization.md) | ⚪ 점검표 |
+| 8. 상시 추론 서비스 | [task8-inference-service.md](tasks/task8-inference-service.md) | ⚪ 점검표 |
+
 ## 과제별 계획
 
 | 과제 | 상태 | 요구사항 | 설계 | 작업 |
