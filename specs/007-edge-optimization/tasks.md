@@ -29,7 +29,7 @@ description: "과제 7 엣지 최적화 작업 목록"
   - 합성 Linear·Conv1d·GRU를 ONNX로 내보낸다
   - ORT CPU·CUDA EP, TensorRT FP16 엔진 생성·실행, ORT TensorRT EP를 실행한다
   - 결과 일치(FP32 1e-5, FP16 1e-2)와 실패 사유를 `var/edgeopt/probe.json`에 쓴다
-- [ ] T003 `edgeopt probe`를 실행한다(GPU 그룹 래퍼 경유)
+- [X] T003 `edgeopt probe`를 실행한다(GPU 그룹 래퍼 경유)
   - 실패하면 research R2의 대안 순서대로 시도한다: lib 경로 → ORT TensorRT EP → torch-tensorrt
   - 결과를 research에 기록한다
   - **모두 실패하면 사용자에게 관리자 요청(JetPack TensorRT) 여부를 묻는다**
@@ -38,7 +38,7 @@ description: "과제 7 엣지 최적화 작업 목록"
 
 ## Phase 1: Setup
 
-- [ ] T004 [P] (총괄 작업자가 반영) `pyproject.toml`에 extra `edgeopt = ["onnx", "onnxruntime-gpu", "tensorrt-cu13"]`를 넣고, pytest 마커 `trt`를 등록한다
+- [X] T004 [P] (총괄 작업자가 반영) `pyproject.toml`에 extra `edgeopt = ["onnx", "onnxruntime-gpu", "tensorrt-cu13"]`를 넣고, pytest 마커 `trt`를 등록한다
 - [X] T005 [P] `tools/edgeopt` 래퍼를 만든다
   - `tools/forecast`와 같은 GPU 그룹 처리
   - pip TensorRT lib 경로를 `LD_LIBRARY_PATH`에 넣는다
@@ -91,8 +91,8 @@ description: "과제 7 엣지 최적화 작업 목록"
   - 실행 래퍼(`execute_async_v3` + 스트림 동기화)
   - 생성 환경 기록
 - [X] T016 [P] [US1] `tests/edgeopt/test_export.py` (unit): 합성 예측·오토인코더 ONNX 내보내기 → ORT CPU 결과가 PyTorch와 같다. 배치 1·3·4 동작
-- [ ] T017 [P] [US1] `tests/edgeopt/test_trt.py` (마커 trt): 합성 모델 FP16 엔진 결과가 1e-2 이내다
-- [ ] T018 [US1] `edgeopt export && edgeopt build`를 실데이터 묶음으로 실행하고, 성공·실패와 빌드 시간을 기록한다
+- [X] T017 [P] [US1] `tests/edgeopt/test_trt.py` (마커 trt): 합성 모델 FP16 엔진 결과가 1e-2 이내다
+- [X] T018 [US1] `edgeopt export && edgeopt build`를 실데이터 묶음으로 실행하고, 성공·실패와 빌드 시간을 기록한다
 
 ---
 
@@ -104,7 +104,7 @@ description: "과제 7 엣지 최적화 작업 목록"
   - 오토인코더: 점수 차이와 과제 4 임계값 기준 경보 판정 바뀐 비율
   - 분류기: 바뀐 비율
 - [X] T020 [P] [US3] `tests/edgeopt/test_diff.py` (unit): 일부러 0.5ppm·1.5ppm 차이를 넣은 출력으로 판정 ✅/❌, 바뀐 비율 계산
-- [ ] T021 [US3] `edgeopt diff`를 실행하고 판정표를 확인한다
+- [X] T021 [US3] `edgeopt diff`를 실행하고 판정표를 확인한다
   - CO₂ 최대 차이가 1ppm을 넘으면 그 표본(공간·시각·입력 범위)을 본다
   - `trt.fp32_last_layer`를 켜고 다시 만든 뒤 비교한다(research R4·R7)
 
@@ -112,21 +112,21 @@ description: "과제 7 엣지 최적화 작업 목록"
 
 ## Phase 5: User Story 2·4 — 지연과 자원 (P1, 보드가 조용할 때)
 
-- [ ] T022 [US2] `edgeopt bench` 전체(방식 × 모델 × 배치 1·3·4, CPU 스레드 6·1)
+- [X] T022 [US2] `edgeopt bench` 전체(방식 × 모델 × 배치 1·3·4, CPU 스레드 6·1)
   - 측정 조건·`tegrastats`·메모리를 기록한다
   - 경합으로 표시된 측정은 다시 잰다
-- [ ] T023 [US2] 재현성: 같은 조합 일부(예측 최종 × 4방식 × 배치 1)를 다른 시각에 다시 재서 p95가 ±20% 안인지 확인한다
-- [ ] T024 [US4] 전처리 시간(과제 3 입력 만들기 1회)을 재고, 서비스 한 주기 예산(60초) 대비 비중을 계산한다(과제 8 입력)
+- [~] T023 (같은 날 FP16·FP32·INT8을 나눠 측정 — 시각을 달리한 재측정은 미실시) [US2] 재현성: 같은 조합 일부(예측 최종 × 4방식 × 배치 1)를 다른 시각에 다시 재서 p95가 ±20% 안인지 확인한다
+- [X] T024 [US4] 전처리 시간(과제 3 입력 만들기 1회)을 재고, 서비스 한 주기 예산(60초) 대비 비중을 계산한다(과제 8 입력)
 
 ---
 
 ## Phase 6: User Story 5 — 보고서 (P2)
 
-- [ ] T025 [US5] `src/edgeopt/report.py` + `edgeopt report`
+- [X] T025 [US5] `src/edgeopt/report.py` + `edgeopt report`
   - 표: 방식 × 모델 × 배치 지연(평균·p95)·결과 차이·메모리·전력·에너지, 판정표
   - 그래프: 방식별 지연 분포(상자 그림), 배치별 지연, 1회당 에너지
-- [ ] T026 [US5] `edgeopt runtime --runner <결정>`: 과제 8용 실행 묶음을 고정한다
-- [ ] T027 [US5] `docs/deliverables/task7/01-optimization-report.md` 본문
+- [X] T026 [US5] `edgeopt runtime --runner <결정>`: 과제 8용 실행 묶음을 고정한다
+- [X] T027 [US5] `docs/deliverables/task7/01-optimization-report.md` 본문
   - 측정 조건, 표, 결론(과제 8 실행 방식과 이유)
   - Q1~Q3의 답을 측정 숫자로 쓴다(research R10)
 
@@ -134,21 +134,21 @@ description: "과제 7 엣지 최적화 작업 목록"
 
 ## Phase 7: User Story 6 — 심화 (P3)
 
-- [ ] T028 [US6] INT8: 학습 기간 표본 2,000개(씨앗 0)로 보정해 엔진을 만들고 `bench`·`diff`를 돌린다. 순환 신경망 미지원이면 기록한다
-- [ ] T029 [US6] `src/edgeopt/colocate.py` + `edgeopt colocate`
+- [X] T028 [US6] INT8: 학습 기간 표본 2,000개(씨앗 0)로 보정해 엔진을 만들고 `bench`·`diff`를 돌린다. 순환 신경망 미지원이면 기록한다
+- [X] T029 [US6] `src/edgeopt/colocate.py` + `edgeopt colocate`
   - 서비스 구성 동시 적재(방식별) 총 메모리·지연
   - LLM 크기 가정(1B·3B·7B, 4비트) 조합 표
-- [ ] T030 [US6] `docs/advanced/task7/01-int8.md`, `02-colocation-llm.md` 본문과 해석
+- [X] T030 [US6] `docs/advanced/task7/01-int8.md`, `02-colocation-llm.md` 본문과 해석
 
 ---
 
 ## Phase 8: Polish
 
-- [ ] T031 점검 문서 `docs/tasks/task7-edge-optimization.md`
+- [X] T031 점검 문서 `docs/tasks/task7-edge-optimization.md`
   - 해결할 것 4, 확인 기준 2, 산출물, 생각해 볼 점 3, 심화 2를 대응시킨다
   - **확인 명령**은 실행해 맞춘 뒤 적는다
-- [ ] T032 [P] `docs/deliverables/README.md`, `docs/README.md`, `.github/README.md`, `CLAUDE.md`를 갱신한다
-- [ ] T033 전체 시험(`unit`, 그리고 `trt`)을 실행하고 두 저장소를 커밋·푸시한다. 엔진·ONNX는 `var/`라 커밋하지 않는다
+- [X] T032 [P] `docs/deliverables/README.md`, `docs/README.md`, `.github/README.md`, `CLAUDE.md`를 갱신한다
+- [X] T033 전체 시험(`unit`, 그리고 `trt`)을 실행하고 두 저장소를 커밋·푸시한다. 엔진·ONNX는 `var/`라 커밋하지 않는다
 
 ---
 
