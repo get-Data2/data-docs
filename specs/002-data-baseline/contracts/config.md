@@ -71,8 +71,9 @@ schedule:                          # 고정 일과표(2026-10-21 결정). 실제
     - {space: office, days: [mon, tue, wed, thu, fri], start: "13:00", end: "18:00", kind: work}
   reaction: {pre_min: 15, window_min: 60, delta_ppm: 30, nonclass_use_ppm: 150}   # 비수업일 하루 상승폭이 이 이상이면 "사용"
 
-report:
-  out_dir: docs/reports/task2
+report:                            # 결과 값에 영향이 없어 규칙 해시에서 제외(2026-10-21)
+  out_dir: docs/reports/task2                 # 상세 기록(진단 상세 표, 사건 목록)
+  deliverable_dir: docs/deliverables/task2    # README 산출물(기준선 성능표, 그래프 figures/)
   font: "Noto Sans CJK KR"
 ```
 

@@ -15,20 +15,28 @@
   - 사람 손 없는 복구
   - 해석 우선
 
-## 과제별 산출물 문서
+## 폴더 구성
 
-README의 해결할 것·확인 기준·산출물·생각해 볼 점·심화(B)를 하나도 빠뜨리지 않고 대응시킨 문서다. 최종 결과 보고서는 이 8개를 묶어 만든다.
+| 폴더 | 담는 것 |
+|---|---|
+| [`deliverables/`](deliverables/README.md) | **산출물만**: 과제 안내서의 "산출물" 항목에 해당하는 문서(보고서·표·그래프). 최종 결과 보고서의 재료 |
+| [`tasks/`](tasks/) | **과제별 점검 문서**: 해결할 것·확인 기준·생각해 볼 점·심화(B)의 항목별 대응과 확인 명령 |
+| [`advanced/`](advanced/) | 심화(B) 결과 문서 |
+| [`ops/`](ops/) | 운영 가이드(설치·상태 확인·장애 대응) |
+| [`reports/`](reports/) | 측정·작업 기록(장비 현황, 적재 보고, 자동 생성 상세 표, 사건 목록) |
 
-| 과제 | 문서 | 상태 |
-|---|---|---|
-| 1. 데이터 수집 체계 | [task1-data-collection.md](tasks/task1-data-collection.md) | 🟢 완료(운영 중), 24h 최종표만 남음 |
-| 2. 데이터 이해와 기준선 | [task2-data-baseline.md](tasks/task2-data-baseline.md) | 🟢 완료 — 분할 `v1-provisional`을 과제 3~6 평가 기준으로 채택(2학기 `v2-final`은 망 복구 시 추가) |
-| 3. 60분 예측 | [task3-forecast-60min.md](tasks/task3-forecast-60min.md) | ⚪ 점검표 |
-| 4. 이상 탐지 | [task4-anomaly-detection.md](tasks/task4-anomaly-detection.md) | ⚪ 점검표 |
-| 5. 상태 추정 | [task5-state-estimation.md](tasks/task5-state-estimation.md) | ⚪ 점검표 |
-| 6. 사전학습 모델 비교 | [task6-pretrained-models.md](tasks/task6-pretrained-models.md) | ⚪ 점검표 |
-| 7. 엣지 최적화 | [task7-edge-optimization.md](tasks/task7-edge-optimization.md) | ⚪ 점검표 |
-| 8. 상시 추론 서비스 | [task8-inference-service.md](tasks/task8-inference-service.md) | ⚪ 점검표 |
+## 과제별 산출물과 점검 문서
+
+| 과제 | 산출물 | 점검 문서 | 상태 |
+|---|---|---|---|
+| 1. 데이터 수집 체계 | [수집 현황 보고](deliverables/task1/01-coverage-report-interim.md) · [형식 변경 대응 기록](deliverables/task1/02-format-change.md) | [task1](tasks/task1-data-collection.md) | 🟢 완료(운영 중), 24h 최종표만 남음 |
+| 2. 데이터 이해와 기준선 | [데이터 진단서](deliverables/task2/01-data-diagnosis.md) · [기준선 성능표](deliverables/task2/baseline_v1-provisional.md) | [task2](tasks/task2-data-baseline.md) | 🟢 완료 — 분할 `v1-provisional`이 과제 3~6 평가 기준(2학기 `v2-final`은 망 복구 시 추가) |
+| 3. 60분 예측 | — | [task3](tasks/task3-forecast-60min.md) | ⚪ 점검표 |
+| 4. 이상 탐지 | — | [task4](tasks/task4-anomaly-detection.md) | ⚪ 점검표 |
+| 5. 상태 추정 | — | [task5](tasks/task5-state-estimation.md) | ⚪ 점검표 |
+| 6. 사전학습 모델 비교 | — | [task6](tasks/task6-pretrained-models.md) | ⚪ 점검표 |
+| 7. 엣지 최적화 | — | [task7](tasks/task7-edge-optimization.md) | ⚪ 점검표 |
+| 8. 상시 추론 서비스 | — | [task8](tasks/task8-inference-service.md) | ⚪ 점검표 |
 
 ## 과제별 계획
 
@@ -56,14 +64,15 @@ README의 해결할 것·확인 기준·산출물·생각해 볼 점·심화(B)�
   - ChirpStack이 같은 업링크를 두 번 발행한다. 그래서 (장치, fCnt)로 중복을 걸러 낸다.
   - 설치 직후 브로커에 같은 client_id를 쓰는 다른 클라이언트가 있어 1초마다 서로 밀어냈다. client_id를 바꾸고 감지 기능을 넣었다.
 
-## 결과 문서
+## 그 밖의 문서
 
-| 문서 | 상태 |
-|---|---|
-| [collector-ops.md](collector-ops.md): 수집기 운영 가이드·장애 대응·확인 기준 검증 기록 | ✅ |
-| [format-change-case.md](format-change-case.md): 형식 변경 대응 기록(과제 1 산출물) | ✅ |
-| [reports/2026-10-21-coverage-interim.md](reports/2026-10-21-coverage-interim.md): 수집 현황 보고(과제 1 산출물) — 중간 16.3시간, 핵심 항목 공간별 최저 98.0% | 🟡 24시간 최종본은 10-21 16:40 이후 |
-| [reports/2026-10-21-backfill.md](reports/2026-10-21-backfill.md): InfluxDB 과거 데이터 적재 — 978만 행, 장치 미특정 75만 행 원인과 계획 | 🟡 유선망 복구 대기 |
-| [storage-policy.md](storage-policy.md): 저장소 1년 추정(8.2GB)과 보관 정책(심화 B) | ✅ |
+| 문서 | 내용 | 상태 |
+|---|---|---|
+| [ops/collector-ops.md](ops/collector-ops.md) | 수집기 운영 가이드·장애 대응·확인 기준 검증 기록 | ✅ |
+| [advanced/storage-policy.md](advanced/storage-policy.md) | 과제 1 심화(B): 저장소 1년 추정(8.2GB)과 보관 정책 | ✅ |
+| [reports/2026-10-21-devices.md](reports/2026-10-21-devices.md) | 장비 현황(정상·수신 중단·판단 보류·배터리) | ✅ |
+| [reports/2026-10-21-backfill.md](reports/2026-10-21-backfill.md) | InfluxDB 과거 데이터 적재 — 978만 행, 장치 미특정 75만 행 원인과 계획 | 🟡 유선망 복구 대기 |
+| [reports/task2/diagnosis_v1-provisional.md](reports/task2/diagnosis_v1-provisional.md) | 과제 2 진단 상세 표(자동 생성, 진단서의 숫자 원본) | ✅ |
+| [reports/task2/events.md](reports/task2/events.md) | 과제 2 사건 후보·값 고정 목록(과제 4 입력) | ✅ |
 
 모든 결과표에는 측정 조건(데이터 기간, 실/합성, 시험 기간, 전력 모드)을 함께 적는다.

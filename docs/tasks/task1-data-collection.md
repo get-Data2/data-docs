@@ -1,9 +1,12 @@
-# 과제 1. 데이터 수집 체계 — 산출물
+# 과제 1. 데이터 수집 체계 — 점검 문서
 
 > 상태: 🟢 **완료(운영 중)**. 남은 것은 24시간 최종 현황표(2026-10-21 16:40 이후)와 InfluxDB 미적재분(유선망 복구 대기).
 > 측정 조건: Jetson(L4T R39, aarch64), 실데이터, 수집 2026-10-20 16:33 KST~, 보드 전력 모드 기본값(측정에 영향 없음).
 > 계획: [spec](../../specs/001-data-collection/spec.md) · [plan](../../specs/001-data-collection/plan.md) · [tasks](../../specs/001-data-collection/tasks.md) ·
 > 코드: [get-Data2/data](https://github.com/get-Data2/data) `src/collector/`
+>
+> 이 문서는 README 항목(해결할 것·확인 기준·생각해 볼 점·심화)별 대응과 확인 명령을 모은 **점검 문서**다. 산출물 본문은 [산출물 폴더](../deliverables/README.md)에 있다.
+> 산출물: [① 수집 현황 보고](../deliverables/task1/01-coverage-report-interim.md) · [② 형식 변경 대응 기록](../deliverables/task1/02-format-change.md)
 
 ## 요약
 
@@ -26,9 +29,9 @@ MQTT 두 원천(ChirpStack LoRaWAN 센서, xflow 냉난방)을 구독해 **공�
 | # | README 요구 | 해결 방법 | 근거·위치 |
 |---|---|---|---|
 | 1 | MQTT 센서 메시지를 **공간·항목·시각별로 저장**하는 수집기를 상시 가동 | `wonil-collector`(systemd 사용자 서비스)가 구독 → 해석 → 보드 내 스풀 → MySQL `measurement` 일괄 기록. 기준 시각은 네트워크 서버 시각(`nsTime`). 원천 시각과 수신 시각도 함께 저장 | [data-model](../../specs/001-data-collection/data-model.md), [research R1·R2](../../specs/001-data-collection/research.md) |
-| 2 | 형식 변경·새 센서에 **설정만 바꿔** 대응 | `config/collector.yaml`의 원천 규칙(경로 표현식), 공간 매핑(장치 지정 → 별칭 → unmapped), 항목 별칭, 장치별 주기. 반영은 `reload`(재시작 없음) | [형식 변경 대응 기록](../format-change-case.md), [설정 형식](../../specs/001-data-collection/contracts/config.md) |
-| 3 | 브로커 재시작·네트워크 끊김·재부팅 뒤 **사람 손 없이 재수집** | 재접속(최대 30초 간격), 구독 확인 뒤 접속 판정, 5분 무수신 시 강제 재접속, client_id 충돌 감지, DB 장애는 스풀이 흡수(최대 40만 행), 거부 행 격리, `Restart=always`, `Linger=yes` | [운영 가이드](../collector-ops.md) |
-| 4 | 공간·항목별 **건수, 마지막 수신, 커버율**을 한눈에 | `collector report`: ① 확인 필요 장치 ② 공간·항목별 ③ 장치별(관측 주기 포함) ④ 빠진 구간과 원인 단서. 연결 점검은 `collector check` | [중간 현황 보고](../reports/2026-10-21-coverage-interim.md) |
+| 2 | 형식 변경·새 센서에 **설정만 바꿔** 대응 | `config/collector.yaml`의 원천 규칙(경로 표현식), 공간 매핑(장치 지정 → 별칭 → unmapped), 항목 별칭, 장치별 주기. 반영은 `reload`(재시작 없음) | [형식 변경 대응 기록](../deliverables/task1/02-format-change.md), [설정 형식](../../specs/001-data-collection/contracts/config.md) |
+| 3 | 브로커 재시작·네트워크 끊김·재부팅 뒤 **사람 손 없이 재수집** | 재접속(최대 30초 간격), 구독 확인 뒤 접속 판정, 5분 무수신 시 강제 재접속, client_id 충돌 감지, DB 장애는 스풀이 흡수(최대 40만 행), 거부 행 격리, `Restart=always`, `Linger=yes` | [운영 가이드](../ops/collector-ops.md) |
+| 4 | 공간·항목별 **건수, 마지막 수신, 커버율**을 한눈에 | `collector report`: ① 확인 필요 장치 ② 공간·항목별 ③ 장치별(관측 주기 포함) ④ 빠진 구간과 원인 단서. 연결 점검은 `collector check` | [중간 현황 보고](../deliverables/task1/01-coverage-report-interim.md) |
 
 ### 저장 정확성 검증 (해결할 것 1의 근거)
 
@@ -49,39 +52,12 @@ MQTT 두 원천(ChirpStack LoRaWAN 센서, xflow 냉난방)을 구독해 **공�
 
 ## 산출물
 
-### 1) 수집 현황 보고
-
-- [중간 현황 보고(16.3시간)](../reports/2026-10-21-coverage-interim.md): 공간·항목별 커버율 표, 장치별 표, 결측 구간과 추정 원인.
-- 24시간 최종본은 `docs/reports/2026-10-21-coverage.md`로 추가한다.
-
-| 공간 | co2 | 온도 | 습도 | 비고 |
-|---|---|---|---|---|
-| 실습실 | 99.8% | 99.9% | 99.9% | CO₂ 4대·온습도 8대 |
-| 사무실 | 99.8% | 99.9% | 99.9% | |
-| 회의실 | 98.0% | 98.0% | 98.0% | 10분 주기 센서 1대가 2회 누락 |
-| 사무실 밖 | — | 99.9% | 99.9% | |
-| 개발실(냉난방) | — | 100.0% | 100.0% | 보고 간격 60·120초 혼재 → 기대 주기 120초 |
-
-**결측 구간과 원인**
-
-| 구간 | 원인 | 근거 |
+| README 산출물 | 위치 | 상태 |
 |---|---|---|
-| 10-20 17:28 (46초) | 사용자 재부팅 | `stop`→부팅→`start` 사건 |
-| 10-20 17:33~17:37, 장치 9대 2~3분 | 수집기 쪽 MQTT keepalive timeout + DB 62초 실패(재부팅 직후 무선망 불안정 추정) | `db_down`→`mqtt_disconnected`→`mqtt_connected`→`db_up`. 스풀 덕분에 손실 0 |
-| 개별 장치 2분 2회 | LoRa 패킷 연속 손실 | 다른 장치는 정상 |
+| 수집 현황 보고(공간·항목별 커버율 표, 결측 구간과 추정 원인) | [deliverables/task1/01-coverage-report-interim.md](../deliverables/task1/01-coverage-report-interim.md) | 🟡 중간본(16.3시간, 핵심 항목 공간별 최저 98.0%). 24시간 최종본은 10-21 16:40 이후 `01-coverage-report.md`로 추가 |
+| 메시지 형식 변경 상황 가정과 대응 기록 | [deliverables/task1/02-format-change.md](../deliverables/task1/02-format-change.md) | ✅ 가정 2개(필드 이름 변경, 새 원천), 설정만 수정·코드 0줄 |
 
-### 2) 메시지 형식 변경 대응 기록
-
-- [format-change-case.md](../format-change-case.md)에 두 가지 가정 상황을 기록했다.
-  - 펌웨어가 `co2`를 `co2_ppm`으로 바꾼 경우
-  - 다른 제품의 게이트웨이가 새 토픽·구조로 보내는 경우
-- 두 경우 모두 `config/collector.yaml`만 고쳐 대응했다(코드 수정 0줄, 자동 시험 `tests/unit/test_format_change.py`).
-- 실제 운영 중에도 설정만으로 대응한 사례가 있다.
-  - 새로 발견한 장치 4대가 공간 별칭으로 자동 매핑됐다.
-  - 장치별 보고 주기 7건을 설정에 넣었다.
-  - 문 열림 센서를 사건형으로 지정했다.
-  - 공간 '창고'를 추가했다.
-  - client_id를 바꿨다.
+산출물이 아닌 부속 기록: [운영 가이드](../ops/collector-ops.md), [장비 현황](../reports/2026-10-21-devices.md), [InfluxDB 적재 보고](../reports/2026-10-21-backfill.md), 심화 결과 [보관 정책](../advanced/storage-policy.md)
 
 ## 생각해 볼 점
 
@@ -113,7 +89,7 @@ MQTT 두 원천(ChirpStack LoRaWAN 센서, xflow 냉난방)을 구독해 **공�
 
 | 심화 항목 | 결과 | 문서 |
 |---|---|---|
-| 1년 뒤 저장소 크기 추정과 다운샘플링·보관 정책 | 지금 속도(하루 약 10만 행, 행당 241바이트)로 **1년 8.2GB**. 원본 90일 + 이후 5분 집계면 **4.0GB**, 여기에 냉난방 상태값을 "바뀔 때만 + 15분 생존 기록"으로 저장하면 **약 2.9GB**. 저장량의 절반은 냉난방 반복값이고(야간 100% 반복), 환경 센서 원본은 값 고정 고장 탐지(과제 4)의 근거라 90일은 지킨다 | [storage-policy.md](../storage-policy.md) |
+| 1년 뒤 저장소 크기 추정과 다운샘플링·보관 정책 | 지금 속도(하루 약 10만 행, 행당 241바이트)로 **1년 8.2GB**. 원본 90일 + 이후 5분 집계면 **4.0GB**, 여기에 냉난방 상태값을 "바뀔 때만 + 15분 생존 기록"으로 저장하면 **약 2.9GB**. 저장량의 절반은 냉난방 반복값이고(야간 100% 반복), 환경 센서 원본은 값 고정 고장 탐지(과제 4)의 근거라 90일은 지킨다 | [storage-policy.md](../advanced/storage-policy.md) |
 | 같은 메시지가 두 번 오는 경우(재전송) 찾아 처리 | 실측: ChirpStack이 게이트웨이 조합만 다른 같은 업링크(같은 fCnt)를 두 번 발행. `deduplicationId`와 `nsTime`(1ms 차이)이 달라 DB 유일키로는 못 막는다. (장치, fCnt)를 2시간 동안 기억해 한 번만 저장한다. 16.7시간 동안 **600건(메시지의 3.4%)** 걸러냄(`ingest_stats.duplicate`). 재처리·재접속 중복은 유일키(장치·항목·기준 시각)로 막는다 | [research R8](../../specs/001-data-collection/research.md), `src/collector/dedup.py` |
 
 ## 확인 명령
@@ -138,7 +114,7 @@ MQTT 두 원천(ChirpStack LoRaWAN 센서, xflow 냉난방)을 구독해 **공�
 | 재부팅 뒤 첫 저장 시각 | 아래 SQL ② | 부팅 시각(`uptime -s`) + 1분 안 |
 | 실제 끊김·복구 기록 | 아래 SQL ③ | `mqtt_disconnected` 뒤 `mqtt_connected`, `db_down` 뒤 `db_up` |
 | **해결 4** 현황 보고(커버율·빠진 구간·원인) | `collector report --hours 24` | 표 ①~④, 핵심 항목 커버율 95% 이상 |
-| 보고서를 파일로 | `collector report --hours 24 --md docs/reports/$(date +%F)-coverage.md` | Markdown 파일 생성 |
+| 보고서를 파일로 | `collector report --hours 24 --md docs/deliverables/task1/01-coverage-report.md` | Markdown 파일 생성 |
 | **심화** 저장소 1년 추정 | `collector report --capacity` | 1년 크기 표(원본·집계 정책) |
 | **심화** 재전송(이중 발행) 거르기 | `.venv/bin/python -m pytest tests/unit/test_dedup.py` 그리고 아래 SQL ④ | `3 passed`, 중복 버림 건수 |
 | 과거 데이터 적재 진행 | `systemctl --user list-timers wonil-backfill.timer` / `journalctl --user -u wonil-backfill -n 5` | 다음 실행 시각 / 구간별 적재 행 수 |

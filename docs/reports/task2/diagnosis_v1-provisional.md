@@ -1,7 +1,7 @@
 # 데이터 진단 상세 (과제 2, 분할 v1-provisional)
 
-- 측정 조건: 실데이터, 학습 기간 2025-09-04 ~ 2026-03-31(KST) 기준 통계, 분석 간격 5분, 설정 829102ce1dcf
-- 다시 만들기: `analysis diagnose` (요약·해석은 `docs/tasks/task2-data-baseline.md`)
+- 측정 조건: 실데이터, 학습 기간 2025-09-04 ~ 2026-03-31(KST) 기준 통계, 분석 간격 5분, 설정 21fab7296b62
+- 다시 만들기: `analysis diagnose` (해석은 산출물 `docs/deliverables/task2/01-data-diagnosis.md`)
 
 ## 사실 요약(자동)
 
@@ -14,21 +14,21 @@
 
 | 공간 | 항목 | 원본 | ok | 포화 | 오류(제외) | 오류율 |
 |---|---|---|---|---|---|---|
-| ceo_room | humidity | 1,098 | 1,098 | 0 | 0 | 0.0% |
-| ceo_room | temperature | 1,098 | 1,098 | 0 | 0 | 0.0% |
-| dev_room | humidity | 758 | 758 | 0 | 0 | 0.0% |
-| dev_room | temperature | 758 | 758 | 0 | 0 | 0.0% |
-| lab | co2 | 843,298 | 842,225 | 4 | 1,069 | 0.127% |
-| lab | humidity | 846,559 | 846,537 | 0 | 22 | 0.003% |
-| lab | temperature | 846,288 | 846,266 | 0 | 22 | 0.003% |
-| meeting | co2 | 44,004 | 44,004 | 0 | 0 | 0.0% |
-| meeting | humidity | 43,673 | 43,673 | 0 | 0 | 0.0% |
-| meeting | temperature | 43,672 | 43,672 | 0 | 0 | 0.0% |
-| office | co2 | 404,754 | 404,754 | 0 | 0 | 0.0% |
-| office | humidity | 786,247 | 786,247 | 0 | 0 | 0.0% |
-| office | temperature | 786,227 | 786,227 | 0 | 0 | 0.0% |
-| office_out | humidity | 395,376 | 395,008 | 0 | 368 | 0.093% |
-| office_out | temperature | 395,710 | 395,342 | 0 | 368 | 0.093% |
+| ceo_room | humidity | 1,229 | 1,229 | 0 | 0 | 0.0% |
+| ceo_room | temperature | 1,229 | 1,229 | 0 | 0 | 0.0% |
+| dev_room | humidity | 853 | 853 | 0 | 0 | 0.0% |
+| dev_room | temperature | 853 | 853 | 0 | 0 | 0.0% |
+| lab | co2 | 843,570 | 842,497 | 4 | 1,069 | 0.127% |
+| lab | humidity | 847,237 | 847,215 | 0 | 22 | 0.003% |
+| lab | temperature | 846,966 | 846,944 | 0 | 22 | 0.003% |
+| meeting | co2 | 44,017 | 44,017 | 0 | 0 | 0.0% |
+| meeting | humidity | 43,686 | 43,686 | 0 | 0 | 0.0% |
+| meeting | temperature | 43,685 | 43,685 | 0 | 0 | 0.0% |
+| office | co2 | 404,885 | 404,885 | 0 | 0 | 0.0% |
+| office | humidity | 786,509 | 786,509 | 0 | 0 | 0.0% |
+| office | temperature | 786,489 | 786,489 | 0 | 0 | 0.0% |
+| office_out | humidity | 395,506 | 395,138 | 0 | 368 | 0.093% |
+| office_out | temperature | 395,840 | 395,472 | 0 | 368 | 0.093% |
 | storage | humidity | 436,462 | 436,450 | 0 | 12 | 0.003% |
 | storage | temperature | 436,482 | 436,470 | 0 | 12 | 0.003% |
 
@@ -141,8 +141,8 @@
 
 ## 7. 평일 시간대 패턴
 
-![pattern_co2_v1-provisional.png](pattern_co2_v1-provisional.png)
-![pattern_temperature_v1-provisional.png](pattern_temperature_v1-provisional.png)
+![pattern_co2_v1-provisional.png](../../deliverables/task2/figures/pattern_co2_v1-provisional.png)
+![pattern_temperature_v1-provisional.png](../../deliverables/task2/figures/pattern_temperature_v1-provisional.png)
 
 ## 8. 일정–CO₂ 반응 지연(고정 일과표)
 
@@ -157,7 +157,7 @@
 | office | 점심 끝(오후 시작) | 102 | 56% | 5.0 | 5~25 |
 | office | 퇴실 | 103 | 62% | 15.0 | 5~30 |
 
-![reaction_v1-provisional.png](reaction_v1-provisional.png)
+![reaction_v1-provisional.png](../../deliverables/task2/figures/reaction_v1-provisional.png)
 
 ### 어긋나는 날(학습 기간)
 

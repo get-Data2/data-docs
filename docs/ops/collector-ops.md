@@ -1,7 +1,7 @@
 # 수집기 운영 가이드 (과제 1)
 
 MQTT로 들어오는 센서·냉난방 메시지를 MySQL `cf_u36_d3`에 쌓는 상시 서비스 `wonil-collector`의 운영 방법이다.
-설계 근거는 data-docs의 [plan](../specs/001-data-collection/plan.md)과 [research](../specs/001-data-collection/research.md)에 있다.
+설계 근거는 data-docs의 [plan](../../specs/001-data-collection/plan.md)과 [research](../../specs/001-data-collection/research.md)에 있다.
 
 ## 구성
 
@@ -109,7 +109,7 @@ systemctl --user reload wonil-collector    # 설정(config/collector.yaml)만 �
 systemctl --user status wonil-collector
 journalctl --user -u wonil-collector -n 50 --no-pager
 .venv/bin/python -m collector report --hours 1          # 최근 1시간 현황
-.venv/bin/python -m collector report --hours 24 --md docs/reports/$(date +%F)-coverage.md
+.venv/bin/python -m collector report --hours 24 --md docs/deliverables/task1/01-coverage-report.md
 ```
 
 현황 보고에는 표 네 개가 나온다.
@@ -143,7 +143,7 @@ journalctl --user -u wonil-collector -n 50 --no-pager
 | 실 브로커 수집 | `pytest -m live` (3분) | 장치 18대·항목 30종, 미지정 공간 0, \|ts−수신\| 최대 69.7초 | 2026-10-20 16:29~16:32 KST, 실데이터 |
 | 실제 장애 자동 복구 | 운영 중 사건 기록 | 2026-10-20 17:34(재부팅 6분 뒤) DB 기록 실패와 MQTT keepalive timeout이 함께 발생. 부팅 직후 네트워크(무선) 불안정으로 보인다. **DB 62초, MQTT 15초 만에 사람 손 없이 복구**, 스풀 덕분에 손실 0 | 실데이터, 운영 서비스 |
 | 보드 재부팅 후 자동 시작 | 실제 재부팅 기록(`last -x`, journal, `collector_event`) | **통과**: 부팅 17:28:37 → 수집기 시작 17:28:52(15초) → MQTT 접속 17:28:59 → 첫 저장 17:29:04(**28초**). 첫 SSH 로그인 17:29보다 먼저 시작. 종료 때 스풀 잔여 7건을 기록하고 끝남. 데이터 공백 46초 | 2026-10-20 17:28 KST 사용자 재부팅, Linger=yes, 실데이터 |
-| 24시간 커버율 95% | `report` | **중간 보고 16.3시간: 핵심 항목 공간별 최저 98.0%** ([보고](reports/2026-10-21-coverage-interim.md)). 24시간 최종본은 2026-10-21 16:33 이후 | 2026-10-20 16:40 ~ 10-21 09:00 KST, 실데이터 |
+| 24시간 커버율 95% | `report` | **중간 보고 16.3시간: 핵심 항목 공간별 최저 98.0%** ([보고](../deliverables/task1/01-coverage-report-interim.md)). 24시간 최종본은 2026-10-21 16:33 이후 | 2026-10-20 16:40 ~ 10-21 09:00 KST, 실데이터 |
 | 메모리 200MB 이하 | `systemctl --user show -p MemoryCurrent` | 20.0MB(10-20 16:34) → 21.8MB(16:41) → 25.5MB(10-21 09:04) → 24MB(10-21 오전 `check` 실행 시). 16시간 동안 늘지 않음 | 운영 서비스, `MemoryMax=256M` |
 
 ### 재부팅 시험 절차
