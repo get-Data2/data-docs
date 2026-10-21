@@ -11,7 +11,7 @@ deploy/install-inference.sh                 # 사용자 서비스 wonil-inferenc
 systemctl --user status wonil-inference
 ```
 
-발행 대상이 `local`이면 로컬 브로커가 함께 떠 있어야 한다. 팀 브로커 발행은 **사용자 승인 뒤** `infer probe-mqtt`로 권한을 확인한 뒤 설정을 `team`으로 바꾼다.
+발행 대상은 보드 로컬 브로커(`wonil-broker`, 포트 11883)다(2026-10-21 결정). 서비스보다 먼저 떠 있어야 한다. 공용 MQTT 서버에는 발행하지 않는다.
 
 ## 검증 시나리오
 

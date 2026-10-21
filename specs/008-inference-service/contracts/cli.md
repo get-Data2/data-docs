@@ -14,7 +14,6 @@
 | `report --from --to [--md 경로]` | 기간 요약: 주기 수·처리 시간 분포·경보 내역·장애 시험·메모리 | Markdown | 기록 없음 |
 | `selftest` | 자기 성능 감시 현황(지평별 이동 MAE vs 과제 3 시험 MAE) | 표 | — |
 | `reload` | 묶음 다시 적재(실행 중 서비스에 신호) | 결과 | 서비스 없음 |
-| `probe-mqtt` | **사용자 승인 뒤에만**: 시험 토픽 1회 발행(retain 없음)·수신 확인으로 팀 브로커 발행 권한 확인 | 성공/거부 | 거부(4) |
 | `simulate-control --days 7` | 심화 1 제어 규칙 시뮬레이션 | 표·Markdown | 데이터 부족 |
 | `fault-test collector --minutes 10` | 장애 시험 보조: 수집기 정지 → 대기 → 재시작, 단계 기록(`svc_event`) | 진행 로그 | — |
 
