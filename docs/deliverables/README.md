@@ -11,7 +11,9 @@
 | | 메시지 형식 변경 상황 가정과 대응 기록 | [task1/02-format-change.md](task1/02-format-change.md) | ✅ |
 | 2. 데이터 이해와 기준선 | 데이터 진단서(정제 규칙, 분할 기준, 패턴 그래프, 일정–CO₂ 반응 분석) | [task2/01-data-diagnosis.md](task2/01-data-diagnosis.md) | ✅ 그래프 3개(`task2/figures/`) |
 | | 기준선 성능표 | [task2/baseline_v1-provisional.md](task2/baseline_v1-provisional.md) | ✅ `analysis baseline`이 생성 |
-| 3. 60분 예측 | 모델 비교표 / 공간별 오차 분석과 원인 / 일정 정보 포함·제외 비교와 결론 | `task3/` | ⚪ |
+| 3. 60분 예측 | 모델 비교표 | [task3/01-model-comparison.md](task3/01-model-comparison.md) | ✅ 실습실 CO₂ 60분 53% 개선 |
+| | 공간별 오차 분석과 원인 | [task3/02-space-error-analysis.md](task3/02-space-error-analysis.md) | ✅ |
+| | 일정 정보 포함·제외 비교와 결론 | [task3/03-schedule-value.md](task3/03-schedule-value.md) | ✅ 3.3ppm(8%) 감소 |
 | 4. 이상 탐지 | 탐지 성적표 / 임계값–탐지율·헛경보 표·그래프 / 운영 제안 | `task4/` | ⚪ |
 | 5. 상태 추정 | 두 분류기 성적표·혼동 행렬 / 일정 기반 정답과 직접 관찰의 차이 / 많이 틀리는 상황 사례 | `task5/` | ⚪ |
 | 6. 사전학습 모델 비교 | 비교표와 채택 의견(반 쪽) | `task6/` | ⚪ |

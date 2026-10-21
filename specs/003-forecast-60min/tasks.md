@@ -187,7 +187,7 @@ description: "과제 3 60분 예측 작업 목록"
 
 ## Phase 7: User Story 5 — 일정 정보의 가치 (P2)
 
-- [ ] T032 [US5] `src/forecast/analysis.py`의 `schedule_value()`
+- [X] T032 [US5] `src/forecast/analysis.py`의 `schedule_value()`
   - final vs final − schedule의 시험 MAE 차이를 공간 × 지평 × (전체·사용 시간대·일정 사건 직후 30분)으로 계산하고, 씨앗 변동과 함께 낸다
   - 결론 문장을 만든다: "○ppm(○%) 줄어든다", 또는 변동 안이면 "구별할 수 없다"
 
@@ -195,13 +195,13 @@ description: "과제 3 60분 예측 작업 목록"
 
 ## Phase 8: User Story 4 — 공간별 오차 분석 (P2)
 
-- [ ] T033 [US4] `src/forecast/analysis.py`
+- [X] T033 [US4] `src/forecast/analysis.py`
   - `phase_errors()`: 일과 단계별 MAE(수업 시작 전후 30분, 점심, 퇴실, 야간, 주말)
   - `top_errors(n=20)`
   - `window_open_segments()`: 창문 개방 추정(설정 `window_open`)과 그 구간 MAE
   - `event_errors()`: 과제 2 `events.parquet` 시험 기간 사건 구간 MAE
   - 공간 성질 표: 센서 수, 주기, 일정 반응률 — 과제 2 진단서 값을 인용
-- [ ] T034 [P] [US4] 그래프(`docs/deliverables/task3/figures/`)
+- [X] T034 [P] [US4] 그래프(`docs/deliverables/task3/figures/`)
   - 지평별 MAE 곡선(모델 + 기준선 3종, 공간별)
   - 하루 시각별 오차(모델 vs 현재값 유지)
   - 대표 하루(수업일 1일, 회의실 회의일 1일)의 예측 궤적. 한글 폰트는 과제 2와 같다
@@ -211,30 +211,30 @@ description: "과제 3 60분 예측 작업 목록"
 ## Phase 9: User Story 6 (나머지) — 심화 2·3 (P3)
 
 - [X] T035 [US6] 백그라운드에서 `forecast run S A2 A3`을 실행한다(S는 선택 전에 돌아도 되지만 시험 평가는 선택 뒤). 이어서 `forecast test`로 시험 대상에 포함한다
-- [ ] T036 [US6] 심화 2 분석: `booking` 유무에 따른 회의실 30·60분 MAE와 실습실·사무실 영향. **추정 예약 = 상한** 표시. 추정 예약 건수·평균 길이도 정리
-- [ ] T037 [US6] 심화 3 분석: 공간별 "빼고 학습" vs "포함 학습(`space` 끔)" vs 현재값 유지 시험 MAE와 해석
+- [X] T036 [US6] 심화 2 분석: `booking` 유무에 따른 회의실 30·60분 MAE와 실습실·사무실 영향. **추정 예약 = 상한** 표시. 추정 예약 건수·평균 길이도 정리
+- [X] T037 [US6] 심화 3 분석: 공간별 "빼고 학습" vs "포함 학습(`space` 끔)" vs 현재값 유지 시험 MAE와 해석
 
 ---
 
 ## Phase 10: Polish & 산출물
 
-- [ ] T038 `src/forecast/report.py` + `forecast report`
+- [X] T038 `src/forecast/report.py` + `forecast report`
   - `docs/deliverables/task3/01-model-comparison.md`: 비교표, 판정표, 측정 조건
   - `docs/deliverables/task3/02-space-error-analysis.md`: 공간별 분석, 그래프
   - `docs/deliverables/task3/03-schedule-value.md`: 일정 포함·제외 비교와 결론
   - `docs/advanced/task3/01-lookback-model.md`, `02-future-info.md`, `03-unseen-space.md`
   - 각 문서에 측정 조건(데이터 기간, 실데이터, 분할·평가 시점 해시, 장치, 전력 모드 25W, 씨앗 수)과 해석 자리를 둔다
-- [ ] T039 산출물·심화 문서의 해석 절을 작성한다(헌법 VII)
+- [X] T039 산출물·심화 문서의 해석 절을 작성한다(헌법 VII)
   - 왜 이 모델·설계가 이겼나
   - 회의실이 어려운 이유와 필요한 외부 정보(Q1)
   - 값 vs 변화량(Q2)
   - 오차가 큰 순간과 맞힐 수 있는지(Q3)
-- [ ] T040 `docs/tasks/task3-forecast-60min.md` 점검 문서를 완성한다
+- [X] T040 `docs/tasks/task3-forecast-60min.md` 점검 문서를 완성한다
   - 해결할 것 5, 확인 기준 3, 산출물 3, 생각해 볼 점 3, 심화 3을 항목별로 대응시키고 산출물에 링크한다
   - **확인 명령 표**는 실제로 실행해 맞춘 뒤 적는다(`forecast check/info`, pytest, 판정표 위치)
-- [ ] T041 [P] `docs/deliverables/README.md`(과제 3 행 상태·링크), `docs/README.md`, `.github/README.md`(빠른 사용에 `forecast` 추가), `CLAUDE.md` 진행 상황을 갱신한다
-- [ ] T042 전체 시험을 실행한다. `pytest -m "unit or broker or mysql"`, `pytest tests/forecast`, 그리고 `-m forecast` 실데이터 시험이다. 결과 수를 점검 문서에 기록한다
-- [ ] T043 두 저장소를 커밋·푸시한다. 비밀 값·내부 주소가 없는지 확인한다. 가중치·예측은 `var/`라 커밋하지 않는다
+- [X] T041 [P] `docs/deliverables/README.md`(과제 3 행 상태·링크), `docs/README.md`, `.github/README.md`(빠른 사용에 `forecast` 추가), `CLAUDE.md` 진행 상황을 갱신한다
+- [X] T042 전체 시험을 실행한다. `pytest -m "unit or broker or mysql"`, `pytest tests/forecast`, 그리고 `-m forecast` 실데이터 시험이다. 결과 수를 점검 문서에 기록한다
+- [X] T043 두 저장소를 커밋·푸시한다. 비밀 값·내부 주소가 없는지 확인한다. 가중치·예측은 `var/`라 커밋하지 않는다
 
 ---
 
