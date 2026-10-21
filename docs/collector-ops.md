@@ -31,7 +31,7 @@ src/collector/
 ├── backfill.py   InfluxDB 과거 데이터 → MySQL 적재(구간별 재개·멱등)
 └── check.py      연결 점검(서비스·MQTT·MySQL·InfluxDB)
 config/collector.yaml   원천 규칙·공간 매핑·항목 별칭·장치별 주기 — 형식 변경·센서 추가는 여기만 고친다
-deploy/                 wonil-collector.service, install.sh, run_forever.sh(cron 대체), team2-backfill.{service,timer}, install-backfill.sh
+deploy/                 wonil-collector.service, install.sh, run_forever.sh(cron 대체), wonil-backfill.{service,timer}, install-backfill.sh
 tests/                  unit(오프라인) · broker(보드 안 amqtt) · mysql(test_ 테이블) · live(실 브로커)
 ```
 
@@ -82,7 +82,7 @@ Claude Code 대화창에서는 앞에 `!`를 붙여 실행한다(예: `! collect
 | MySQL 저장 | `SELECT MAX(received_at) FROM measurement` | 1분 이내 |
 | InfluxDB 경로 | `ip route \| grep '^10\.'` | 유선 랜(`enP8p1s0`) 경로가 보여야 함. 없으면 사설망 InfluxDB에 닿지 않는다 |
 | InfluxDB 응답 | `check` 결과의 InfluxDB 행 | `pass`와 최근 값 시각 |
-| 과거 적재 진행 | `systemctl --user list-timers team2-backfill.timer`, `journalctl --user -u team2-backfill -n 5` | 완료되면 `var/backfill_done` 생성 |
+| 과거 적재 진행 | `systemctl --user list-timers wonil-backfill.timer`, `journalctl --user -u wonil-backfill -n 5` | 완료되면 `var/backfill_done` 생성 |
 
 ## 서비스 설정
 
