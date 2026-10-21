@@ -22,7 +22,7 @@ description: "과제 5 상태 추정 작업 목록"
 
 ## Phase 1: Setup
 
-- [ ] T001 (`.gitignore`의 `data/`는 완료, pyproject 수정은 상위 작업자가 모아서) `pyproject.toml`에 extra `state = ["scikit-learn>=1.9"]`를 추가하고 `-e '.[test,analysis,forecast,state]'`로 설치한다(torch를 바꾸지 않는지 확인). `.gitignore`에 `data/`를 추가한다
+- [X] T001 (`.gitignore`의 `data/`는 완료, pyproject 수정은 상위 작업자가 모아서) `pyproject.toml`에 extra `state = ["scikit-learn>=1.9"]`를 추가하고 `-e '.[test,analysis,forecast,state]'`로 설치한다(torch를 바꾸지 않는지 확인). `.gitignore`에 `data/`를 추가한다
 - [X] T002 [P] `config/state.yaml`을 contracts/config.md 그대로 작성한다
 - [X] T003 [P] `tools/state` 래퍼(`tools/forecast`와 같은 GPU 그룹 처리·환경 변수)를 만들고 `~/.local/bin/state`에 링크한다. 이름 충돌을 확인한다(`which state`)
 - [X] T004 [P] `tests/state/__init__.py`, `conftest.py`를 작성한다
@@ -81,14 +81,14 @@ description: "과제 5 상태 추정 작업 목록"
   - 미래 관측 부족: 판단 불가
   - 공휴일 일정 = 비어있음
   - 관찰 칸 다수 상태
-- [ ] T017 [US1] `state labels`를 실데이터로 실행한다. 양성 비율(공간·분할별), 이미 초과 비율, 관찰과 일정 정답 불일치 표(관찰이 있으면)를 기록한다
+- [X] T017 [US1] `state labels`를 실데이터로 실행한다. 양성 비율(공간·분할별), 이미 초과 비율, 관찰과 일정 정답 불일치 표(관찰이 있으면)를 기록한다
 
 ---
 
 ## Phase 5: User Story 4 — 환기 선제 경보 (P1)
 
 - [X] T018 [US4] `src/state/train.py`: 후보 × 격자 × 씨앗 학습, 검증 예측·지표 저장, 끝난 것 건너뜀, 실패 기록 후 계속
-- [ ] T019 [US4] `state features && state train vent`를 실데이터로 실행한다(과제 3 실험 종료 뒤). 학습 시간·메모리를 기록한다
+- [X] T019 [US4] `state features && state train vent`를 실데이터로 실행한다(과제 3 실험 종료 뒤). 학습 시간·메모리를 기록한다
 - [X] T020 [US4] (코드 `src/state/pipeline.py`·`forecast_vent.py`, 실데이터 실행은 T025) 환기 평가
   - 재현율·정밀도·F1·macro-F1·PR 곡선·AP·하루당 헛경보·선행 시간, "항상 음성" 정확도
   - 단순 규칙(CO₂ ≥ 850)
@@ -98,14 +98,14 @@ description: "과제 5 상태 추정 작업 목록"
 
 ## Phase 6: User Story 3 — 사용 여부 (P1)
 
-- [ ] T021 [US3] `state train occupancy leak`: 사용 여부 후보와 누수 비교 실험(일정 입력 포함)
-- [ ] T022 [US3] `state select`로 두 문제의 선택을 고정한다(누수 실험은 선택 대상 아님)
+- [X] T021 [US3] `state train occupancy leak`: 사용 여부 후보와 누수 비교 실험(일정 입력 포함)
+- [X] T022 [US3] `state select`로 두 문제의 선택을 고정한다(누수 실험은 선택 대상 아님)
 - [X] T023 [US3] (코드 `src/state/pipeline.py`, 실데이터 실행은 T025) 사용 여부 평가
   - 정답 기준 두 가지(관찰·일정)별 정확도·F1·macro-F1·비어있음→사용중 오류율·혼동 행렬
   - 단순 규칙(15분 +30ppm), 누수 실험 비교(SC-006)
   - 관찰이 목표 미달이면 "판단 보류" + 진행률
 - [X] T024 [P] [US3] `tests/state/test_select_pipeline.py` (unit): 손으로 만든 예측·정답으로 지표·오류율·판정표를 대조한다. 관찰 부족 시 판단 보류
-- [ ] T025 [US3] `state evaluate`를 실행한다. 판정표를 확인하고 `var/state/bundle/`(bundle.json: 모델 종류·파일, 입력 규약 버전, 특징 순서, 정규화, 임계값, 해시)을 저장한다
+- [X] T025 [US3] `state evaluate`를 실행한다. 판정표를 확인하고 `var/state/bundle/`(bundle.json: 모델 종류·파일, 입력 규약 버전, 특징 순서, 정규화, 임계값, 해시)을 저장한다
 
 ---
 
@@ -117,7 +117,7 @@ description: "과제 5 상태 추정 작업 목록"
   - 시간대 × 공간 × 상황 상위 혼동 3개와 사례
   - 환기 헛경보 하루당 수·시각대(Q3)
   - 그래프
-- [ ] T027 [US5] `state analyze` 실행, 해석 메모
+- [X] T027 [US5] `state analyze` 실행, 해석 메모
 
 ---
 
@@ -134,17 +134,17 @@ description: "과제 5 상태 추정 작업 목록"
 ## Phase 9: Polish & 산출물
 
 - [X] T031 `src/state/report.py` + `state report`: 결과 표(`tables/`)·그래프(혼동 행렬, PR 곡선, 전환 뒤 오류, 사례)
-- [ ] T032 산출물 본문을 쓴다
+- [X] T032 산출물 본문을 쓴다
   - `docs/deliverables/task5/01-scorecards.md`(두 분류기 성적표·혼동 행렬·판정)
   - `02-label-vs-observation.md`(일정 정답과 관찰의 차이)
   - `03-error-cases.md`(가장 많이 틀리는 상황)
   - 측정 조건과 해석을 단다
-- [ ] T033 심화 문서 `docs/advanced/task5/01-unseen-space.md`, `02-noshow-unbooked.md`
-- [ ] T034 점검 문서 `docs/tasks/task5-state-estimation.md`
+- [X] T033 심화 문서 `docs/advanced/task5/01-unseen-space.md`, `02-noshow-unbooked.md`
+- [X] T034 점검 문서 `docs/tasks/task5-state-estimation.md`
   - 해결할 것 5, 확인 기준 3, 산출물 3, 생각해 볼 점 4, 심화 2를 대응시킨다
   - **확인 명령**은 실행해 맞춘 뒤 적는다
-- [ ] T035 [P] `docs/deliverables/README.md`, `docs/README.md`, `.github/README.md`, `CLAUDE.md`를 갱신한다
-- [ ] T036 전체 시험을 실행하고 두 저장소를 커밋·푸시한다. 관찰 CSV(`data/`)가 커밋되지 않았는지 확인한다
+- [X] T035 [P] `docs/deliverables/README.md`, `docs/README.md`, `.github/README.md`, `CLAUDE.md`를 갱신한다
+- [X] T036 전체 시험을 실행하고 두 저장소를 커밋·푸시한다. 관찰 CSV(`data/`)가 커밋되지 않았는지 확인한다
 
 ---
 
