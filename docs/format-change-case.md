@@ -1,7 +1,7 @@
 # 형식 변경 대응 기록 (과제 1 산출물)
 
 - 측정 조건: 2026-10-20 실 브로커에서 3분간 받은 메시지 표본(`tests/fixtures/messages.jsonl`)을 변형한 시험 메시지,
-  수집기 v0.1.0, 확인 도구는 `python -m collector replay`(해석만 하고 저장하지 않음)
+  수집기 v0.1.0, 확인 도구는 `collector replay`(해석만 하고 저장하지 않음)
 - 자동 검증: `tests/unit/test_format_change.py` — 같은 코드에 설정 조각만 바꿔 넣어 전후를 비교한다.
 - 결론: 두 상황 모두 **`config/collector.yaml`만 고쳐 대응했다. `src/` 코드 수정은 0줄이다.**
 
@@ -76,8 +76,8 @@
 ## 운영 절차와 안전장치
 
 1. 바뀐 메시지 몇 개를 JSONL로 저장한다(`{"t": 수신 epoch, "topic": ..., "payload": "..."}`).
-2. 설정을 고친 뒤 `python -m collector check-config`로 검증한다. 틀리면 `파일: 위치: 이유`로 거부된다.
-3. `python -m collector replay --file <저장한 파일>`로 저장 없이 결과를 확인한다.
+2. 설정을 고친 뒤 `collector check-config`로 검증한다. 틀리면 `파일: 위치: 이유`로 거부된다.
+3. `collector replay --file <저장한 파일>`로 저장 없이 결과를 확인한다.
 4. `systemctl --user reload wonil-collector`(SIGHUP)로 반영한다. 재시작은 필요 없다.
    - 검증에 실패하면 기존 설정을 유지하고 `config_rejected` 사건을 남긴다.
    - 성공하면 구독 토픽의 차이만 반영하고 `config_reload` 사건을 남긴다.

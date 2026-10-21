@@ -129,7 +129,7 @@ journalctl --user -u wonil-collector -n 50 --no-pager
 | `db_down` 사건, 스풀 증가 | MySQL 접속 불가 | 자동 재시도(최대 30초 간격). 복구되면 `db_up`과 함께 밀린 행 기록 |
 | `spool_drop` 사건 | DB 장애가 스풀 한도(약 24시간)를 넘김 | 버린 구간이 사건 detail에 남는다. 결측 원인으로 보고서에 적는다 |
 | `bad_row` 사건 | DB가 거부한 행(형식 이상) | 해당 행만 버리고 나머지는 기록. 로그에서 장치·항목 확인 후 설정 점검 |
-| `config_rejected` 사건 | 설정 검증 실패 | 기존 설정으로 계속 동작. `python -m collector check-config`로 오류 위치 확인 |
+| `config_rejected` 사건 | 설정 검증 실패 | 기존 설정으로 계속 동작. `collector check-config`로 오류 위치 확인 |
 | `stale_reconnect` 사건 | 접속은 됐는데 5분 무수신 | 조용히 죽은 연결로 보고 자동 재접속 |
 | `reload` 뒤에 `stop`·`start` 사건(재시작됨) | (수정됨) 예전 서비스 파일은 HUP을 `flock`에 보내 프로세스가 죽었다 | 2026-10-21에 `ExecReload`를 자식 프로세스로 보내게 고쳤다. `deploy/install.sh`로 서비스 파일을 다시 설치 |
 | `mqtt_flapping` 사건, 로그에 1초 간격 접속·끊김(`Unspecified error`) | 브로커에 **같은 client_id**를 쓰는 다른 클라이언트 | `config/collector.yaml`의 `mqtt.client_id`를 고유하게 바꾸고 재시작(2026-10-20 설치 직후 실제 발생, `team2-collector` → `team2-jetson-collector-a1`로 해결) |

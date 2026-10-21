@@ -3,7 +3,7 @@
 - 측정 조건: 2026-10-21 09시 KST, MySQL `cf_u36_d3`, 실데이터
   - 과거 적재분: InfluxDB, 2025-08-08 ~ 2026-07-22, 약 985만 행
   - 실시간 수집: 2026-10-20 16:33부터 16.6시간
-- 도구: `python -m collector report --capacity`, 그리고 아래 SQL 측정
+- 도구: `collector report --capacity`, 그리고 아래 SQL 측정
 
 ## 1. 지금 크기
 

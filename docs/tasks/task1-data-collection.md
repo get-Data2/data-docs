@@ -28,7 +28,7 @@ MQTT 두 원천(ChirpStack LoRaWAN 센서, xflow 냉난방)을 구독해 **공�
 | 1 | MQTT 센서 메시지를 **공간·항목·시각별로 저장**하는 수집기를 상시 가동 | `wonil-collector`(systemd 사용자 서비스)가 구독 → 해석 → 보드 내 스풀 → MySQL `measurement` 일괄 기록. 기준 시각은 네트워크 서버 시각(`nsTime`). 원천 시각과 수신 시각도 함께 저장 | [data-model](../../specs/001-data-collection/data-model.md), [research R1·R2](../../specs/001-data-collection/research.md) |
 | 2 | 형식 변경·새 센서에 **설정만 바꿔** 대응 | `config/collector.yaml`의 원천 규칙(경로 표현식), 공간 매핑(장치 지정 → 별칭 → unmapped), 항목 별칭, 장치별 주기. 반영은 `reload`(재시작 없음) | [형식 변경 대응 기록](../format-change-case.md), [설정 형식](../../specs/001-data-collection/contracts/config.md) |
 | 3 | 브로커 재시작·네트워크 끊김·재부팅 뒤 **사람 손 없이 재수집** | 재접속(최대 30초 간격), 구독 확인 뒤 접속 판정, 5분 무수신 시 강제 재접속, client_id 충돌 감지, DB 장애는 스풀이 흡수(최대 40만 행), 거부 행 격리, `Restart=always`, `Linger=yes` | [운영 가이드](../collector-ops.md) |
-| 4 | 공간·항목별 **건수, 마지막 수신, 커버율**을 한눈에 | `python -m collector report`: ① 확인 필요 장치 ② 공간·항목별 ③ 장치별(관측 주기 포함) ④ 빠진 구간과 원인 단서. 연결 점검은 `python -m collector check` | [중간 현황 보고](../reports/2026-10-21-coverage-interim.md) |
+| 4 | 공간·항목별 **건수, 마지막 수신, 커버율**을 한눈에 | `collector report`: ① 확인 필요 장치 ② 공간·항목별 ③ 장치별(관측 주기 포함) ④ 빠진 구간과 원인 단서. 연결 점검은 `collector check` | [중간 현황 보고](../reports/2026-10-21-coverage-interim.md) |
 
 ### 저장 정확성 검증 (해결할 것 1의 근거)
 
@@ -37,7 +37,7 @@ MQTT 두 원천(ChirpStack LoRaWAN 센서, xflow 냉난방)을 구독해 **공�
   - 3분 표본: 메시지 52건 → 기대 행 **212/212 일치**. 그 시간대 DB 행 중 원본에 없는 행 0개.
   - 90초 표본: **94/94 일치**.
 - 공간 8개 매핑, 미지정 0건이다. 기준 시각은 `nsTime`과 밀리초까지 일치했고, 이중 발행은 1행만 저장됐다.
-- 장비 현황(정상 22대, 수신 중단 3대, 배터리 교체 필요 1대)과 공간별 장비 목록은 [장비 현황](../reports/2026-10-21-devices.md)에 있다.
+- 장비 현황(MQTT 실시간 22대 정상, 과거 데이터에만 있는 3대 중 확실한 수신 중단 1대·판단 보류 2대, 배터리 1% 교체 시급 1대)과 공간별 장비 목록은 [장비 현황](../reports/2026-10-21-devices.md)에 있다.
 
 ## 확인 기준
 
@@ -121,7 +121,7 @@ MQTT 두 원천(ChirpStack LoRaWAN 센서, xflow 냉난방)을 구독해 **공�
 - **InfluxDB 과거 데이터 적재**: 2025-08-08 ~ 2026-07-22, **978만 행**을 같은 공간 매핑으로 적재했다. 하루치 대조 결과는 37,401 = 37,401이다.
   유선망이 끊겨 나머지 90일은 대기 중이고, 타이머가 10분마다 재시도한다. 장치를 특정하지 못한 75만 행은 복원할 계획이다. [적재 보고](../reports/2026-10-21-backfill.md)
 - **Crowfoot ERD**: "데이터 수집" 워크스페이스, 문서 684에 요구사항 6개를 넣었다(모두 반영 상태).
-- **연결 점검 명령** `python -m collector check`: 서비스·MQTT·MySQL·InfluxDB를 한 번에 확인한다.
+- **연결 점검 명령** `collector check`: 서비스·MQTT·MySQL·InfluxDB를 한 번에 확인한다.
 
 ## 한계와 다음 행동
 

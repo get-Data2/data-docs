@@ -39,7 +39,7 @@ description: "과제 1 데이터 수집 체계 작업 목록"
 - [X] T010 `src/collector/store.py`: `contracts/schema.sql`을 패키지 자원으로 읽어 `{p}` 치환 후 실행하는 `init_db(conn, prefix)`(멱등), `sync_spaces(conn, config)`(space 테이블 upsert), PyMySQL 연결 생성(`.env`의 `MYSQL_*`, `autocommit=False`, 세션 `time_zone='+00:00'`, connect/read/write timeout 10초). `contracts/schema.sql`을 `src/collector/schema.sql`로 복사해 사용
 - [X] T011 `src/collector/__main__.py`: argparse CLI 골격 — 공통 `--config`(기본 `config/collector.yaml`), `--env`(기본 `.env`); 하위 명령 `check-config`(OK/오류, 종료 코드 2), `init-db`(`--prefix`), 이후 단계에서 `run`/`report`/`replay` 추가. 외부 접속 실패는 종료 코드 3 (contracts/cli.md)
 
-**Checkpoint**: `python -m collector check-config` → OK, `init-db` → 테이블 5개 생성
+**Checkpoint**: `collector check-config` → OK, `init-db` → 테이블 5개 생성
 
 ---
 
