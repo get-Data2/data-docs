@@ -1,6 +1,6 @@
 # Contract: 조회 API (HTTP JSON, 읽기 전용)
 
-- **주소**: `http://<보드 주소>:<port>/v1/...`. 포트 기본값은 8080이고 사용자 확인 뒤 확정한다. 내부망·Tailscale 접근을 가정한다.
+- **주소**: `http://<보드 주소>:<port>/v1/...`. 포트는 18080이다(2026-10-21 결정, `config/service.yaml` api.port). 내부망·Tailscale 접근을 가정한다.
 - **방식**: GET만, 인증 없음(읽기 전용, 이번 범위)
 - **응답**: `application/json; charset=utf-8`. 필드는 MQTT 결과와 같다(contracts/mqtt.md).
 - **스키마**: `GET /v1/openapi.json`(OpenAPI 3)
@@ -19,7 +19,7 @@
 ## 예시
 
 ```bash
-curl -s http://<보드 주소>:8080/v1/spaces/meeting/forecast?minutes=30
+curl -s "http://<보드 주소>:18080/v1/spaces/meeting/forecast?minutes=30"
 ```
 
 ```json
