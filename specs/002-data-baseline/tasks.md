@@ -133,22 +133,22 @@ description: "과제 2 데이터 이해와 기준선 작업 목록"
 
 **Independent Test**: 같은 평가 시점 파일로 MAE를 다시 계산하면 같은 표가 나오고, 세 기준선의 시점 수가 같다.
 
-- [ ] T021 [P] [US3] `tests/analysis/test_baseline.py`
+- [X] T021 [P] [US3] `tests/analysis/test_baseline.py`
   - 합성 사인파 + 일주기 시계열에서 손 계산과 일치
     - 현재값 유지 = y(t0)
     - 1시간 평균 = mean(y[t0−55분..t0])
     - 어제 = y(t0+h−24h)
   - 평가 시점 조건: 정답이 보간 칸이면 제외, 1시간 칸 50% 미만이면 제외, 어제 값 없으면 제외. 세 방법 시점 집합이 같다(SC-004)
   - `usage_hours`: 평일 08~19시, 공휴일 제외. 2026-10-09 한글날이 제외되는지 확인
-- [ ] T022 [US3] `src/analysis/baseline.py`
+- [X] T022 [US3] `src/analysis/baseline.py`
   - `build_eval_points(series, test, cfg) -> DataFrame[space_id, item, t0, horizon_min, y_true, usage_hours]`
   - 메타데이터: `var/eval/eval_points_<split>.parquet` + `.json`(split, 행 수, sha256, 설정 해시, 생성 시각)
   - `predict_baselines(series, points)`
   - `mae_table(preds)`: 공간 × 항목 × 지평 × 방법, 전체·사용 시간대, 평가 시점 수
-- [ ] T023 [US3] `baseline` 명령 연결 → `var/eval/baseline_<split>.parquet`, `docs/reports/task2/baseline_<split>.md`
+- [X] T023 [US3] `baseline` 명령 연결 → `var/eval/baseline_<split>.parquet`, `docs/reports/task2/baseline_<split>.md`
   - 문서 머리에 측정 조건: 데이터 기간, 실데이터, 분할, 분석 간격, 설정 해시, 평가 시점 sha256
   - 지평별 1위 방법 요약 줄
-- [ ] T024 [US3] `info` 명령: 사본·시계열·분할·평가 시점 파일의 존재·행 수·sha256, 기준선 결과가 쓴 평가 시점 sha256과 일치하는지 표시
+- [X] T024 [US3] `info` 명령: 사본·시계열·분할·평가 시점 파일의 존재·행 수·sha256, 기준선 결과가 쓴 평가 시점 sha256과 일치하는지 표시
 
 ---
 
@@ -158,25 +158,25 @@ description: "과제 2 데이터 이해와 기준선 작업 목록"
 
 **Independent Test**: `analysis diagnose`로 모든 표·그래프를 다시 만들 수 있고 숫자가 정제 결과와 같다.
 
-- [ ] T025 [P] [US2] `tests/analysis/test_schedule.py`
+- [X] T025 [P] [US2] `tests/analysis/test_schedule.py`
   - 일과표 행 → 날짜별 사건 시각(09:00·11:30·13:00·18:00 KST, 공휴일 제외)
   - 합성 CO₂가 09:07에 +40ppm → 반응 지연 7분
   - 60분 내 변화 없으면 무반응
   - 토요일 사용 수준 상승 → 어긋나는 날
-- [ ] T026 [US2] `src/analysis/schedule.py`: `events_for(date_range, cfg)`, `reaction_lags(series, events, pre_min=15, window_min=60, delta_ppm=30)`, `mismatch_days(...)`. 실제 자료 CSV(`schedule.file`)도 같은 함수로 읽는다
-- [ ] T027 [US2] `src/analysis/diagnose.py` 표
+- [X] T026 [US2] `src/analysis/schedule.py`: `events_for(date_range, cfg)`, `reaction_lags(series, events, pre_min=15, window_min=60, delta_ppm=30)`, `mismatch_days(...)`. 실제 자료 CSV(`schedule.file`)도 같은 함수로 읽는다
+- [X] T027 [US2] `src/analysis/diagnose.py` 표
   - 공간·항목별 결측률(긴 결측 칸 비율)·제거 이상값(축 A error) 수·보간 칸 비율·사건/의심 건수
   - 장치별 기록 주기(간격 중앙값·p99)와 긴 결측 목록
   - 간격 후보 1·5·15분 비교(칸당 값 수, 결측률, 칸 안 잡음)
   - 보간 시험 표
   - 자기상관(1칸·1시간·1일)
   - 반응 지연 분포 요약·어긋나는 날 목록
-- [ ] T028 [US2] `src/analysis/diagnose.py` 그래프(matplotlib Agg, 폰트 `Noto Sans CJK KR`, `docs/reports/task2/*.png`)
+- [X] T028 [US2] `src/analysis/diagnose.py` 그래프(matplotlib Agg, 폰트 `Noto Sans CJK KR`, `docs/reports/task2/*.png`)
   - 공간별 평일 시간대 평균 CO₂·온도(학습 기간, 일과표 사건 세로선)
   - 주말 비교
   - 반응 지연 히스토그램
   - 자기상관 막대
-- [ ] T029 [US2] `diagnose` 명령 → `docs/reports/task2/diagnosis_<split>.md`
+- [X] T029 [US2] `diagnose` 명령 → `docs/reports/task2/diagnosis_<split>.md`
   - 표·그래프 링크·측정 조건 머리
   - 해석 자리 표시(사람이 쓰는 절)는 비워 두지 말고 자동으로 사실 요약을 넣는다. 예: "평일 09시대 실습실 CO₂ 상승 시작 중앙 N분"
 
@@ -184,17 +184,17 @@ description: "과제 2 데이터 이해와 기준선 작업 목록"
 
 ## Phase 7: Polish & 산출물
 
-- [ ] T030 `all` 명령: extract → clean → split → events → diagnose → baseline 순서. 단계별 걸린 시간을 출력하고 전체 10분 이내(SC-001)를 확인. 메모리 최대치 기록(`resource.getrusage`)
-- [ ] T031 실데이터로 `analysis all --split v1-provisional` 실행. 결과 숫자를 확인하고 이상한 점은 원인을 찾아 기록
-- [ ] T032 `docs/tasks/task2-data-baseline.md` 산출물 문서 채우기
+- [X] T030 `all` 명령: extract → clean → split → events → diagnose → baseline 순서. 단계별 걸린 시간을 출력하고 전체 10분 이내(SC-001)를 확인. 메모리 최대치 기록(`resource.getrusage`)
+- [X] T031 실데이터로 `analysis all --split v1-provisional` 실행. 결과 숫자를 확인하고 이상한 점은 원인을 찾아 기록
+- [X] T032 `docs/tasks/task2-data-baseline.md` 산출물 문서 채우기
   - 해결할 것 5항목·확인 기준 3·산출물 2·생각해 볼 점 2에 결과·측정 조건·해석
   - **확인 명령 표**: 실행해 결과를 맞춘 뒤 기재
-- [ ] T033 [P] 진단서 해석 절 작성
+- [X] T033 [P] 진단서 해석 절 작성
   - 정제 규칙의 이유
   - 가장 강한 기준선과 이유
   - '어제 같은 시각'이 약한 이유와 강할 수 있는 공간
   - 고장 구간을 학습·평가에 넣을지
-- [ ] T034 [P] `.github/README.md`·`docs/README.md` 진행 표, `CLAUDE.md` 진행 상황 갱신, 두 저장소 커밋·푸시
+- [X] T034 [P] `.github/README.md`·`docs/README.md` 진행 표, `CLAUDE.md` 진행 상황 갱신, 두 저장소 커밋·푸시
 - [ ] T035 InfluxDB 미적재분(2026-07-23 ~ 10-20)을 적재한 뒤 `analysis extract --refresh && analysis all --split v2-final` 실행 → 확정 기준선 표로 교체(과제 1 T055 완료가 선행 조건)
 
 ---
