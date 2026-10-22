@@ -85,5 +85,6 @@
 | [reports/2026-10-21-backfill.md](reports/2026-10-21-backfill.md) | InfluxDB 과거 데이터 적재 — 1,395만 행(2025-08-08 ~ 2026-10-20), 장치 미특정 75만 행 원인과 계획 | ✅ 적재 완료, 75만 행 복원은 선택 |
 | [reports/task2/diagnosis_v1-provisional.md](reports/task2/diagnosis_v1-provisional.md) | 과제 2 진단 상세 표(자동 생성, 진단서의 숫자 원본) | ✅ |
 | [reports/task2/events.md](reports/task2/events.md) | 과제 2 사건 후보·값 고정 목록(과제 4 입력) | ✅ |
+| [reports/2026-10-22-cause-check.md](reports/2026-10-22-cause-check.md) | 과제 3·4·5 미달 원인 재검증 — 계절 이동 외에 실습실 센서 결측(07-06~)·회의 시작을 찾음 | ✅ |
 
 모든 결과표에는 측정 조건(데이터 기간, 실/합성, 시험 기간, 전력 모드)을 함께 적는다.
