@@ -127,7 +127,7 @@ curl -s "http://<팀 Jetson 주소>:18080/v1/spaces/x"                         #
 | `freshness_min` | float · null | 데이터 나이(분). 관측이 없으면 null |
 | `stale` | bool | 15분 초과 |
 | `availability` | str | `ok` · `unavailable:<이유>` · `error:<이유>` |
-| `model` | object | `{version, sha256, runtime}`. runtime은 `tensorrt` · `torch-cuda` · `torch-cpu` |
+| `model` | object | `{version, sha256, runtime}`. runtime은 `onnxruntime-cpu`(지금 예측) · `torch-cpu`(지금 이상·상태) · `torch-cuda`. 실행 방식이 바뀌어도 값의 의미는 같다 |
 | `summary_ko` | str | 한 줄 요약(LLM 에이전트·사람용) |
 
 **가용성 이유**

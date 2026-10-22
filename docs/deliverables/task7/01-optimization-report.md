@@ -89,7 +89,7 @@
 | TensorRT FP32 | 1,024MB | +510MB | 3.5 | 3.1 |
 
 - GPU를 쓰는 순간 CUDA 문맥으로 약 0.5~0.6GB가 든다(CPU·GPU 공유 메모리). TensorRT 엔진 자체는 0.1~0.2MB다.
-- 지금 서비스 프로세스(PyTorch GPU)는 RSS 1.41GB다. ONNX Runtime CPU로 바꾸면 **약 0.6GB를 아낀다**(과제 8 적용 예정).
+- 지금 서비스 프로세스(PyTorch GPU)는 RSS 1.41GB다. ONNX Runtime CPU로 바꾸면 **약 0.6GB를 아낀다**고 예상했다. 실제 적용(10-22 08:54) 뒤 서비스 RSS는 **689MB**로 720MB 줄었다(CUDA 문맥을 만들지 않으므로 예상보다 조금 더 줄었다).
 
 **전력**(tegrastats 1초 간격, 보드 입력 전력 VDD_IN 기준)
 - 대기 전력이 5.7~7.0W로 흔들렸다. 다른 계정 서비스와 우리 서비스가 매분 계산하기 때문이다.
@@ -112,4 +112,4 @@
 | 서비스 실행 방식 | **ONNX Runtime CPU, 스레드 1**(`edgeopt runtime --runner ort_cpu` → `var/edgeopt/runtime/runtime.json`) |
 | 이유 | 결과 동일, 가장 빠름, 메모리 최소, GPU 비움. 스레드 1은 p95가 안정적(스레드 6은 LSTM p99 3.8ms 튐) |
 | TensorRT를 쓸 때 | 모델이 커지거나(과제 6 사전학습 모델) 공간이 수십 개로 늘 때. 그때는 FP32 또는 FP16 + TCN 계열 |
-| 적용 시점 | 과제 8의 12시간 가동 기록이 끝난 뒤(2026-10-22 08:20) 서비스 코드에 ONNX Runtime 경로를 넣고 재시작한다. 가동 중 코드를 바꾸면 기록이 끊기기 때문이다 |
+| 적용 | 과제 8의 12시간 기록이 끝난 뒤 **2026-10-22 08:54 적용**했다. 서비스가 `runtime.json`을 읽고, ONNX가 지금 가중치에서 만든 것인지 해시로 확인한 뒤 쓴다. 다르면 PyTorch로 내려간다. 결과는 [과제 8 12시간 요약](../task8/02-12h-run-summary.md) 마지막 절 |

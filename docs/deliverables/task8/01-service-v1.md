@@ -11,9 +11,9 @@
 | 주기 | 매분 :20초. 공간 3곳(실습실·사무실·회의실) |
 | 판단 | 예측 `ok` · 이상 `ok` · 상태 `ok` · 규칙 `ok` |
 | 모델 | 예측 `forecast-52aff4f0c4bf`(과제 3 GRU 2시간) · 이상 `anomaly-240088924310`(과제 4 공간별 오토인코더) · 상태 `state-1cd4d961a332`(과제 5 HGB) |
-| 실행 방식 | `torch-cuda`. 과제 7 결과(TensorRT)가 정해지면 `infer reload`로 바꾼다 |
+| 실행 방식 | 예측 **ONNX Runtime CPU**(`onnxruntime-cpu`), 이상·상태 PyTorch CPU. 과제 7 결과 `var/edgeopt/runtime/runtime.json`을 읽어 고른다. ONNX가 지금 가중치에서 만든 것이 아니면 PyTorch로 내려간다. 12시간 기록(10-21 20:20 ~ 10-22 08:20)은 `torch-cuda`로 했고, 10-22 08:54에 바꿨다 |
 | 처리 시간 | 주기 전체 p50 0.8초, p95 2.4초(같은 보드에서 다른 실험이 돌 때 포함). 목표 20초 |
-| 메모리 | 프로세스 RSS 1.41GB에서 머무름(시작 1.26GB, 30분 뒤 평탄), cgroup 0.98GB / 상한 1.5GB |
+| 메모리 | 프로세스 RSS **689MB**(ONNX Runtime CPU). PyTorch GPU일 때는 1,409MB에서 12시간 평탄. 상한 1.5GB |
 | 제공 | MQTT 보드 브로커 `:11883`(보존 메시지 16토픽), 조회 API `:18080` |
 
 12시간 가동 요약은 [산출물 ②](02-12h-run-summary.md), 결과 형식은 [산출물 ③](03-result-format.md)에 있다.
@@ -50,7 +50,7 @@
 | 프로세스 멈춤 | 감시 스레드가 종료 → `Restart=always`로 10초 뒤 재시작. 경보 상태는 `state.json`에서 복원 | 단위 시험 |
 | 브로커 끊김 | 계산은 계속, 재접속하면 최신 보존 메시지 재발행 | `tests/service/test_publish.py` |
 | 재부팅 | 사용자 로그인 없이 시작(`enabled` + `Linger=yes`) | 설정 확인 완료. 실제 재부팅 시험은 사용자 일정(보드를 다른 계정과 공유) |
-| 메모리 | `MemoryMax=1536M`. 넘으면 cgroup이 서비스만 끝내고 재시작 | 12시간 가동 중 관찰 |
+| 메모리 | `MemoryMax=1536M`. 넘으면 cgroup이 서비스만 끝내고 재시작 | 12시간 동안 1,409MB 평탄(여유 127MB) → CPU 실행으로 689MB |
 
 ## 운영 방법
 

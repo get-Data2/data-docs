@@ -1,11 +1,11 @@
 # 과제 8. 상시 추론 서비스 — 점검 문서
 
-> 상태: 🟡 **서비스 상시 가동 중, 12시간 기록 진행 중(2026-10-21 20:20 ~ 10-22 08:20 KST)**. 나머지 확인 기준·심화는 끝났다.
-> 12시간 표는 10-22 08:25에 자동 생성된다. 재부팅 실측은 사용자 일정으로 남았다.
+> 상태: 🟢 **확인 기준 4개 모두 충족. 서비스 상시 가동 중.** 12시간 무중단(2026-10-21 20:20 ~ 10-22 08:20 KST, 720/720 주기 ok, 재시작 0)을 마쳤다.
+> 12시간 뒤(10-22 08:54) 과제 7 결정대로 실행 방식을 ONNX Runtime CPU로 바꿨다(메모리 1,409 → 689MB). 밤 운영에서 찾은 냉난방 실내기 끊김 오경보도 함께 고쳤다. 재부팅 실측은 사용자 일정으로 남았다.
 >
 > 측정 조건
 > - 데이터: 실데이터(과제 1 수집기 → MySQL `measurement` 1분 원본). 대상 공간: 실습실·사무실·회의실
-> - 모델: 예측 `forecast-52aff4f0c4bf`(과제 3), 이상 `anomaly-240088924310`(과제 4), 상태 `state-1cd4d961a332`(과제 5). 실행 `torch-cuda`
+> - 모델: 예측 `forecast-52aff4f0c4bf`(과제 3), 이상 `anomaly-240088924310`(과제 4), 상태 `state-1cd4d961a332`(과제 5). 실행: 12시간 기록은 `torch-cuda`, 10-22 08:54부터 예측 `onnxruntime-cpu`·이상·상태 `torch-cpu`
 > - 보드: Jetson Orin Nano Super 25W(클럭 고정 안 함). 수집기·다른 계정 작업과 공유
 >
 > 산출물: [① 서비스 v1](../deliverables/task8/01-service-v1.md) · [② 12시간 가동 요약](../deliverables/task8/02-12h-run-summary.md) · [③ 결과 형식 문서](../deliverables/task8/03-result-format.md)
@@ -58,7 +58,7 @@
 
 | # | 기준 | 결과 | 판정 | 측정 조건 |
 |---|---|---|---|---|
-| 1 | 12시간 무중단 가동 기록 | 진행 중. 첫 30분: 주기 32/32 ok, 실패 0, 메모리 1.41GB에서 평탄 | ⏳ (10-22 08:25 표 생성) | 10-21 20:20 ~ 10-22 08:20 KST |
+| 1 | 12시간 무중단 가동 기록 | 예정 720주기 모두 ok(실패·`partial`·빠진 주기 0), 재시작 0. 처리 시간 p50 0.78초·최대 4.6초(다른 실험과 겹친 때), 서비스만 돈 01:00 이후 p95 0.84초. 메모리 1,409MB에서 11시간 47분 평탄. 경보: 장애 시험 8건 정확, 냉난방 실내기 오경보 1건 발견·수정 | ✅ | 10-21 20:20 ~ 10-22 08:20 KST, PyTorch GPU |
 | 2 | 수집기 10분 정지 → '데이터 끊김' 경보, 재가동 → 정상 복귀 | 1분 주기 장치 8대 모두 마지막 수신 10.0~10.9분 뒤 `raised`, 재가동 2.5~3.5분 뒤 `cleared`. 10분 주기 장치는 기준 20분이라 경보 없음(정상). 주기 실패 0 | ✅ | 10-21 20:32:51 ~ 20:42:51 |
 | 3 | 조회 API로 공간별 예측·이상·상태 | `/v1/spaces/{space}/forecast?minutes=30`·`/anomaly`·`/state`가 실제 값 반환. 400·404 확인 | ✅ (회의실 상태는 관측 조건을 채울 때만, 시간의 약 3분의 1) | 10-21 20:48 |
 | 4 | 결과 형식 문서(토픽·필드·단위·예시) | 실제 응답으로 작성 | ✅ | |
@@ -68,7 +68,7 @@
 | # | 산출물 | 위치 | 상태 |
 |---|---|---|---|
 | 1 | 예측 서비스 v1(상시 운영) | `wonil-inference`·`wonil-broker` 가동 중. [운영 문서](../deliverables/task8/01-service-v1.md) | ✅ |
-| 2 | 12시간 가동 로그 요약(처리 시간, 경보 내역, 장애 시험 결과) | [02-12h-run-summary.md](../deliverables/task8/02-12h-run-summary.md), 자동 표 `tables/02-12h-run.md` | ⏳ 장애 시험·첫 30분 완료 |
+| 2 | 12시간 가동 로그 요약(처리 시간, 경보 내역, 장애 시험 결과) | [02-12h-run-summary.md](../deliverables/task8/02-12h-run-summary.md), 자동 표 `tables/02-12h-run.md` | ✅ |
 | 3 | 결과 형식 문서 | [03-result-format.md](../deliverables/task8/03-result-format.md) | ✅ |
 
 ## 생각해 볼 점
@@ -140,14 +140,15 @@ Jetson 터미널에서 `cd ~/Desktop/project` 뒤에 실행한다. 아래 결과
 | 자기 채점 | `infer selftest` | 공간/항목/지평별 이동 MAE |
 | 제어 규칙 시뮬레이션 | `infer --device cpu simulate-control --days 7` | 공간 × 규칙 표(약 4분) |
 | 전처리 불일치 실험 | `infer --device cpu skew-test --days 3` | 변형별 60분 MAE 표(약 5분) |
-| 단위·브로커 시험 | `.venv/bin/python -m pytest tests/service` | 26 passed |
+| 단위·브로커 시험 | `.venv/bin/python -m pytest tests/service` | 28 passed(실행 방식 선택·실내기 끊김 판정 시험 포함) |
+| 실행 방식 확인 | `curl -s localhost:18080/v1/health` | `"device": "cpu"`, `models.forecast.runtime`이 `onnxruntime-cpu`, `runtime_note` "과제 7 선택: ONNX Runtime CPU" |
+| 12시간 표 다시 만들기 | `infer report --from "2026-10-21 20:20" --to "2026-10-22 08:20"` | 주기 720(+수동 1)·처리 시간·경보·장애 시험 표 |
 | 실데이터 전처리 일치 | `.venv/bin/python -m pytest tests/service -m mysql` | 9 passed |
 | 학습 코드 회귀 | `.venv/bin/python -m pytest tests/analysis tests/forecast` + `sha256sum var/eval/eval_points_v1-provisional.parquet` | 통과, `2f878c11d09ab68d…` |
 
 ## 남은 것
 
-- 12시간 표(10-22 08:25 자동 생성)로 산출물 ②와 확인 기준 1을 채운다.
 - 재부팅 실측(T034): 보드를 다른 계정과 함께 쓰므로 사용자가 정한 시각에 한다. 로그인 없이 첫 결과까지 걸린 시간을 잰다.
   - 재부팅하면 사용자 서비스 관리자가 GPU 그룹을 갖고 시작한다. 그래서 `sg` 감싸기 없이 바로 GPU를 쓰는지도 함께 본다.
 - 회의실 상태 판단 가용률(약 3분의 1)을 올리려면 과제 5에서 회의실 입력 창을 60분으로 다시 학습한다.
-- 과제 7에서 TensorRT 실행이 정해지면 `infer reload`로 바꾸고 처리 시간을 다시 잰다.
+- 실행 방식은 ONNX Runtime CPU로 바꿨다(과제 7). 이상·상태 판단은 PyTorch CPU로 돈다. 추론 단계(약 0.45초) 중 예측 모델 실행은 1ms 미만이고, 나머지는 입력 구성과 이상·상태 판단이다. 주기를 더 줄이려면 그쪽을 손봐야 한다.

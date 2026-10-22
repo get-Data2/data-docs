@@ -56,6 +56,8 @@ curl -s "http://<팀 Jetson 주소>:18080/v1/spaces/meeting/forecast?minutes=30"
  "model": {"version": "forecast-52aff4f0c4bf", "sha256": "696085dc53f9b69d", "runtime": "torch-cuda"}}
 ```
 
+> 이 예시는 10-21 응답이다. 10-22 08:54부터 `model.runtime`은 `onnxruntime-cpu`다(결과 값 차이 최대 0.0005ppm).
+
 ## 3. MQTT — `<팀 Jetson 주소>:11883`
 
 - 구독은 익명으로 할 수 있다. QoS 1, UTF-8 JSON이다. **보존 메시지**라 새로 구독해도 최신값을 바로 받는다(실측 8ms 안 16개).
