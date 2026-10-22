@@ -39,7 +39,7 @@
 
 | 과제 | 산출물 | 점검 문서 | 상태 |
 |---|---|---|---|
-| 1. 데이터 수집 체계 | [수집 현황 보고](deliverables/task1/01-coverage-report-interim.md) · [형식 변경 대응 기록](deliverables/task1/02-format-change.md) | [task1](tasks/task1-data-collection.md) | 🟢 완료(운영 중), 24h 최종표만 남음 |
+| 1. 데이터 수집 체계 | [수집 현황 보고(24시간 최종)](deliverables/task1/01-coverage-report.md) · [중간본](deliverables/task1/01-coverage-report-interim.md) · [형식 변경 대응 기록](deliverables/task1/02-format-change.md) | [task1](tasks/task1-data-collection.md) | 🟢 완료(운영 중) — 24시간 커버율 최저 98.6%, InfluxDB 1,395만 행 적재 |
 | 2. 데이터 이해와 기준선 | [데이터 진단서](deliverables/task2/01-data-diagnosis.md) · [기준선 성능표](deliverables/task2/baseline_v1-provisional.md) | [task2](tasks/task2-data-baseline.md) | 🟢 완료 — 분할 `v1-provisional`이 과제 3~6 평가 기준(2학기 `v2-final`은 망 복구 시 추가) |
 | 3. 60분 예측 | [모델 비교표](deliverables/task3/01-model-comparison.md) · [공간별 오차 분석](deliverables/task3/02-space-error-analysis.md) · [일정 정보의 가치](deliverables/task3/03-schedule-value.md) | [task3](tasks/task3-forecast-60min.md) | 🟢 완료 — 실습실 CO₂ 60분 53% 개선(사무실 29%·회의실 20%) |
 | 4. 이상 탐지 | [탐지 성적표](deliverables/task4/01-scorecard.md) · [임계값과 헛경보](deliverables/task4/02-threshold-tradeoff.md) · [운영 제안](deliverables/task4/03-operations.md) | [task4](tasks/task4-anomaly-detection.md) | 🟡 탐지 86.7% ✅, 헛경보 4.65회/일 ❌(계절 이동 — 여름 포함 재학습 필요) |
@@ -82,7 +82,7 @@
 | [advanced/task1/01-storage-policy.md](advanced/task1/01-storage-policy.md) | 과제 1 심화(B): 저장소 1년 추정(8.2GB)과 보관 정책 | ✅ |
 | [advanced/task1/02-duplicate-messages.md](advanced/task1/02-duplicate-messages.md) | 과제 1 심화(B): 재전송(이중 발행 3.2%) 찾아 처리, 남은 중복 0건 | ✅ |
 | [reports/2026-10-21-devices.md](reports/2026-10-21-devices.md) | 장비 현황(정상·수신 중단·판단 보류·배터리) | ✅ |
-| [reports/2026-10-21-backfill.md](reports/2026-10-21-backfill.md) | InfluxDB 과거 데이터 적재 — 978만 행, 장치 미특정 75만 행 원인과 계획 | 🟡 유선망 복구 대기 |
+| [reports/2026-10-21-backfill.md](reports/2026-10-21-backfill.md) | InfluxDB 과거 데이터 적재 — 1,395만 행(2025-08-08 ~ 2026-10-20), 장치 미특정 75만 행 원인과 계획 | ✅ 적재 완료, 75만 행 복원은 선택 |
 | [reports/task2/diagnosis_v1-provisional.md](reports/task2/diagnosis_v1-provisional.md) | 과제 2 진단 상세 표(자동 생성, 진단서의 숫자 원본) | ✅ |
 | [reports/task2/events.md](reports/task2/events.md) | 과제 2 사건 후보·값 고정 목록(과제 4 입력) | ✅ |
 

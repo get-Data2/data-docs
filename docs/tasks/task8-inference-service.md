@@ -6,6 +6,7 @@
 > 측정 조건
 > - 데이터: 실데이터(과제 1 수집기 → MySQL `measurement` 1분 원본). 대상 공간: 실습실·사무실·회의실
 > - 모델: 예측 `forecast-52aff4f0c4bf`(과제 3), 이상 `anomaly-240088924310`(과제 4), 상태 `state-1cd4d961a332`(과제 5). 실행: 12시간 기록은 `torch-cuda`, 10-22 08:54부터 예측 `onnxruntime-cpu`·이상·상태 `torch-cpu`
+> - 이상 묶음 해시: 12시간 기록은 `6d04702384d48367`, 10-22 08:54부터 `4f39080a80938d6c`. 10-21 21:26에 과제 4 심화(예측 오차 탐지기) 임계값이 `bundle.json`에 추가돼 해시만 바뀌었다. 서비스가 쓰는 오토인코더 가중치·임계값은 같다
 > - 보드: Jetson Orin Nano Super 25W(클럭 고정 안 함). 수집기·다른 계정 작업과 공유
 >
 > 산출물: [① 서비스 v1](../deliverables/task8/01-service-v1.md) · [② 12시간 가동 요약](../deliverables/task8/02-12h-run-summary.md) · [③ 결과 형식 문서](../deliverables/task8/03-result-format.md)
